@@ -1,0 +1,52 @@
+.layout {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    height: 100%;
+    background: #1e1e2f;
+    color: #fff;
+    padding: 1rem;
+    border-radius: 0 15px 15px 0;
+    transition: width 0.25s ease, opacity 0.25s ease;
+
+    li {
+        list-style: none;
+    }
+}
+
+.sidebar.closed {
+    height: 100%;
+    background: #1e1e2f;
+    color: #fff;
+    padding: 1rem;
+    width: 30px;
+}
+
+.sidebar a,
+.sidebar a:visited {
+    color: #cfd2dc;
+    text-decoration: none;
+}
+
+.content {
+    flex: 1;
+    padding: 1.5rem;
+    background: #f5f6fa;
+}
+
+.toggle-button {
+    color: #f5f6fa;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    p {
+        font-size: 18px;
+    }
+}

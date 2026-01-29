@@ -1,0 +1,34 @@
+<nav class="sidebar" [class.closed]="!isOpen()">
+    <h2>Lynx</h2>
+    <div>
+        <ul>
+            <li>
+                <button class="toggle-button" (click)="toggle()">
+                    <p>☰</p>
+                </button>
+            </li>
+            @for (item of menu(); track item.label) {
+            <li>
+                @if (item.route) {
+                <a [routerLink]="item.route" routerLinkActive="active">
+                    {{item.icon}} {{ item.label }}
+                </a>
+                }
+
+                @if (item.children?.length) {
+                <span class="submenu-title">{{ item.label }}</span>
+                <ul class="submenu">
+                    @for (child of item.children; track child.label) {
+                    <li>
+                        <a [routerLink]="child.route" routerLinkActive="active">
+                            {{ child.label }}
+                        </a>
+                    </li>
+                    }
+                </ul>
+                }
+            </li>
+            }
+        </ul>
+    </div>
+</nav>
