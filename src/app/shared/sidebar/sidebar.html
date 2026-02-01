@@ -1,10 +1,17 @@
 <nav class="sidebar" [class.closed]="!isOpen()">
-    <h2>Lynx</h2>
-    <div>
+    <div class="logo-container">
+        @if(isOpen()){
+        <h2>Lynx</h2>
+        } @else {
+        <h2>🇫🇷</h2>
+        }
+    </div>
+
+    <div class="options">
         <ul>
             <li>
                 <button class="toggle-button" (click)="toggle()">
-                    <p>☰</p>
+                    <mat-icon>menu</mat-icon>
                 </button>
             </li>
             @for (item of menu(); track item.label) {
@@ -30,5 +37,14 @@
             </li>
             }
         </ul>
+    </div>
+    <div class="logoff-container">
+        <button class="logoff-button">
+            <mat-icon>logout</mat-icon>
+
+            @if (isOpen()) {
+            <span>Sair</span>
+            }
+        </button>
     </div>
 </nav>

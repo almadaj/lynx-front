@@ -3,6 +3,23 @@
     height: 100vh;
 }
 
+.logo-container {
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+    height: 40px;
+
+    h2 {
+        font-size: 42px;
+    }
+}
+
+.options {
+    margin-top: 30px;
+    gap: 10px;
+}
+
 .sidebar {
     width: 240px;
     height: 100%;
@@ -14,6 +31,11 @@
 
     li {
         list-style: none;
+        font-size: 18px;
+
+        p {
+            font-size: 18px;
+        }
     }
 }
 
@@ -22,7 +44,12 @@
     background: #1e1e2f;
     color: #fff;
     padding: 1rem;
-    width: 30px;
+    width: 70px;
+
+    // p,
+    // a {
+    //     display: none;
+    // }
 }
 
 .sidebar a,
@@ -49,4 +76,27 @@
     p {
         font-size: 18px;
     }
+}
+
+.logoff-container {
+    padding: 12px;
+}
+
+.logoff-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.logoff-button:hover {
+    background-color: #f3f4f6;
 }

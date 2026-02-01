@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import { sign } from 'node:crypto';
+import { MatIcon } from "@angular/material/icon";
 
 
 interface MenuItem {
@@ -12,7 +13,7 @@ interface MenuItem {
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLink, RouterModule],
+  imports: [RouterLink, RouterModule, MatIcon],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
