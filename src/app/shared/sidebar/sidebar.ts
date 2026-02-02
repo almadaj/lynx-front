@@ -22,10 +22,13 @@ export class Sidebar {
   menu = signal<MenuItem[]>([
     {
       label: 'Dashboard',
-      route: '/dashboard'
+      route: '/dashboard',
+      icon: 'dashboard'
     },
     {
       label: 'Acadêmico',
+      route: '/academy',
+      icon: 'school'
       // children: [
       //   { label: 'Turmas', route: '/dashboard/turmas' },
       //   { label: 'Disciplinas', route: '/dashboard/disciplinas' },

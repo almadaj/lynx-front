@@ -9,16 +9,28 @@
 
     <div class="options">
         <ul>
-            <li>
+            <li class="menu-link">
                 <button class="toggle-button" (click)="toggle()">
-                    <mat-icon>menu</mat-icon>
+                    <mat-icon class="menu-icon">menu</mat-icon>
                 </button>
+                @if (isOpen()) {
+                <span class="menu-label">
+                    Menu
+                </span>
+                }
             </li>
             @for (item of menu(); track item.label) {
             <li>
                 @if (item.route) {
-                <a [routerLink]="item.route" routerLinkActive="active">
-                    {{item.icon}} {{ item.label }}
+                <a [routerLink]="item.route" routerLinkActive="active" class="menu-link">
+                    <mat-icon class="menu-icon">
+                        {{item.icon}}
+                    </mat-icon>
+                    @if (isOpen()) {
+                    <span class="menu-label">
+                        {{ item.label }}
+                    </span>
+                    }
                 </a>
                 }
 
@@ -43,7 +55,7 @@
             <mat-icon>logout</mat-icon>
 
             @if (isOpen()) {
-            <span>Sair</span>
+            <span class="menu-label">Sair</span>
             }
         </button>
     </div>
