@@ -1,6 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { RouterLink, RouterModule } from '@angular/router';
-import { sign } from 'node:crypto';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { MatIcon } from "@angular/material/icon";
 
 
@@ -18,7 +17,9 @@ interface MenuItem {
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
+  constructor(private router: Router) { }
   isOpen = signal<boolean>(true)
+
   menu = signal<MenuItem[]>([
     {
       label: 'Dashboard',
@@ -34,6 +35,16 @@ export class Sidebar {
       //   { label: 'Disciplinas', route: '/dashboard/disciplinas' },
       //   { label: 'Avaliações', route: '/dashboard/avaliacoes' }
       // ]
+    },
+    {
+      label: "Minha Instituição",
+      route: "my-company",
+      icon: 'store'
+    },
+    {
+      label: "Turmas",
+      route: "classes",
+      icon: 'book'
     }
   ]);
 
@@ -48,5 +59,9 @@ export class Sidebar {
 
   toggle(): void {
     this.isOpen.update(value => !value);
+  }
+
+  logout(): void {
+    this.router.navigate(['/']);
   }
 }

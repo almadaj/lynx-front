@@ -51,11 +51,13 @@
         </ul>
     </div>
     <div class="logoff-container">
-        <button class="logoff-button">
+        <button class="logoff-button" (click)="logout()">
             <mat-icon>logout</mat-icon>
 
             @if (isOpen()) {
-            <span class="menu-label">Sair</span>
+            <span class="menu-label">
+                <p>Sair</p>
+            </span>
             }
         </button>
     </div>

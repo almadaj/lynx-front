@@ -37,18 +37,18 @@
 
 .toggle-button {
     display: flex;
-    // align-items: center;
-    // justify-content: center;
-    // height: 48px;
-    // width: 48px;
 }
 
 .menu-label {
     color: #cfd2dc;
 }
 
+.menu-label:hover {
+    color: #07d2d2;
+}
+
 .menu-icon {
-    font-size: 24px;
+    font-size: 22px;
     width: 24px;
     height: 24px;
     line-height: 24px;
@@ -106,7 +106,7 @@
     cursor: pointer;
 
     p {
-        font-size: 18px;
+        font-size: 20px;
     }
 }
 
