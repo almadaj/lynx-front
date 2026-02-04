@@ -9,9 +9,10 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [RouterOutlet, Sidebar, MatIconModule],
   template: `
     <div class="layout">
-      <app-sidebar />
+      <app-sidebar></app-sidebar>
+
       <main class="content">
-        <router-outlet />
+        <router-outlet></router-outlet>
       </main>
     </div>
   `,

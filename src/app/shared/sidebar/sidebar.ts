@@ -38,12 +38,12 @@ export class Sidebar {
     },
     {
       label: "Minha Instituição",
-      route: "my-company",
+      route: "/my-company",
       icon: 'store'
     },
     {
       label: "Turmas",
-      route: "classes",
+      route: "/classes",
       icon: 'book'
     }
   ]);
