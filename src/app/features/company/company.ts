@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-company',
   imports: [],
   templateUrl: './company.html',
-  styleUrl: './company.scss',
+  styleUrls: ['./company.scss'],
 })
 export class Company {
 
