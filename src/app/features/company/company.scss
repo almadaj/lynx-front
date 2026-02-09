@@ -1,10 +1,162 @@
-// .main-container {
-//     flex: 1;
-//     padding: 24px;
-//     height: 100%;
-//     background-color: #fafcff;
-//     border-radius: 12px;
-//     border: 1px solid #eaeaea;
+.main-content {
+    flex: 1;
+    flex-direction: column;
+    min-width: 100%;
+    padding-top: 15px;
+}
 
-//     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-// }
+.header {
+    display: flex;
+}
+
+.button {
+    color: #1d1d1d;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.info-card {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    font-size: 12px;
+    color: #777;
+}
+
+.value {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.list {
+    padding-left: 20px;
+    list-style: none;
+}
+
+.teachers-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.list-item {
+    margin-bottom: 8px;
+    list-style: none;
+}
+
+.teachers-list {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+}
+
+.teachers-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pill-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    width: fit-content;
+}
+
+.pill.professor {
+    background: linear-gradient(135deg, #07d2d2, #4dd0e1);
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(7, 210, 210, 0.25);
+}
+
+.pill.director {
+    background: #e8f7ff;
+    color: #0277bd;
+    border: 1px solid #b3e5fc;
+}
+
+.pill.professor:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(7, 210, 210, 0.35);
+}
+
+.social-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid #dcdfe8;
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.social-pill:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.social-user {
+    display: none;
+}
+
+.social-pill:hover .social-name {
+    display: none;
+}
+
+.social-pill:hover .social-user {
+    display: inline;
+}
+
+.social-name,
+.social-user {
+    transition: opacity 0.35s ease;
+}
+
+
+.social-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
