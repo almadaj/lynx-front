@@ -9,7 +9,7 @@
     display: flex;
 }
 
-.button {
+.add-button {
     color: #1d1d1d;
     display: flex;
     flex-direction: row;
@@ -17,6 +17,28 @@
     background: transparent;
     border: none;
     cursor: pointer;
+    border-radius: 50%;
+
+    :hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 12px rgba(7, 210, 210, 0.35);
+    }
+}
+
+.button {
+    margin-left: 10px;
+    color: #1d1d1d;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    :hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 12px rgba(7, 210, 210, 0.35);
+    }
 }
 
 .info-card {
