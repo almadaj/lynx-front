@@ -36,12 +36,25 @@
 .add-button {
     padding: 10px 16px;
     border-radius: 10px;
-    border: none;
+    border: 2px solid #07d2d2;
     background: #07d2d2;
     color: #fff;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+}
+
+
+.add-button.student {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 2px solid #07d2d2;
+    background: none;
+    color: #07d2d2;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 10px;
 }
 
 .add-button:hover {
