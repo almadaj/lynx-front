@@ -1,15 +1,18 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guard/auth.guard';
+import { publicGuard } from './core/guard/public.guard';
 
 export const routes: Routes = [
-    // Login (sem sidebar)
     {
         path: '',
+        canActivate: [publicGuard],
         loadComponent: () =>
             import('./features/home/login-page/login-page')
                 .then(m => m.LoginPage)
     },
     {
         path: '',
+        canActivate: [authGuard],
         loadComponent: () =>
             import('./shared/sidebar/dashboard-layout')
                 .then(m => m.DashboardLayout),

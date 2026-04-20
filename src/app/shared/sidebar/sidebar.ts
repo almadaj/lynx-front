@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, Inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { MatIcon } from "@angular/material/icon";
+import { AuthService } from '../../services/api-services/auth.service';
 
 
 interface MenuItem {
@@ -17,7 +18,10 @@ interface MenuItem {
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    @Inject(AuthService) private authService: AuthService
+  ) { }
   isOpen = signal<boolean>(true)
 
   menu = signal<MenuItem[]>([
@@ -62,6 +66,7 @@ export class Sidebar {
   }
 
   logout(): void {
-    this.router.navigate(['/']);
+    console.log("alou")
+    this.authService.logout();
   }
 }
