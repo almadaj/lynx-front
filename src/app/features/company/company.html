@@ -1,4 +1,7 @@
 <div class="main-container">
+    @if (loading()) {
+    <div>Carregando!</div>
+    } @else {
     <div class="main-content">
         <div class="header">
             <h1 class="main-title">Minha Instituição</h1>
@@ -11,7 +14,7 @@
             <div class="info-grid">
                 <div class="info-item">
                     <span class="label">Nome</span>
-                    <span class="value">Viens Avec Moi</span>
+                    <span class="value">{{company()?.companyName}}</span>
                 </div>
 
                 <div class="info-item">
@@ -21,12 +24,12 @@
 
                 <div class="info-item">
                     <span class="label">Email</span>
-                    <span class="value">contato@viensavecmoi.com</span>
+                    <span class="value">{{company()?.email}}</span>
                 </div>
 
                 <div class="info-item">
                     <span class="label">Telefone</span>
-                    <span class="value">(85) 99999-9999</span>
+                    <span class="value">{{company()?.phone}}</span>
                 </div>
             </div>
         </div>
@@ -65,7 +68,7 @@
             <div class="teachers-list">
                 <div class="teachers-column">
                     <span class="label">Diretor(a)</span>
-                    <div class="pill director">Nome do Diretor</div>
+                    <div class="pill director">{{principal()?.name}}</div>
                 </div>
                 <div class="teachers-column">
                     <span class="label">Professor(es)</span>
@@ -100,4 +103,5 @@
             </div>
         </div>
     </div>
+    }
 </div>
