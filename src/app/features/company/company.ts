@@ -26,6 +26,27 @@ export class Company implements OnInit {
     this.fetchCompanyInfo('e219b846-804f-44a3-8bbb-237b9c2c5ef0')
   }
 
+  formatUrl(url: string): string {
+    if (!url) return '';
+
+    return url.startsWith('http://') || url.startsWith('https://')
+      ? url
+      : `https://${url}`;
+  }
+
+  getUsername(url: string): string {
+    try {
+      const formatted = url.startsWith('http') ? url : `https://${url}`;
+      const parsed = new URL(formatted);
+
+      const path = parsed.pathname.split('/').filter(Boolean);
+
+      return '@' + path.pop() || '';
+    } catch {
+      return '';
+    }
+  }
+
   fetchCompanyInfo(id: string) {
     this.loading.set(true);
     this.error.set(null);
