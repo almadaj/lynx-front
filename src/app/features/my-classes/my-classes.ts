@@ -15,7 +15,8 @@ export class MyClasses implements OnInit {
   isModalNovaTurmaOpen = signal(false)
   isModalNovoAlunoOpen = signal(false)
   isLoading = signal(false)
-  courses = signal<CourseClassResponseDTO | null>(null)
+  currentDate = signal<number>(0)
+  courses = signal<CourseClassResponseDTO[]>([])
 
   constructor(
     private courseService: CourseClassService) {
@@ -24,6 +25,7 @@ export class MyClasses implements OnInit {
 
   ngOnInit(): void {
     this.fetchMyCourses();
+    const todayNow = Date.now()
   }
 
   handleModalNovaTurma(): void {
@@ -35,18 +37,19 @@ export class MyClasses implements OnInit {
   }
 
   fetchMyCourses(): void {
+    this.isLoading.set(true);
+
     this.courseService.getMyCourseClasses().subscribe({
       next: (data) => {
-        this.isLoading.set(true)
-        this.courses.set(data)
+        this.courses.set(data);
       },
       error: (err) => {
-        this.isLoading.set(false)
         console.error(err);
+        this.isLoading.set(false);
       },
       complete: () => {
-        this.isLoading.set(false)
+        this.isLoading.set(false);
       }
-    })
+    });
   }
 }

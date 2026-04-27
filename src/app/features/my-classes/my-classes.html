@@ -12,19 +12,21 @@
             </div>
         </div>
         <div class="turmas-list">
+            @for (course of courses(); track course.id) {
             <div class="turma-card">
                 <div class="turma-info">
-                    <h2 class="turma-title">Inglês Básico A1</h2>
+                    <h2 class="turma-title">{{course.name}} {{course.level}}</h2>
                     <span class="turma-code">ENGT001</span>
 
                     <div class="turma-meta">
                         <span>
                             <mat-icon class="menu-icon">language</mat-icon>
-                            Inglês
+                            {{course.language}}
                         </span>
                         <span>
                             <mat-icon class="menu-icon">badge</mat-icon>
-                            Prof. João
+                            <!-- TODO: ajustar retorno do professor corretamente -->
+                            {{course.teacherId}}
                         </span>
                         <span>
                             <mat-icon class="menu-icon">schedule</mat-icon>
@@ -32,17 +34,18 @@
                         </span>
                         <span>
                             <mat-icon class="menu-icon">group</mat-icon>
-                            5 alunos
+                            {{course.students.length === 1 ? '1 aluno' : course.students.length + ' alunos'}}
                         </span>
                     </div>
                 </div>
 
                 <div class="turma-actions">
-                    <span class="status active">Ativa</span>
+                    <span class="status active">{{course.endDate ? 'Ativa' : 'Inativa'}}</span>
                     <button class="action-btn">Ver</button>
                     <button class="action-btn">Editar</button>
                 </div>
             </div>
+            }
 
             <!-- Exemplo Inativa -->
             <div class="turma-card inactive">
