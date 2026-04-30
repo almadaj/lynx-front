@@ -1,3 +1,5 @@
+import { UserResponseDTO } from "./user.model"
+
 export interface CompanySocialNetworkResponseDTO {
     id: string
     socialNetworkId: string
@@ -17,6 +19,6 @@ export interface CompanyResponseDTO {
     address: string
     hasOnlineClass: boolean
     isActive: boolean
-    principalTeacherId: string
+    principalTeacher: UserResponseDTO
     socialNetworks: CompanySocialNetworkResponseDTO[]
 }

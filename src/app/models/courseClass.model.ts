@@ -1,4 +1,5 @@
 import { Language, LanguageLevel } from "./language.model";
+import { UserResponseDTO } from "./user.model";
 
 export interface CourseClassResponseDTO {
     id: string;
@@ -6,7 +7,7 @@ export interface CourseClassResponseDTO {
     level: LanguageLevel;
     language: Language;
     maxStudents: number;
-    teacherId: string;
+    teacher: UserResponseDTO;
     companyId: string;
     startDate: string;
     endDate: string;

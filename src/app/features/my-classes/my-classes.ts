@@ -1,7 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { sign } from 'node:crypto';
-import { Observable } from 'rxjs';
 import { CourseClassResponseDTO } from '../../models/courseClass.model';
 import { CourseClassService } from '../../services/api-services/courseClass.service';
 
@@ -26,6 +24,17 @@ export class MyClasses implements OnInit {
   ngOnInit(): void {
     this.fetchMyCourses();
     const todayNow = Date.now()
+  }
+  isCourseActive(endDate?: string | Date): boolean {
+    if (!endDate) return true;
+
+    const today = new Date();
+    const courseEndDate = new Date(endDate);
+
+    today.setHours(0, 0, 0, 0);
+    courseEndDate.setHours(0, 0, 0, 0);
+
+    return courseEndDate > today;
   }
 
   handleModalNovaTurma(): void {

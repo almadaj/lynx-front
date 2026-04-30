@@ -13,11 +13,11 @@
         </div>
         <div class="turmas-list">
             @for (course of courses(); track course.id) {
+            @if (isCourseActive(course.endDate)) {
             <div class="turma-card">
                 <div class="turma-info">
                     <h2 class="turma-title">{{course.name}} {{course.level}}</h2>
                     <span class="turma-code">ENGT001</span>
-
                     <div class="turma-meta">
                         <span>
                             <mat-icon class="menu-icon">language</mat-icon>
@@ -25,8 +25,7 @@
                         </span>
                         <span>
                             <mat-icon class="menu-icon">badge</mat-icon>
-                            <!-- TODO: ajustar retorno do professor corretamente -->
-                            {{course.teacherId}}
+                            {{course.teacher.name}}
                         </span>
                         <span>
                             <mat-icon class="menu-icon">schedule</mat-icon>
@@ -39,16 +38,52 @@
                     </div>
                 </div>
 
+                <!-- TODO: ajustar essa lógica -->
                 <div class="turma-actions">
-                    <span class="status active">{{course.endDate ? 'Ativa' : 'Inativa'}}</span>
+                    <span class="status" [class.active]="isCourseActive(course.endDate)">
+                        Ativa
+                    </span>
+
                     <button class="action-btn">Ver</button>
                     <button class="action-btn">Editar</button>
                 </div>
             </div>
+            }@else {
+            <div class="turma-card inactive">
+                <div class="turma-info">
+                    <h2 class="turma-title">{{course.name}} {{course.level}}</h2>
+                    <span class="turma-code">ESPT004</span>
+
+                    <div class="turma-meta">
+                        <span>
+                            <mat-icon class="menu-icon">language</mat-icon>
+                            {{course.language}}
+                        </span>
+                        <span>
+                            <mat-icon class="menu-icon">badge</mat-icon>
+                            {{course.teacher.name}}
+                        </span>
+                        <span>
+                            <mat-icon class="menu-icon">schedule</mat-icon>
+                            Ter • Qui • 18:00 - 19:30
+                        </span>
+                        <span>
+                            <mat-icon class="menu-icon">group</mat-icon>
+                            Individual
+                        </span>
+                    </div>
+                </div>
+
+                <div class="turma-actions">
+                    <span class="status inactive">Inativa</span>
+                    <button class="action-btn">Ver</button>
+                </div>
+            </div>
+            }
             }
 
             <!-- Exemplo Inativa -->
-            <div class="turma-card inactive">
+            <!-- <div class="turma-card inactive">
                 <div class="turma-info">
                     <h2 class="turma-title">Espanhol Intermediário B1</h2>
                     <span class="turma-code">ESPT004</span>
@@ -77,7 +112,7 @@
                     <span class="status inactive">Inativa</span>
                     <button class="action-btn">Ver</button>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

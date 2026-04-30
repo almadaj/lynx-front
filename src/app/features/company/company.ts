@@ -54,9 +54,6 @@ export class Company implements OnInit {
     this.companyService.findById(id).subscribe({
       next: (data) => {
         this.company.set(data);
-        if (data.principalTeacherId) {
-          this.fetchPrincipalUser(data.principalTeacherId);
-        }
         this.loading.set(false);
       },
       error: (err) => {
