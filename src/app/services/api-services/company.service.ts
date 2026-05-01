@@ -3,6 +3,7 @@ import { environment } from "../../enviroment/enviroment";
 import { HttpClient } from "@angular/common/http";
 import { CompanyResponseDTO } from "../../models/company.model";
 import { Observable } from "rxjs";
+import { UserResponseDTO } from "../../models/user.model";
 
 @Injectable({
     providedIn: 'root'
@@ -16,5 +17,9 @@ export class CompanyService {
 
     findById(companyId: string): Observable<CompanyResponseDTO> {
         return this.http.get<CompanyResponseDTO>(`${this.apiUrl}/company/${companyId}`);
+    }
+
+    getAllTeachersByCompany(companyId: string): Observable<UserResponseDTO[]> {
+        return this.http.get<UserResponseDTO[]>(`${this.apiUrl}/company/${companyId}/teachers`)
     }
 }

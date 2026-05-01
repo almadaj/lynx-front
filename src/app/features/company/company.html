@@ -71,12 +71,11 @@
                     <div class="pill director">{{company()?.principalTeacher?.name}}</div>
                 </div>
                 <div class="teachers-column">
-                    <span class="label">Professor(es)</span>
+                    <span class="label">{{staff().length === 1 ? 'Professor' : 'Professores'}}</span>
                     <div class="pill-container">
-                        <span class="pill professor">Professor 1</span>
-                        <span class="pill professor">Professor 2</span>
-                        <span class="pill professor">Professor 3</span>
-                        <span class="pill professor">Professor 4</span>
+                        @for (teacher of staff(); track teacher.id) {
+                        <span class="pill professor">{{teacher.name}}</span>
+                        }
                     </div>
                 </div>
             </div>

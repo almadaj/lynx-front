@@ -14,6 +14,7 @@ import { UserService } from '../../services/api-services/user.service';
 export class Company implements OnInit {
   company = signal<CompanyResponseDTO | null>(null);
   principal = signal<UserResponseDTO | null>(null);
+  staff = signal<UserResponseDTO[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
 
@@ -24,6 +25,7 @@ export class Company implements OnInit {
 
   ngOnInit(): void {
     this.fetchCompanyInfo('e219b846-804f-44a3-8bbb-237b9c2c5ef0')
+    this.fetchTeachStaff('e219b846-804f-44a3-8bbb-237b9c2c5ef0')
   }
 
   formatUrl(url: string): string {
@@ -62,6 +64,22 @@ export class Company implements OnInit {
         console.error(err);
       }
     });
+  }
+
+  fetchTeachStaff(id: string) {
+    this.loading.set(true);
+    this.error.set(null);
+    this.companyService.getAllTeachersByCompany(id).subscribe({
+      next: (data) => {
+        this.staff.set(data)
+        this.loading.set(false)
+      },
+      error: (err) => {
+        this.error.set('Erro ao buscar empresa');
+        this.loading.set(false);
+        console.error(err);
+      }
+    })
   }
 
   fetchPrincipalUser(userId: string) {
