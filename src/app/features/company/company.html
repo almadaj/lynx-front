@@ -5,9 +5,11 @@
     <div class="main-content">
         <div class="header">
             <h1 class="main-title">Minha Instituição</h1>
+            @if (isPrincipal()) {
             <button class="button">
                 <mat-icon class="menu-icon">edit_document</mat-icon>
             </button>
+            }
         </div>
         <div class="info-card">
             <h2 class="section-title">Dados Gerais</h2>
@@ -61,9 +63,11 @@
         <div class="info-card">
             <div class="header" style="justify-content: space-between;">
                 <h2 class="section-title">Corpo Docente</h2>
+                @if(isPrincipal()){
                 <button class="add-button">
                     <mat-icon class="menu-icon">add</mat-icon>
                 </button>
+                }
             </div>
             <div class="teachers-list">
                 <div class="teachers-column">

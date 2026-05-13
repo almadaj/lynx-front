@@ -17,4 +17,8 @@ export class UserService {
     findById(userId: string): Observable<UserResponseDTO> {
         return this.http.get<UserResponseDTO>(`${this.apiUrl}/user/${userId}`);
     }
+
+    findMyInfo(): Observable<UserResponseDTO> {
+        return this.http.get<UserResponseDTO>(`${this.apiUrl}/user/me`)
+    }
 }

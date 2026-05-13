@@ -15,6 +15,7 @@ export class Company implements OnInit {
   company = signal<CompanyResponseDTO | null>(null);
   principal = signal<UserResponseDTO | null>(null);
   staff = signal<UserResponseDTO[]>([]);
+  isPrincipal = signal<boolean>(false);
   loading = signal(false);
   error = signal<string | null>(null);
 
@@ -56,6 +57,8 @@ export class Company implements OnInit {
     this.companyService.findById(id).subscribe({
       next: (data) => {
         this.company.set(data);
+        this.principal.set(data.principalTeacher);
+        this.fetchMyProfile(data.principalTeacher?.id);
         this.loading.set(false);
       },
       error: (err) => {
@@ -86,8 +89,29 @@ export class Company implements OnInit {
     this.userService.findById(userId).subscribe({
       next: (data) => {
         this.principal.set(data);
+
       },
       error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+  //TODO: transformar em global
+  fetchMyProfile(principalTeacherId?: string) {
+    const companyPrincipalId = principalTeacherId ?? this.company()?.principalTeacher?.id;
+
+    if (!companyPrincipalId) {
+      this.isPrincipal.set(false);
+      return;
+    }
+
+    this.userService.findMyInfo().subscribe({
+      next: (data) => {
+        this.isPrincipal.set(data.id === companyPrincipalId);
+      },
+      error: (err) => {
+        this.isPrincipal.set(false);
         console.error(err);
       }
     });

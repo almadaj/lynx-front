@@ -66,7 +66,6 @@ export class Sidebar {
   }
 
   logout(): void {
-    console.log("alou")
     this.authService.logout();
   }
 }
