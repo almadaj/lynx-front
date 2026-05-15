@@ -4,20 +4,25 @@ import { CompanyService } from '../../services/api-services/company.service';
 import { CompanyResponseDTO } from '../../models/company.model';
 import { UserResponseDTO } from '../../models/user.model';
 import { UserService } from '../../services/api-services/user.service';
+import { CommonModal } from '../../shared/common-modal/common-modal';
 
 @Component({
   selector: 'app-company',
-  imports: [MatIcon],
+  imports: [MatIcon, CommonModal],
   templateUrl: './company.html',
   styleUrls: ['./company.scss'],
 })
 export class Company implements OnInit {
+  readonly modalAction = signal<'social' | 'teacher' | null>(null);
   company = signal<CompanyResponseDTO | null>(null);
   principal = signal<UserResponseDTO | null>(null);
   staff = signal<UserResponseDTO[]>([]);
   isPrincipal = signal<boolean>(false);
   loading = signal(false);
   error = signal<string | null>(null);
+  isModalOpen = signal(false);
+  modalTitle = signal('Adicionar');
+  modalContent = signal('');
 
   constructor(
     private companyService: CompanyService,
@@ -95,6 +100,38 @@ export class Company implements OnInit {
         console.error(err);
       }
     });
+  }
+
+  openTeacherModal(): void {
+    this.modalAction.set('teacher');
+    this.modalTitle.set('Adicionar professor');
+    this.modalContent.set('Em breve voce podera cadastrar um novo professor por aqui.');
+    this.isModalOpen.set(true);
+  }
+
+  openSocialModal(): void {
+    this.modalAction.set('social');
+    this.modalTitle.set('Adicionar rede social');
+    this.modalContent.set('Em breve voce podera cadastrar uma nova rede social da instituicao.');
+    this.isModalOpen.set(true);
+  }
+
+  closeModal(): void {
+    this.isModalOpen.set(false);
+    this.modalAction.set(null);
+  }
+
+  confirmModal(): void {
+    // Placeholder ate conectar com o formulario/API de criacao.
+    if (this.modalAction() === 'teacher') {
+      console.log('Abrir fluxo de cadastro de professor');
+    }
+
+    if (this.modalAction() === 'social') {
+      console.log('Abrir fluxo de cadastro de rede social');
+    }
+
+    this.closeModal();
   }
 
   //TODO: transformar em global

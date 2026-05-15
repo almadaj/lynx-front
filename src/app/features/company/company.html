@@ -64,7 +64,7 @@
             <div class="header" style="justify-content: space-between;">
                 <h2 class="section-title">Corpo Docente</h2>
                 @if(isPrincipal()){
-                <button class="add-button">
+                <button class="add-button" (click)="openTeacherModal()">
                     <mat-icon class="menu-icon">add</mat-icon>
                 </button>
                 }
@@ -85,8 +85,21 @@
             </div>
         </div>
 
+        <!-- Dar uma olhada melhor nesse componente -->
+        <app-common-modal [isOpen]="isModalOpen()" [title]="modalTitle()" [content]="modalContent()"
+            [cancelButtonText]="'Fechar'" [confirmButtonText]="'Continuar'" (close)="closeModal()"
+            (cancel)="closeModal()" (confirm)="confirmModal()">
+        </app-common-modal>
+
         <div class="info-card">
-            <h2 class="section-title">Redes Sociais</h2>
+            <div class="header" style="justify-content: space-between;">
+                <h2 class="section-title">Redes Sociais</h2>
+                @if(isPrincipal()){
+                <button class="add-button" (click)="openSocialModal()">
+                    <mat-icon class="menu-icon">add</mat-icon>
+                </button>
+                }
+            </div>
 
             <div class="social-container">
                 @if(company()?.socialNetworks){
