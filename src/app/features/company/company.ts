@@ -122,7 +122,6 @@ export class Company implements OnInit {
   }
 
   confirmModal(): void {
-    // Placeholder ate conectar com o formulario/API de criacao.
     if (this.modalAction() === 'teacher') {
       console.log('Abrir fluxo de cadastro de professor');
     }

@@ -1,38 +1,39 @@
-<div class="modal-overlay" *ngIf="isOpen" (click)="onOverlayClick()">
+@if (isOpen) {
+<div class="modal-overlay" (click)="onOverlayClick()">
     <div class="modal-container" role="dialog" aria-modal="true" [attr.aria-label]="title" tabindex="-1"
         (click)="$event.stopPropagation()">
+
         <!-- Header com Close Button opcional -->
-        <div class="modal-header" *ngIf="showHeader">
+        <div class="modal-header">
             <h2 class="modal-title">{{ title }}</h2>
-            <button *ngIf="showClose" class="modal-close-btn" (click)="onClose()" type="button"
-                aria-label="Fechar modal">
+            @if (showClose) {
+            <button class="modal-close-btn" (click)="onClose()" type="button" aria-label="Fechar modal">
                 ✕
             </button>
+            }
         </div>
 
         <!-- Conteúdo do Modal -->
         <div class="modal-body">
-            <ng-container *ngIf="contentType === 'text'">
-                <p>{{ content }}</p>
-            </ng-container>
-
-            <ng-container *ngIf="contentType === 'html'">
-                <div [innerHTML]="content"></div>
-            </ng-container>
-
-            <ng-container *ngIf="contentType === 'component'">
-                <ng-container *ngComponentOutlet="contentComponent"></ng-container>
-            </ng-container>
+            @if(contentComponent){
+            <ng-container *ngComponentOutlet="contentComponent"></ng-container>
+            } @else {
+            <ng-content></ng-content>
+            }
         </div>
 
-        <!-- Footer com Botões -->
-        <div class="modal-footer" *ngIf="showFooter">
-            <button *ngIf="showCancel" class="btn btn-secondary" (click)="onCancel()" type="button">
+        <div class="modal-footer">
+            @if(showCancel){
+            <button class="btn btn-secondary" (click)="onCancel()" type="button">
                 {{ cancelButtonText }}
             </button>
-            <button *ngIf="showConfirm" class="btn btn-primary" (click)="onConfirm()" type="button">
+            }
+            @if (showConfirm) {
+            <button class="btn btn-primary" (click)="onConfirm()" type="button">
                 {{ confirmButtonText }}
             </button>
+            }
         </div>
     </div>
 </div>
+}

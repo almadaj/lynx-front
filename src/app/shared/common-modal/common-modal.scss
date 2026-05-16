@@ -22,7 +22,6 @@
     padding: 18px;
     background: var(--modal-overlay-bg);
     backdrop-filter: blur(3px);
-    animation: overlay-fade-in 0.22s ease;
 }
 
 .modal-container {
@@ -36,7 +35,6 @@
     box-shadow: var(--modal-shadow);
     color: var(--modal-text);
     overflow: hidden;
-    animation: modal-pop-in 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .modal-header {
@@ -72,10 +70,10 @@
     color: #111827;
 }
 
-.modal-close-btn:focus-visible {
-    outline: 2px solid #60a5fa;
-    outline-offset: 2px;
-}
+// .modal-close-btn:focus-visible {
+//     outline: 2px solid #60a5fa;
+//     outline-offset: 2px;
+// }
 
 .modal-body {
     padding: 20px;
@@ -110,11 +108,6 @@
 
 .btn:active {
     transform: translateY(1px);
-}
-
-.btn:focus-visible {
-    outline: 2px solid #60a5fa;
-    outline-offset: 2px;
 }
 
 .btn-secondary {

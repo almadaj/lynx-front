@@ -4,21 +4,20 @@ import {
   HostListener,
   Input,
   Output,
-  Type,
+  Type
 } from '@angular/core';
-import { NgComponentOutlet, NgIf } from '@angular/common';
+import { NgComponentOutlet } from '@angular/common';
 
 @Component({
   selector: 'app-common-modal',
-  imports: [NgIf, NgComponentOutlet],
+  imports: [NgComponentOutlet],
   templateUrl: './common-modal.html',
   styleUrl: './common-modal.scss',
 })
 export class CommonModal {
   @Input() isOpen = false;
-  @Input() title = 'Modal';
+  @Input() title = 'Lynx';
 
-  @Input() showHeader = true;
   @Input() showFooter = true;
   @Input() showClose = true;
 
@@ -27,9 +26,6 @@ export class CommonModal {
   @Input() cancelButtonText = 'Cancelar';
   @Input() confirmButtonText = 'Confirmar';
 
-  @Input() closeOnOverlayClick = true;
-  @Input() closeOnEsc = true;
-  @Input() contentType: 'text' | 'html' | 'component' = 'text';
   @Input() content = '';
   @Input() contentComponent: Type<unknown> | null = null;
 
@@ -39,13 +35,13 @@ export class CommonModal {
 
   @HostListener('document:keydown.escape')
   onEsc(): void {
-    if (this.isOpen && this.closeOnEsc) {
+    if (this.isOpen) {
       this.onClose();
     }
   }
 
   onOverlayClick(): void {
-    if (this.closeOnOverlayClick) {
+    if (this.isOpen) {
       this.onClose();
     }
   }

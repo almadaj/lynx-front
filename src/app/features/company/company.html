@@ -85,10 +85,10 @@
             </div>
         </div>
 
-        <!-- Dar uma olhada melhor nesse componente -->
-        <app-common-modal [isOpen]="isModalOpen()" [title]="modalTitle()" [content]="modalContent()"
-            [cancelButtonText]="'Fechar'" [confirmButtonText]="'Continuar'" (close)="closeModal()"
-            (cancel)="closeModal()" (confirm)="confirmModal()">
+        <!-- TODO: Dar uma olhada melhor nesse componente -->
+        <app-common-modal [isOpen]="isModalOpen()" [title]="modalTitle()" [cancelButtonText]="'Fechar'"
+            [confirmButtonText]="'Continuar'" (close)="closeModal()" (cancel)="closeModal()" (confirm)="confirmModal()">
+            {{modalContent()}}
         </app-common-modal>
 
         <div class="info-card">
