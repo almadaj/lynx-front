@@ -1,0 +1,17 @@
+<app-common-modal [isOpen]="isOpen" [title]="'Adicionar Rede Social'" [cancelButtonText]="'Fechar'"
+    [confirmButtonText]="'Continuar'" (close)="closeModal()" (cancel)="closeModal()" (confirm)="confirmModal()">
+
+    <div class="social-form">
+        <label class="label">Rede Social:</label>
+        <select class="input" [value]="socialNetworks()" (change)="name.set($any($event.target).value)">
+            <option value="" disabled selected>Selecione...</option>
+            @for (social of socialNetworks(); track $index) {
+            <option [value]="social.id">{{social.name}}</option>
+            }
+        </select>
+
+        <label class="label">URL:</label>
+        <input class="input" type="text" [value]="url()" (input)="url.set($any($event.target).value)"
+            placeholder="https://..." />
+    </div>
+</app-common-modal>

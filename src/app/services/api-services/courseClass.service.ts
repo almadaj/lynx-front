@@ -3,7 +3,6 @@ import { environment } from "../../enviroment/enviroment";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { CourseClassResponseDTO } from "../../models/courseClass.model";
-import { UserResponseDTO } from "../../models/user.model";
 
 @Injectable({
     providedIn: 'root'

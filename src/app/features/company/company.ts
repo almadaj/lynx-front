@@ -4,11 +4,11 @@ import { CompanyService } from '../../services/api-services/company.service';
 import { CompanyResponseDTO } from '../../models/company.model';
 import { UserResponseDTO } from '../../models/user.model';
 import { UserService } from '../../services/api-services/user.service';
-import { CommonModal } from '../../shared/common-modal/common-modal';
+import { SocialNetworkModal } from './social-network-modal/social-network-modal';
 
 @Component({
   selector: 'app-company',
-  imports: [MatIcon, CommonModal],
+  imports: [MatIcon, SocialNetworkModal],
   templateUrl: './company.html',
   styleUrls: ['./company.scss'],
 })
@@ -103,34 +103,20 @@ export class Company implements OnInit {
   }
 
   openTeacherModal(): void {
-    this.modalAction.set('teacher');
-    this.modalTitle.set('Adicionar professor');
-    this.modalContent.set('Em breve voce podera cadastrar um novo professor por aqui.');
     this.isModalOpen.set(true);
   }
 
   openSocialModal(): void {
-    this.modalAction.set('social');
-    this.modalTitle.set('Adicionar rede social');
-    this.modalContent.set('Em breve voce podera cadastrar uma nova rede social da instituicao.');
+    console.log(this.isModalOpen)
     this.isModalOpen.set(true);
   }
 
   closeModal(): void {
-    this.isModalOpen.set(false);
-    this.modalAction.set(null);
+    this.isModalOpen.set(false)
   }
 
-  confirmModal(): void {
-    if (this.modalAction() === 'teacher') {
-      console.log('Abrir fluxo de cadastro de professor');
-    }
-
-    if (this.modalAction() === 'social') {
-      console.log('Abrir fluxo de cadastro de rede social');
-    }
-
-    this.closeModal();
+  handleSaveSocial(): void {
+    console.log("Olar")
   }
 
   //TODO: transformar em global
@@ -151,5 +137,9 @@ export class Company implements OnInit {
         console.error(err);
       }
     });
+  }
+
+  onSocialConfirm() {
+    this.isModalOpen.set(false);
   }
 }
