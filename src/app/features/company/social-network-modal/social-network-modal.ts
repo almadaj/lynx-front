@@ -21,6 +21,10 @@ export class SocialNetworkModal {
   name = signal('');
   url = signal('');
 
+  ngOnInit(): void {
+    this.fetchSocialNetworks();
+  }
+
   fetchSocialNetworks(): void {
     this.socialNetworkService.listAll().subscribe({
       next: (data) => {
