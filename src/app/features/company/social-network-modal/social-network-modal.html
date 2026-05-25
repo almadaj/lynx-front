@@ -4,7 +4,7 @@
     <div class="social-form">
         <label class="label">Rede Social:</label>
         <select class="input" [value]="socialNetworks()" (change)="name.set($any($event.target).value)">
-            <option value="" disabled selected>Selecione...</option>
+            <option value="" selected>Selecione...</option>
             @for (social of socialNetworks(); track $index) {
             <option [value]="social.id">{{social.name}}</option>
             }

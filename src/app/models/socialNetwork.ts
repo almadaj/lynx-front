@@ -3,3 +3,8 @@ export interface SocialNetworkResponseDTO {
     name: string
     icon: string;
 }
+
+export interface SocialNetworkRequestDTO {
+    socialNetworkId: string
+    url: string
+}
