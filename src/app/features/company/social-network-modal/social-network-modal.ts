@@ -45,6 +45,7 @@ export class SocialNetworkModal {
   confirmModal(): void {
     const data: SocialNetworkRequestDTO = { socialNetworkId: this.name(), url: this.url() };
     console.log(this.name(), this.url())
+    //TODO: pegar o ID de company
     this.companySocialNetworkService.addSocialToCompany('e219b846-804f-44a3-8bbb-237b9c2c5ef0', data).subscribe({
       next: () => this.closeModal(),
       error: (err) => console.log(err),
