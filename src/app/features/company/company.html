@@ -21,7 +21,8 @@
 
                 <div class="info-item">
                     <span class="label">CNPJ</span>
-                    <span class="value">00.000.000/0001-00</span>
+                    <span class="value">{{company()?.cnpj ? CnpjFormatter.format(company()!.cnpj.toString()) :
+                        "-"}}</span>
                 </div>
 
                 <div class="info-item">
@@ -86,7 +87,7 @@
         </div>
 
         <app-social-network-modal [isOpen]="isModalOpen()" (close)="closeModal()" />
-
+        <app-teacher-modal [isOpen]="isTeacherModalOpen()" (close)="closeModal()" />
         <div class="info-card">
             <div class="header" style="justify-content: space-between;">
                 <h2 class="section-title">Redes Sociais</h2>

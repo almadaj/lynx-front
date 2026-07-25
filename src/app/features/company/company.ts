@@ -5,14 +5,17 @@ import { CompanyResponseDTO } from '../../models/company.model';
 import { UserResponseDTO } from '../../models/user.model';
 import { UserService } from '../../services/api-services/user.service';
 import { SocialNetworkModal } from './social-network-modal/social-network-modal';
+import { CnpjFormatter } from '../../shared/common-functions/shared.functions';
+import { TeacherModal } from './teacher-modal/teacher-modal';
 
 @Component({
   selector: 'app-company',
-  imports: [MatIcon, SocialNetworkModal],
+  imports: [MatIcon, SocialNetworkModal, TeacherModal],
   templateUrl: './company.html',
   styleUrls: ['./company.scss'],
 })
 export class Company implements OnInit {
+  protected readonly CnpjFormatter = CnpjFormatter;
   readonly modalAction = signal<'social' | 'teacher' | null>(null);
   company = signal<CompanyResponseDTO | null>(null);
   principal = signal<UserResponseDTO | null>(null);
@@ -21,6 +24,7 @@ export class Company implements OnInit {
   loading = signal(false);
   error = signal<string | null>(null);
   isModalOpen = signal(false);
+  isTeacherModalOpen = signal(false);
   modalTitle = signal('Adicionar');
   modalContent = signal('');
 
@@ -30,8 +34,7 @@ export class Company implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.fetchCompanyInfo('e219b846-804f-44a3-8bbb-237b9c2c5ef0')
-    this.fetchTeachStaff('e219b846-804f-44a3-8bbb-237b9c2c5ef0')
+    this.fetchCompanyInfo()
   }
 
   formatUrl(url: string): string {
@@ -55,46 +58,48 @@ export class Company implements OnInit {
     }
   }
 
-  fetchCompanyInfo(id: string) {
+  fetchCompanyInfo() {
     this.loading.set(true);
     this.error.set(null);
 
-    this.companyService.findById(id).subscribe({
+    this.userService.findMyInfo().subscribe({
       next: (data) => {
-        this.company.set(data);
-        this.principal.set(data.principalTeacher);
-        this.fetchMyProfile(data.principalTeacher?.id);
-        this.loading.set(false);
+        this.companyService.findById(data.companies[0].companyId).subscribe({
+          next: (fetchedCompany) => {
+            this.company.set(fetchedCompany);
+            this.loading.set(false);
+          },
+          error: (err) => {
+            this.error.set('Erro ao buscar empresa');
+            this.loading.set(false);
+            console.error(err);
+          }
+        });
+        this.companyService.getAllTeachersByCompany(data.companies[0].companyId).subscribe({
+          next: (data) => {
+            this.staff.set(data)
+            this.loading.set(false)
+          },
+          error: (err) => {
+            this.error.set('Erro ao buscar empresa');
+            this.loading.set(false);
+            console.error(err);
+          }
+        })
       },
       error: (err) => {
         this.error.set('Erro ao buscar empresa');
         this.loading.set(false);
         console.error(err);
-      }
-    });
-  }
-
-  fetchTeachStaff(id: string) {
-    this.loading.set(true);
-    this.error.set(null);
-    this.companyService.getAllTeachersByCompany(id).subscribe({
-      next: (data) => {
-        this.staff.set(data)
-        this.loading.set(false)
       },
-      error: (err) => {
-        this.error.set('Erro ao buscar empresa');
-        this.loading.set(false);
-        console.error(err);
-      }
     })
+
   }
 
   fetchPrincipalUser(userId: string) {
     this.userService.findById(userId).subscribe({
       next: (data) => {
         this.principal.set(data);
-
       },
       error: (err) => {
         console.error(err);
@@ -103,16 +108,16 @@ export class Company implements OnInit {
   }
 
   openTeacherModal(): void {
-    this.isModalOpen.set(true);
+    this.isTeacherModalOpen.set(true);
   }
 
   openSocialModal(): void {
-    console.log(this.isModalOpen)
     this.isModalOpen.set(true);
   }
 
   closeModal(): void {
     this.isModalOpen.set(false)
+    this.isTeacherModalOpen.set(false);
   }
 
   handleSaveSocial(): void {

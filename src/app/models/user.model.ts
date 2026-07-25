@@ -13,6 +13,18 @@ export interface UserResponseDTO {
     name: string;
     email: string;
     birth: string;
+    companies: UserCompanyResponse[]
     isActive: boolean;
     isAdmin: boolean;
+}
+
+export interface UserCompanyResponse {
+    companyId: string;
+    companyName: string;
+    publicName: string;
+    role: Role;
+}
+
+export enum Role {
+
 }

@@ -1,0 +1,37 @@
+<app-common-modal [isOpen]="isOpen" [title]="'Adicionar Professor'" [cancelButtonText]="'Fechar'"
+    [confirmButtonText]="'Cadastrar Professor'" (close)="closeModal()" (cancel)="closeModal()"
+    (confirm)="confirmModal()">
+    <!--TODO: Aqui será feito o vínculo de User com Company
+    o professor já deve estar com um login e será buscado pelo email
+    Inserir mensagens de erro e ver funções
+    -->
+    <div class="social-form">
+        <div>
+            <label class="label">Digite o email:</label>
+            <input class="input" type="text" [value]="email()" (input)="email.set($any($event.target).value)"
+                placeholder="Ex: fulano@email.com" />
+        </div>
+
+        <div style="display: flex; justify-content: space-between; gap: 12px;">
+            <div style="flex: 1;">
+                <label class="label">Instituição:</label>
+                <select class="input" [value]="company()" (change)="company.set($any($event.target).value)">
+                    <option value="" selected>Selecione...</option>
+                    @for (role of roleList(); track role.value) {
+                    <option [value]="role.value">{{role.label}}</option>
+                    }
+                </select>
+            </div>
+
+            <div style="flex: 1;">
+                <label class="label">Função:</label>
+                <select class="input" [value]="role()" (change)="role.set($any($event.target).value)">
+                    <option value="" selected>Selecione...</option>
+                    @for (role of roleList(); track role.value) {
+                    <option [value]="role.value">{{role.label}}</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+</app-common-modal>
