@@ -2,11 +2,12 @@ import { Component, OnInit, signal } from '@angular/core';
 import { MatIcon } from "@angular/material/icon";
 import { CompanyService } from '../../services/api-services/company.service';
 import { CompanyResponseDTO } from '../../models/company.model';
-import { UserResponseDTO } from '../../models/user.model';
+import { UserCompanyResponse, UserResponseDTO } from '../../models/user.model';
 import { UserService } from '../../services/api-services/user.service';
 import { SocialNetworkModal } from './social-network-modal/social-network-modal';
 import { CnpjFormatter } from '../../shared/common-functions/shared.functions';
 import { TeacherModal } from './teacher-modal/teacher-modal';
+import { Role, RoleHelper } from '../../shared/enum/role.enum';
 
 @Component({
   selector: 'app-company',
@@ -15,6 +16,7 @@ import { TeacherModal } from './teacher-modal/teacher-modal';
   styleUrls: ['./company.scss'],
 })
 export class Company implements OnInit {
+  [x: string]: any;
   protected readonly CnpjFormatter = CnpjFormatter;
   readonly modalAction = signal<'social' | 'teacher' | null>(null);
   company = signal<CompanyResponseDTO | null>(null);
@@ -25,12 +27,13 @@ export class Company implements OnInit {
   error = signal<string | null>(null);
   isModalOpen = signal(false);
   isTeacherModalOpen = signal(false);
+  userCompanies = signal<UserCompanyResponse[]>([])
   modalTitle = signal('Adicionar');
   modalContent = signal('');
 
   constructor(
     private companyService: CompanyService,
-    private userService: UserService
+    private userService: UserService,
   ) { }
 
   ngOnInit(): void {
@@ -62,8 +65,13 @@ export class Company implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
+    //TODO: aqui estamos tratando como se só um usuário tivesse uma COMPANY, porém nem sempre será assim 
     this.userService.findMyInfo().subscribe({
       next: (data) => {
+        if (RoleHelper.hasPermission(data.companies[0].role, Role.HEADTEACHER)) {
+          this.isPrincipal.set(true)
+          this.userCompanies.set(data.companies)
+        }
         this.companyService.findById(data.companies[0].companyId).subscribe({
           next: (fetchedCompany) => {
             this.company.set(fetchedCompany);
@@ -122,26 +130,6 @@ export class Company implements OnInit {
 
   handleSaveSocial(): void {
     console.log("Olar")
-  }
-
-  //TODO: transformar em global
-  fetchMyProfile(principalTeacherId?: string) {
-    const companyPrincipalId = principalTeacherId ?? this.company()?.principalTeacher?.id;
-
-    if (!companyPrincipalId) {
-      this.isPrincipal.set(false);
-      return;
-    }
-
-    this.userService.findMyInfo().subscribe({
-      next: (data) => {
-        this.isPrincipal.set(data.id === companyPrincipalId);
-      },
-      error: (err) => {
-        this.isPrincipal.set(false);
-        console.error(err);
-      }
-    });
   }
 
   onSocialConfirm() {

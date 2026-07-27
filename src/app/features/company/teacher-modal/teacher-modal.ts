@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output, signal } from "@angular/core";
+import { Component, effect, EventEmitter, input, Input, Output, signal, SimpleChanges } from "@angular/core";
 import { CommonModal } from "../../../shared/common-modal/common-modal";
+import { UserCompanyResponse } from "../../../models/user.model";
 
 @Component({
     selector: 'app-teacher-modal',
@@ -9,19 +10,29 @@ import { CommonModal } from "../../../shared/common-modal/common-modal";
 })
 export class TeacherModal {
     isOpenSignal = signal<boolean>(false)
-    @Input() isOpen = this.isOpenSignal();
+    @Input() isOpen = false;
     roleList = signal([
         { value: 'TEACHER', label: 'Professor' },
         { value: 'HEADTEACHER', label: 'Coordenador' }
     ]);
     @Output() close = new EventEmitter<void>();
-    @Output() confirm = new EventEmitter<{ name: string; url: string }>();
 
     name = signal('');
-    birth = signal('');
     email = signal('');
-    company = signal('');
+    company = signal<UserCompanyResponse | null>(null);
     role = signal('');
+
+    autorizedCompanies = input<UserCompanyResponse[]>([]);
+
+    constructor() {
+        effect(() => {
+            const companies = this.autorizedCompanies();
+
+            if (companies.length > 0) {
+                this.company.set(companies[0]);
+            }
+        });
+    }
 
     closeModal(): void {
         this.close.emit();
@@ -29,13 +40,11 @@ export class TeacherModal {
 
     confirmModal(): void {
         const request = {
-            name: this.name(),
             email: this.email(),
-            birth: this.birth(),
+            company: this.company(),
             role: this.role()
         };
         console.log(request)
         this.close.emit();
     }
-
 }

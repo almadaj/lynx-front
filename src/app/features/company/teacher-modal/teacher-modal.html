@@ -9,16 +9,19 @@
         <div>
             <label class="label">Digite o email:</label>
             <input class="input" type="text" [value]="email()" (input)="email.set($any($event.target).value)"
-                placeholder="Ex: fulano@email.com" />
+                placeholder="Ex: usuario@email.com" />
         </div>
 
         <div style="display: flex; justify-content: space-between; gap: 12px;">
             <div style="flex: 1;">
                 <label class="label">Instituição:</label>
                 <select class="input" [value]="company()" (change)="company.set($any($event.target).value)">
-                    <option value="" selected>Selecione...</option>
-                    @for (role of roleList(); track role.value) {
-                    <option [value]="role.value">{{role.label}}</option>
+                    <option value="">Selecione...</option>
+
+                    @for (company of autorizedCompanies(); track company.companyId) {
+                    <option [value]="company.companyId">
+                        {{ company.publicName }}
+                    </option>
                     }
                 </select>
             </div>

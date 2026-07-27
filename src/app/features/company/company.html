@@ -87,7 +87,8 @@
         </div>
 
         <app-social-network-modal [isOpen]="isModalOpen()" (close)="closeModal()" />
-        <app-teacher-modal [isOpen]="isTeacherModalOpen()" (close)="closeModal()" />
+        <app-teacher-modal [isOpen]="isTeacherModalOpen()" (close)="closeModal()"
+            [autorizedCompanies]="userCompanies()" />
         <div class="info-card">
             <div class="header" style="justify-content: space-between;">
                 <h2 class="section-title">Redes Sociais</h2>

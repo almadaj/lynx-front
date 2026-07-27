@@ -1,3 +1,5 @@
+import { Role } from "../shared/enum/role.enum";
+
 export interface UserDTO {
     id: string;
     name: string;
@@ -23,8 +25,4 @@ export interface UserCompanyResponse {
     companyName: string;
     publicName: string;
     role: Role;
-}
-
-export enum Role {
-
 }
