@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { UserDTO, UserResponseDTO } from "../../models/user.model";
+import { UserResponseDTO } from "../../models/user.model";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { Injectable } from "@angular/core";
@@ -16,6 +16,10 @@ export class UserService {
 
     findById(userId: string): Observable<UserResponseDTO> {
         return this.http.get<UserResponseDTO>(`${this.apiUrl}/user/${userId}`);
+    }
+
+    findByEmail(email: string): Observable<UserResponseDTO> {
+        return this.http.get<UserResponseDTO>(`${this.apiUrl}/user/email=${email}`);
     }
 
     findMyInfo(): Observable<UserResponseDTO> {

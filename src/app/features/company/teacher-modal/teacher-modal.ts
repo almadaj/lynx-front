@@ -1,6 +1,8 @@
 import { Component, effect, EventEmitter, input, Input, Output, signal, SimpleChanges } from "@angular/core";
 import { CommonModal } from "../../../shared/common-modal/common-modal";
-import { UserCompanyResponse } from "../../../models/user.model";
+import { UserCompanyResponse, UserResponseDTO } from "../../../models/user.model";
+import { UserService } from "../../../services/api-services/user.service";
+import { inject } from '@angular/core';
 
 @Component({
     selector: 'app-teacher-modal',
@@ -16,13 +18,17 @@ export class TeacherModal {
         { value: 'HEADTEACHER', label: 'Coordenador' }
     ]);
     @Output() close = new EventEmitter<void>();
-
-    name = signal('');
     email = signal('');
     company = signal<UserCompanyResponse | null>(null);
     role = signal('');
-
+    isConfirm = signal<boolean>(false)
+    errorMessage = signal('');
     autorizedCompanies = input<UserCompanyResponse[]>([]);
+
+    foundUser = signal<UserResponseDTO | null>(null);
+    step = signal<'form' | 'confirm'>('form');
+
+    private readonly userService = inject(UserService);
 
     constructor() {
         effect(() => {
@@ -35,16 +41,28 @@ export class TeacherModal {
     }
 
     closeModal(): void {
+        this.email.set("")
+        this.role.set("")
+        this.errorMessage.set("");
+        this.step.set('form')
         this.close.emit();
     }
 
     confirmModal(): void {
-        const request = {
-            email: this.email(),
-            company: this.company(),
-            role: this.role()
-        };
-        console.log(request)
-        this.close.emit();
+        this.userService.findByEmail(this.email()).subscribe({
+            next: (data) => {
+                this.foundUser.set(data)
+                this.step.set('confirm')
+                this.isConfirm.set(true)
+            },
+            error: (err) => {
+                console.error(err);
+                this.errorMessage.set("Usuário inválido");
+            }
+        });
+    }
+
+    confirmAssociation(): void {
+
     }
 }
