@@ -1,12 +1,16 @@
-import { Component, effect, EventEmitter, input, Input, Output, signal, SimpleChanges } from "@angular/core";
+import { Component, computed, effect, EventEmitter, input, Input, Output, signal, SimpleChanges } from "@angular/core";
 import { CommonModal } from "../../../shared/common-modal/common-modal";
 import { UserCompanyResponse, UserResponseDTO } from "../../../models/user.model";
 import { UserService } from "../../../services/api-services/user.service";
 import { inject } from '@angular/core';
+import { BidiModule } from "@angular/cdk/bidi";
+import { CompanyService } from "../../../services/api-services/company.service";
+import { NewTeacherDTO } from "../../../models/company.model";
+import { Role } from "../../../shared/enum/role.enum";
 
 @Component({
     selector: 'app-teacher-modal',
-    imports: [CommonModal],
+    imports: [CommonModal, BidiModule],
     templateUrl: './teacher-modal.html',
     styleUrls: ['./teacher-modal.scss'],
 })
@@ -20,7 +24,7 @@ export class TeacherModal {
     @Output() close = new EventEmitter<void>();
     email = signal('');
     company = signal<UserCompanyResponse | null>(null);
-    role = signal('');
+    role = signal<Role | null>(null);
     isConfirm = signal<boolean>(false)
     errorMessage = signal('');
     autorizedCompanies = input<UserCompanyResponse[]>([]);
@@ -29,6 +33,13 @@ export class TeacherModal {
     step = signal<'form' | 'confirm'>('form');
 
     private readonly userService = inject(UserService);
+    private readonly companyService = inject(CompanyService);
+
+    selectedCompany = computed(() =>
+        this.autorizedCompanies().find(
+            c => c.companyId === this.company()!.toString()
+        )
+    );
 
     constructor() {
         effect(() => {
@@ -42,7 +53,7 @@ export class TeacherModal {
 
     closeModal(): void {
         this.email.set("")
-        this.role.set("")
+        this.role.set(null)
         this.errorMessage.set("");
         this.step.set('form')
         this.close.emit();
@@ -62,7 +73,26 @@ export class TeacherModal {
         });
     }
 
+    // TODO: função ainda não está 100% está dando erro, pode ser backend
     confirmAssociation(): void {
+        const dto: NewTeacherDTO = {
+            email: this.foundUser()!.email,
+            role: this.role()!
+        };
 
+        this.companyService
+            .addNewTeacherToCompany(this.selectedCompany()!.companyId, dto)
+            .subscribe({
+                next: (response) => {
+                    console.log('Professor cadastrado:', response);
+                    this.close.emit();
+                },
+                error: (err) => {
+                    console.error(err);
+                    if (err.status === 409) { this.errorMessage.set("Usuário já pertence a essa instituição"); }
+                    else { this.errorMessage.set("Erro ao vincular professor"); }
+
+                }
+            });
     }
 }

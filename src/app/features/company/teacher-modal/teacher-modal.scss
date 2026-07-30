@@ -72,6 +72,15 @@
     color: #555;
 }
 
+.confirm-text {
+    max-width: 500px;
+    font-size: 18px;
+    margin: 0 auto;
+    text-align: center;
+    text-align-last: center;
+    line-height: 1.6;
+}
+
 @media (max-width: 480px) {
     .social-modal-card {
         width: 100%;

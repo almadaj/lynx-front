@@ -1,10 +1,7 @@
 <app-common-modal [isOpen]="isOpen" [title]="'Adicionar Professor'" [cancelButtonText]="'Fechar'"
     [confirmButtonText]="'Cadastrar Professor'" (close)="closeModal()" (cancel)="closeModal()"
     (confirm)="step() === 'form' ? confirmModal() : confirmAssociation()">
-    <!--TODO: Aqui será feito o vínculo de User com Company
-    o professor já deve estar com um login e será buscado pelo email
-    Inserir mensagens de erro e ver funções
-    -->
+
     @if (step() === 'form') {
     <div class="social-form">
         <div>
@@ -38,15 +35,16 @@
             </div>
         </div>
     </div>
-    <p style="margin-top: 15px; margin-bottom: 0; color: #ff0000;">{{errorMessage()}}</p>
     } @else {
     <!-- TODO: deixar bonito e entender pq não está vindo Company -->
     <!-- fazer a função confirmAssociation -->
-    <h3>Confirmação</h3>
 
-    <p><strong>Nome:</strong> {{ foundUser()?.name }}</p>
-    <p><strong>Email:</strong> {{ foundUser()?.email }}</p>
-    <p><strong>Instituição:</strong> {{ company()?.publicName }}</p>
-    <p><strong>Função:</strong> {{ role() }}</p>
+    <p class="confirm-text">Você tem certeza que deseja associar
+        <strong>{{foundUser()?.name }}</strong>
+        do email <strong>{{ foundUser()?.email }}</strong> para a instituição
+        <strong>{{ selectedCompany()?.companyName }}
+        </strong> na função de <strong>{{role()}}</strong>?
+    </p>
     }
+    <p style="margin-top: 15px; margin-bottom: 0; color: #ff0000;">{{errorMessage()}}</p>
 </app-common-modal>

@@ -78,8 +78,13 @@
                 <div class="teachers-column">
                     <span class="label">{{staff().length === 1 ? 'Professor' : 'Professores'}}</span>
                     <div class="pill-container">
-                        @for (teacher of staff(); track teacher.id) {
-                        <span class="pill professor">{{teacher.name}}</span>
+                        @for (teacher of staff().slice(0, 5); track teacher.id) {
+                        <span class="pill professor">{{ teacher.name }}</span>
+                        }
+                        @if (staff().length > 5) {
+                        <span class="pill professor">
+                            + {{ staff().length - 5 }} membros
+                        </span>
                         }
                     </div>
                 </div>

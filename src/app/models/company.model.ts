@@ -1,3 +1,4 @@
+import { Role } from "../shared/enum/role.enum"
 import { UserResponseDTO } from "./user.model"
 
 export interface CompanySocialNetworkResponseDTO {
@@ -21,4 +22,16 @@ export interface CompanyResponseDTO {
     isActive: boolean
     principalTeacher: UserResponseDTO
     socialNetworks: CompanySocialNetworkResponseDTO[]
+}
+
+export interface UserCompanyResponse {
+    companyId: string;
+    companyName: string;
+    publicName: string;
+    role: Role;
+}
+
+export interface NewTeacherDTO {
+    email: string;
+    role: Role;
 }
