@@ -8,6 +8,7 @@ import { SocialNetworkModal } from './social-network-modal/social-network-modal'
 import { CnpjFormatter } from '../../shared/common-functions/shared.functions';
 import { TeacherModal } from './teacher-modal/teacher-modal';
 import { Role, RoleHelper } from '../../shared/enum/role.enum';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-company',
@@ -34,6 +35,7 @@ export class Company implements OnInit {
   constructor(
     private companyService: CompanyService,
     private userService: UserService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -68,7 +70,7 @@ export class Company implements OnInit {
     //TODO: aqui estamos tratando como se só um usuário tivesse uma COMPANY, porém nem sempre será assim 
     this.userService.findMyInfo().subscribe({
       next: (data) => {
-        if (RoleHelper.hasPermission(data.companies[0].role, Role.HEADTEACHER)) {
+        if (RoleHelper.hasPermission(data.companies[0].role, Role.PRINCIPAL)) {
           this.isPrincipal.set(true)
           this.userCompanies.set(data.companies)
         }
@@ -130,6 +132,10 @@ export class Company implements OnInit {
 
   handleSaveSocial(): void {
     console.log("Olar")
+  }
+
+  seeAllTeachers(companyId: string) {
+    this.router.navigate([`company/${companyId}/members`])
   }
 
   onSocialConfirm() {

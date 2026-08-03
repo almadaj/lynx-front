@@ -7,6 +7,7 @@
 
 .header {
     display: flex;
+    align-items: baseline
 }
 
 .add-button {
@@ -55,7 +56,16 @@
 .section-title {
     font-size: 18px;
     margin-bottom: 15px;
+    margin-right: 10px;
     font-weight: 600;
+}
+
+.see-all-button {
+    border: none;
+    background-color: transparent;
+    font-size: 10px;
+    color: #999;
+    cursor: pointer;
 }
 
 .info-grid {

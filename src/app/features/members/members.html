@@ -1,0 +1,116 @@
+<div class="members-page">
+    <header class="page-header">
+        <div>
+            <h1>Membros</h1>
+            <p>Gerencie os membros da instituição.</p>
+        </div>
+
+        <button class="add-button">
+            + Adicionar membro
+        </button>
+    </header>
+    <section class="toolbar">
+        <div class="search">
+            <input type="text" placeholder="Buscar por nome ou e-mail..." />
+        </div>
+    </section>
+
+    <section class="table-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Função</th>
+                    <th class="actions-column">Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @for (item of members(); track $index) {
+                <!-- repetir -->
+                <tr>
+                    <td>
+                        <div class="member-info">
+                            <div class="avatar">
+                                @if(item.profilePhoto){
+                                <img [src]="item.profilePhoto" alt="Foto de perfil">
+                                } @else {
+                                <span>
+                                    {{item.name.charAt(0)}}
+                                </span>
+                                }
+                            </div>
+
+                            <span>{{item.name}}</span>
+                        </div>
+                    </td>
+
+                    <td>{{item.email}}</td>
+
+                    <td>
+                        <span class="role principal">
+                            Diretor
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="actions">
+                            <button class="icon-button view">
+                                Ver
+                            </button>
+                            <button class="icon-button">
+                                Editar
+                            </button>
+                            <button class="icon-button danger">
+                                Remover
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                }
+
+                <tr>
+                    <td>
+                        <div class="member-info">
+                            <div class="avatar">
+                                M
+                            </div>
+
+                            <span>Maria Silva</span>
+                        </div>
+                    </td>
+
+                    <td>maria@email.com</td>
+
+                    <td>
+                        <span class="role teacher">
+                            Professor
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="actions">
+                            <button class="icon-button">
+                                Editar
+                            </button>
+
+                            <button class="icon-button danger">
+                                Remover
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <!-- mostrar quando vazio -->
+        @if(this.members().length < 1) { <div class="empty-state">
+            <h3>Nenhum membro encontrado</h3>
+            <p>Adicione um novo membro para começar.</p>
+</div>
+}
+</section>
+</div>

@@ -15,7 +15,8 @@ export interface UserResponseDTO {
     name: string;
     email: string;
     birth: string;
-    companies: UserCompanyResponse[]
+    companies: UserCompanyResponse[];
+    profilePhoto: string;
     isActive: boolean;
     isAdmin: boolean;
 }

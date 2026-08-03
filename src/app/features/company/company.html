@@ -63,7 +63,10 @@
 
         <div class="info-card">
             <div class="header" style="justify-content: space-between;">
-                <h2 class="section-title">Corpo Docente</h2>
+                <div class="header">
+                    <h2 class="section-title">Corpo Docente</h2>
+                    <button class="see-all-button" (click)="seeAllTeachers(company()?.id!)">Ver tudo</button>
+                </div>
                 @if(isPrincipal()){
                 <button class="add-button" (click)="openTeacherModal()">
                     <mat-icon class="menu-icon">add</mat-icon>

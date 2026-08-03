@@ -40,6 +40,12 @@ export const routes: Routes = [
                 loadComponent: () =>
                     import('./features/my-classes/my-classes')
                         .then(m => m.MyClasses)
+            },
+            {
+                path: 'company/:companyId/members',
+                loadComponent: () =>
+                    import('./features/members/members')
+                        .then(m => m.Members)
             }
         ]
     }
