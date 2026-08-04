@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, effect, OnInit, signal } from '@angular/core';
 import { MatIcon } from "@angular/material/icon";
 import { CompanyService } from '../../services/api-services/company.service';
 import { CompanyResponseDTO } from '../../models/company.model';
@@ -9,10 +9,19 @@ import { CnpjFormatter } from '../../shared/common-functions/shared.functions';
 import { TeacherModal } from './teacher-modal/teacher-modal';
 import { Role, RoleHelper } from '../../shared/enum/role.enum';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-company',
-  imports: [MatIcon, SocialNetworkModal, TeacherModal],
+  imports: [MatIcon, SocialNetworkModal, TeacherModal, MatIcon,
+    SocialNetworkModal,
+    TeacherModal,
+    FormsModule,
+    MatFormFieldModule,
+    MatSelectModule,],
   templateUrl: './company.html',
   styleUrls: ['./company.scss'],
 })
@@ -28,6 +37,7 @@ export class Company implements OnInit {
   isModalOpen = signal(false);
   isTeacherModalOpen = signal(false);
   userCompanies = signal<UserCompanyResponse[]>([])
+  readonly selectedCompany = signal<UserCompanyResponse | null>(null);
   modalTitle = signal('Adicionar');
   modalContent = signal('');
 
@@ -35,7 +45,17 @@ export class Company implements OnInit {
     private companyService: CompanyService,
     private userService: UserService,
     private router: Router,
-  ) { }
+  ) {
+    effect(() => {
+
+      const company = this.selectedCompany();
+
+      if (!company) return;
+
+      this.loadCompany(company);
+
+    });
+  }
 
   ngOnInit(): void {
     this.fetchCompanyInfo()
@@ -62,47 +82,28 @@ export class Company implements OnInit {
     }
   }
 
-  fetchCompanyInfo() {
+  fetchCompanyInfo(): void {
     this.loading.set(true);
     this.error.set(null);
 
-    //TODO: aqui estamos tratando como se só um usuário tivesse uma COMPANY, porém nem sempre será assim 
     this.userService.findMyInfo().subscribe({
-      next: (data) => {
-        if (RoleHelper.hasPermission(data.companies[0].role, Role.PRINCIPAL)) {
-          this.isPrincipal.set(true)
-          this.userCompanies.set(data.companies)
+      next: (user) => {
+
+        this.userCompanies.set(user.companies);
+
+        if (user.companies.length > 0) {
+          this.selectedCompany.set(user.companies[0]);
+        } else {
+          this.loading.set(false);
         }
-        this.companyService.findById(data.companies[0].companyId).subscribe({
-          next: (fetchedCompany) => {
-            this.company.set(fetchedCompany);
-            this.loading.set(false);
-          },
-          error: (err) => {
-            this.error.set('Erro ao buscar empresa');
-            this.loading.set(false);
-            console.error(err);
-          }
-        });
-        this.companyService.getAllTeachersByCompany(data.companies[0].companyId).subscribe({
-          next: (data) => {
-            this.staff.set(data)
-            this.loading.set(false)
-          },
-          error: (err) => {
-            this.error.set('Erro ao buscar empresa');
-            this.loading.set(false);
-            console.error(err);
-          }
-        })
+
       },
       error: (err) => {
-        this.error.set('Erro ao buscar empresa');
+        this.error.set('Erro ao buscar informações do usuário');
         this.loading.set(false);
         console.error(err);
-      },
-    })
-
+      }
+    });
   }
 
   fetchPrincipalUser(userId: string) {
@@ -114,6 +115,38 @@ export class Company implements OnInit {
         console.error(err);
       }
     });
+  }
+
+  private loadCompany(company: UserCompanyResponse): void {
+    this.loading.set(true);
+    this.isPrincipal.set(
+      RoleHelper.hasPermission(company.role, Role.PRINCIPAL)
+    );
+
+    forkJoin({
+      company: this.companyService.findById(company.companyId),
+      teachers: this.companyService.getAllTeachersByCompany(company.companyId)
+    }).subscribe({
+      next: ({ company, teachers }) => {
+        this.company.set(company);
+        this.staff.set(teachers);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.error.set('Erro ao carregar empresa');
+        this.loading.set(false);
+        console.error(err);
+      }
+    });
+  }
+
+  changeCompany(companyId: string) {
+    const company = this.userCompanies()
+      .find(c => c.companyId === companyId);
+
+    if (company) {
+      this.selectedCompany.set(company);
+    }
   }
 
   openTeacherModal(): void {

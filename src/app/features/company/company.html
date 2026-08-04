@@ -4,12 +4,35 @@
     } @else {
     <div class="main-content">
         <div class="header">
-            <h1 class="main-title">Minha Instituição</h1>
-            @if (isPrincipal()) {
-            <button class="button">
-                <mat-icon class="menu-icon">edit_document</mat-icon>
-            </button>
+            <div style="display: flex; flex-direction: row;">
+                <h1 class="main-title">Minha Instituição</h1>
+                @if (isPrincipal()) {
+                <button class="button">
+                    <mat-icon class="menu-icon">edit_document</mat-icon>
+                </button>
+                }
+            </div>
+
+            @if(userCompanies().length > 1) {
+            <mat-form-field appearance="outline" class="company-select">
+                <mat-label>Instituição</mat-label>
+
+                <mat-select [value]="selectedCompany()?.companyId" (selectionChange)="changeCompany($event.value)">
+
+                    @for(company of userCompanies(); track company.companyId) {
+                    <mat-option [value]="company.companyId">
+                        {{ company.companyName }}
+                    </mat-option>
+                    }
+
+                </mat-select>
+            </mat-form-field>
+            } @else {
+            <span class="company-name">
+                {{ selectedCompany()?.companyName }}
+            </span>
             }
+
         </div>
         <div class="info-card">
             <h2 class="section-title">Dados Gerais</h2>
