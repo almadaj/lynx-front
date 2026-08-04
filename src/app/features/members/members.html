@@ -9,6 +9,15 @@
             + Adicionar membro
         </button>
     </header>
+    <nav class="tabs">
+        <button class="tab" [class.active]="selectedTab() === 'teachers'" (click)="selectedTab.set('teachers')">
+            Corpo Docente
+        </button>
+        <button class="tab" [class.active]="selectedTab() === 'students'" (click)="selectedTab.set('students')">
+            Alunos
+        </button>
+    </nav>
+
     <section class="toolbar">
         <div class="search">
             <input type="text" placeholder="Buscar por nome ou e-mail..." />
@@ -21,96 +30,58 @@
                 <tr>
                     <th>Nome</th>
                     <th>E-mail</th>
+                    @if(selectedTab() === 'teachers') {
                     <th>Função</th>
+                    }
                     <th class="actions-column">Ações</th>
                 </tr>
             </thead>
-
             <tbody>
-
-                @for (item of members(); track $index) {
-                <!-- repetir -->
+                @for (item of displayedMembers(); track item.id) {
                 <tr>
                     <td>
                         <div class="member-info">
                             <div class="avatar">
                                 @if(item.profilePhoto){
-                                <img [src]="item.profilePhoto" alt="Foto de perfil">
+                                <img [src]="item.profilePhoto">
                                 } @else {
-                                <span>
-                                    {{item.name.charAt(0)}}
-                                </span>
+                                <span>{{item.name.charAt(0)}}</span>
                                 }
                             </div>
-
                             <span>{{item.name}}</span>
                         </div>
                     </td>
 
                     <td>{{item.email}}</td>
 
+                    @if(selectedTab() === 'teachers') {
                     <td>
-                        <span class="role principal">
-                            Diretor
+                        <span [class]="'role ' + item.companies[0].role.toLowerCase()">
+                            {{ ROLE_LABELS[item.companies[0].role] }}
                         </span>
                     </td>
+                    }
 
                     <td>
                         <div class="actions">
-                            <button class="icon-button view">
-                                Ver
-                            </button>
-                            <button class="icon-button">
-                                Editar
-                            </button>
-                            <button class="icon-button danger">
-                                Remover
-                            </button>
+                            <button class="icon-button view">Ver</button>
+                            <button class="icon-button">Editar</button>
+                            <button class="icon-button danger">Remover</button>
                         </div>
                     </td>
                 </tr>
+
                 }
-
-                <tr>
-                    <td>
-                        <div class="member-info">
-                            <div class="avatar">
-                                M
-                            </div>
-
-                            <span>Maria Silva</span>
-                        </div>
-                    </td>
-
-                    <td>maria@email.com</td>
-
-                    <td>
-                        <span class="role teacher">
-                            Professor
-                        </span>
-                    </td>
-
-                    <td>
-                        <div class="actions">
-                            <button class="icon-button">
-                                Editar
-                            </button>
-
-                            <button class="icon-button danger">
-                                Remover
-                            </button>
-                        </div>
-                    </td>
-                </tr>
 
             </tbody>
         </table>
 
-        <!-- mostrar quando vazio -->
-        @if(this.members().length < 1) { <div class="empty-state">
+        @if(displayedMembers().length === 0) {
+        <div class="empty-state">
             <h3>Nenhum membro encontrado</h3>
             <p>Adicione um novo membro para começar.</p>
-</div>
-}
-</section>
+        </div>
+        }
+
+    </section>
 </div>

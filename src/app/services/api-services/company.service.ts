@@ -23,6 +23,10 @@ export class CompanyService {
         return this.http.get<UserResponseDTO[]>(`${this.apiUrl}/${companyId}/teachers`)
     }
 
+    getAllStudentsByCompany(companyId: string): Observable<UserResponseDTO[]> {
+        return this.http.get<UserResponseDTO[]>(`${this.apiUrl}/${companyId}/students`)
+    }
+
     addNewTeacherToCompany(companyId: string, dto: NewTeacherDTO): Observable<UserCompanyResponse> {
         return this.http.post<UserCompanyResponse>(`${this.apiUrl}/${companyId}/teachers`, dto)
     }

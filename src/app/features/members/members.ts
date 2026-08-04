@@ -9,12 +9,13 @@ import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CompanyService } from '../../services/api-services/company.service';
 import { UserResponseDTO } from '../../models/user.model';
+import { ROLE_LABELS } from '../../shared/enum/role.enum';
 
 @Component({
     selector: 'app-members',
     standalone: true,
     imports: [
-        FormsModule
+        FormsModule,
     ],
     templateUrl: './members.html',
     styleUrl: './members.scss'
@@ -22,23 +23,32 @@ import { UserResponseDTO } from '../../models/user.model';
 export class Members implements OnInit {
     private readonly route = inject(ActivatedRoute);
     private readonly companyService = inject(CompanyService);
+    protected readonly ROLE_LABELS = ROLE_LABELS;
     readonly companyId = signal<string>('');
+    readonly selectedTab = signal<'teachers' | 'students'>('teachers');
     readonly loading = signal(false);
     readonly search = signal('');
     readonly isAddModalOpen = signal(false);
-    readonly members = signal<UserResponseDTO[]>([]);
+    readonly teachers = signal<UserResponseDTO[]>([]);
+    readonly students = signal<UserResponseDTO[]>([]);
     readonly error = signal('')
+
+    displayedMembers = computed(() =>
+        this.selectedTab() === 'teachers'
+            ? this.teachers()
+            : this.students()
+    );
 
     readonly filteredMembers = computed(() => {
         const search = this.search().trim().toLowerCase();
 
         if (!search) {
-            return this.members();
+            return this.teachers();
         }
 
-        return this.members().filter(member =>
-            member.name.toLowerCase().includes(search) ||
-            member.email.toLowerCase().includes(search)
+        return this.teachers().filter(teacher =>
+            teacher.name.toLowerCase().includes(search) ||
+            teacher.email.toLowerCase().includes(search)
         );
 
     });
@@ -48,17 +58,32 @@ export class Members implements OnInit {
 
         if (companyId) {
             this.companyId.set(companyId);
-            this.loadMembers();
+            this.loadTeachers();
+            this.loadStudents();
         }
 
     }
 
-    loadMembers(): void {
+    loadTeachers(): void {
         this.loading.set(true);
         this.companyService.getAllTeachersByCompany(this.companyId()).subscribe({
             next: (data) => {
-                this.members.set(data)
-                console.log(data)
+                this.teachers.set(data)
+                this.loading.set(false)
+            },
+            error: (err) => {
+                this.error.set('Erro ao buscar empresa');
+                this.loading.set(false);
+                console.error(err);
+            }
+        })
+    }
+
+    loadStudents(): void {
+        this.loading.set(true);
+        this.companyService.getAllStudentsByCompany(this.companyId()).subscribe({
+            next: (data) => {
+                this.students.set(data)
                 this.loading.set(false)
             },
             error: (err) => {

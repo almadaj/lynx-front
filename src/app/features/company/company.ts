@@ -17,7 +17,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./company.scss'],
 })
 export class Company implements OnInit {
-  [x: string]: any;
   protected readonly CnpjFormatter = CnpjFormatter;
   readonly modalAction = signal<'social' | 'teacher' | null>(null);
   company = signal<CompanyResponseDTO | null>(null);
