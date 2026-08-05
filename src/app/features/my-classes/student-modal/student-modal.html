@@ -1,0 +1,37 @@
+<app-common-modal [isOpen]="isOpen" [title]="'Adicionar Estudante'" [cancelButtonText]="'Fechar'"
+    [confirmButtonText]="'Cadastrar Estudante'" (close)="closeModal()" (cancel)="closeModal()"
+    (confirm)="step() === 'form' ? confirmModal() : confirmAssociation()">
+
+    @if (step() === 'form') {
+    <div class="social-form">
+        <div>
+            <label class="label">Digite o email:</label>
+            <input class="input" type="text" [value]="email()" (input)="email.set($any($event.target).value)"
+                placeholder="Ex: usuario@email.com" />
+        </div>
+
+        <div style="display: flex; justify-content: space-between; gap: 12px;">
+            <div style="flex: 1;">
+                <label class="label">Instituição:</label>
+                <select class="input" [value]="company()" (change)="company.set($any($event.target).value)">
+                    <option value="">Selecione...</option>
+
+                    @for (company of principalCompanies(); track company.companyId) {
+                    <option [value]="company.companyId">
+                        {{ company.publicName }}
+                    </option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    } @else {
+    <p class="confirm-text">Você tem certeza que deseja associar
+        <strong>{{foundUser()?.name }}</strong>
+        do email <strong>{{ foundUser()?.email }}</strong> para a instituição
+        <strong>{{ selectedCompany()?.companyName }}
+        </strong> na função de <strong>ESTUDANTE</strong>?
+    </p>
+    }
+    <p style="margin-top: 15px; margin-bottom: 0; color: #ff0000;">{{errorMessage()}}</p>
+</app-common-modal>

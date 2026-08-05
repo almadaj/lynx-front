@@ -1,0 +1,90 @@
+.social-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1000;
+
+    &-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        width: 420px;
+        max-width: calc(100% - 32px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+}
+
+.social-form {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+.label {
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.input,
+.select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background: #fafafa;
+    font-size: 14px;
+    color: #222;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 6px;
+}
+
+.btn {
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn.primary {
+    background: #1e88e5;
+    color: #fff;
+}
+
+.btn.ghost {
+    background: transparent;
+    color: #555;
+}
+
+.confirm-text {
+    max-width: 500px;
+    font-size: 18px;
+    margin: 0 auto;
+    text-align: center;
+    text-align-last: center;
+    line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+    .social-modal-card {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+}
