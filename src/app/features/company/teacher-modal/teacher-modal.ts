@@ -7,6 +7,7 @@ import { BidiModule } from "@angular/cdk/bidi";
 import { CompanyService } from "../../../services/api-services/company.service";
 import { NewTeacherDTO } from "../../../models/company.model";
 import { Role } from "../../../shared/enum/role.enum";
+import { ToastService } from "../../../shared/toaster/toast.service";
 
 @Component({
     selector: 'app-teacher-modal',
@@ -41,10 +42,9 @@ export class TeacherModal {
         )
     );
 
-    constructor() {
+    constructor(private toast: ToastService) {
         effect(() => {
             const companies = this.autorizedCompanies();
-
             if (companies.length > 0) {
                 this.company.set(companies[0]);
             }
@@ -83,10 +83,11 @@ export class TeacherModal {
             .addNewTeacherToCompany(this.selectedCompany()!.companyId, dto)
             .subscribe({
                 next: (response) => {
+                    this.toast.success("Professor inserido!")
                     this.close.emit();
                 },
                 error: (err) => {
-                    console.error(err);
+                    this.toast.error("Não foi possível inserir professor!")
                     if (err.status === 409) { this.errorMessage.set("Usuário já pertence a essa instituição"); }
                     else { this.errorMessage.set("Erro ao vincular professor"); }
 

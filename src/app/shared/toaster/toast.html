@@ -1,0 +1,18 @@
+@if (toastService.toast(); as toast) {
+<div class="toast" [ngClass]="toast.type" role="status" aria-live="polite">
+    <div class="icon">
+        @switch (toast.type) {
+        @case ('success') {
+        <mat-icon>check_circle</mat-icon>
+        }
+        @case ('warning') {
+        <mat-icon>warning</mat-icon>
+        }
+        @case ('error') {
+        <mat-icon>error</mat-icon>
+        }
+        }
+    </div>
+    <span>{{ toast.message }}</span>
+</div>
+}
