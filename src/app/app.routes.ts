@@ -42,10 +42,16 @@ export const routes: Routes = [
                         .then(m => m.MyClasses)
             },
             {
-                path: 'company/:companyId/members',
+                path: 'company/:companyId/member',
                 loadComponent: () =>
                     import('./features/members/members')
                         .then(m => m.Members)
+            },
+            {
+                path: 'member/:companyId',
+                loadComponent: () =>
+                    import('./features/members/edit-member/edit-member')
+                        .then(m => m.EditMember)
             }
         ]
     }

@@ -5,7 +5,7 @@ import {
     inject,
     signal,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CompanyService } from '../../services/api-services/company.service';
 import { UserResponseDTO } from '../../models/user.model';
@@ -32,6 +32,10 @@ export class Members implements OnInit {
     readonly teachers = signal<UserResponseDTO[]>([]);
     readonly students = signal<UserResponseDTO[]>([]);
     readonly error = signal('')
+
+    constructor(
+        private router: Router
+    ) { }
 
     displayedMembers = computed(() =>
         this.selectedTab() === 'teachers'
@@ -106,14 +110,9 @@ export class Members implements OnInit {
         this.isAddModalOpen.set(false);
     }
 
-    editMember(member: Member): void {
-        console.log(member);
+    editMember(member: UserResponseDTO): void {
+        this.router.navigate(['/member', member.id]);
     }
-
-    removeMember(member: Member): void {
-        console.log(member);
-    }
-
 }
 
 interface Member {

@@ -166,8 +166,8 @@ export class Company implements OnInit {
     console.log("Olar")
   }
 
-  seeAllTeachers(companyId: string) {
-    this.router.navigate([`company/${companyId}/members`])
+  seeAllMembers(companyId: string) {
+    this.router.navigate([`company/${companyId}/member`])
   }
 
   onSocialConfirm() {

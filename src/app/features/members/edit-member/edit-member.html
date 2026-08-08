@@ -1,0 +1,64 @@
+<div class="page">
+    <div class="header">
+        <button class="back-button" (click)="handleBackButton()">
+            ←
+        </button>
+        <h1>Editar membro</h1>
+    </div>
+
+    <div class="profile-card">
+        <img src="https://i.pravatar.cc/180" class="avatar">
+        <div class="info">
+            <h2>João Silva</h2>
+            <p>joao@email.com</p>
+            <div class="role">
+                <label>Função</label>
+                <select>
+                    <option>Professor</option>
+                    <option>Coordenador</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <h2>Turmas</h2>
+            <button>
+                + Alocar em turma
+            </button>
+        </div>
+
+        <div class="class-list">
+            <div class="class-card">
+                <div>
+                    <h3>3º Ano A</h3>
+                    <span>28 alunos</span>
+                </div>
+                <button class="remove">
+                    Remover
+                </button>
+            </div>
+
+            <div class="class-card">
+                <div>
+                    <h3>2º Ano B</h3>
+                    <span>31 alunos</span>
+                </div>
+
+                <button class="remove">
+                    Remover
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button class="cancel" (click)="handleBackButton()">
+            Cancelar
+        </button>
+        <button class="save">
+            Salvar alterações
+        </button>
+    </div>
+</div>
