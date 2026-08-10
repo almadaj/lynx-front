@@ -65,7 +65,6 @@ export class Members implements OnInit {
             this.loadTeachers();
             this.loadStudents();
         }
-
     }
 
     loadTeachers(): void {
@@ -111,13 +110,6 @@ export class Members implements OnInit {
     }
 
     editMember(member: UserResponseDTO): void {
-        this.router.navigate(['/member', member.id]);
+        this.router.navigate(['/company', this.companyId(), 'member', member.companies[0].userCompanyId]);
     }
-}
-
-interface Member {
-    id: string;
-    name: string;
-    email: string;
-    role: 'ADMIN' | 'PRINCIPAL' | 'HEADTEACHER' | 'TEACHER' | 'STUDENT';
 }

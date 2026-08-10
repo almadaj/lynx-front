@@ -34,4 +34,8 @@ export class CompanyService {
     addNewStudentToCompany(companyId: string, email: string): Observable<UserCompanyResponse> {
         return this.http.post<UserCompanyResponse>(`${this.apiUrl}/${companyId}/students`, email)
     }
+
+    getMemberById(companyId: string, userCompanyId: string): Observable<UserResponseDTO> {
+        return this.http.get<UserResponseDTO>(`${this.apiUrl}/${companyId}/member/${userCompanyId}`)
+    }
 }

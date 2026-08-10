@@ -11,7 +11,7 @@ export interface UserDTO {
 }
 
 export interface UserResponseDTO {
-    id: string;
+    userCompanyId: string;
     name: string;
     email: string;
     birth: string;
@@ -22,6 +22,7 @@ export interface UserResponseDTO {
 }
 
 export interface UserCompanyResponse {
+    userCompanyId: string;
     companyId: string;
     companyName: string;
     publicName: string;
