@@ -36,7 +36,6 @@ export class MyClasses implements OnInit {
       this.isPrincipal.set(
         RoleHelper.hasPermission(company.role, Role.PRINCIPAL)
       );
-      console.log(this.isPrincipal())
     });
   }
 

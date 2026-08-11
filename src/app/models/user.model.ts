@@ -28,3 +28,17 @@ export interface UserCompanyResponse {
     publicName: string;
     role: Role;
 }
+
+export interface UserCompany {
+    companyId: string;
+    companyName: string;
+    publicName: string;
+    role: Role;
+}
+
+export interface AuthUser {
+    id: string;
+    name: string;
+    email: string;
+    companies: UserCompany[];
+}

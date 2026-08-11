@@ -9,8 +9,6 @@ export class ToastService {
     private timeout?: ReturnType<typeof setTimeout>;
 
     show(message: string, type: ToastType = 'success', duration = 5000) {
-        console.log('Toast:', message);
-
         clearTimeout(this.timeout);
 
         this.toast.set({

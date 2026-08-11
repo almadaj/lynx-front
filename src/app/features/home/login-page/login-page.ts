@@ -28,7 +28,7 @@ export class LoginPage {
   submit(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
-      this.errorMessage.set("Email/senha inválidos");
+      this.errorMessage.set('Email/senha inválidos');
       return;
     }
 
@@ -37,15 +37,16 @@ export class LoginPage {
     this.isLoading.set(true);
 
     this.authService.login({ email, password }).subscribe({
-      next: (res) => {
-        sessionStorage.setItem('token', res.token);
-        this.router.navigate(["/dashboard"]);
+      next: () => {
+        this.router.navigate(['/dashboard']);
       },
+
       error: (err) => {
-        this.errorMessage.set("Credenciais inválidas");
+        this.errorMessage.set('Credenciais inválidas');
         console.error(err);
-        this.isLoading.set(false)
+        this.isLoading.set(false);
       },
+
       complete: () => {
         this.isLoading.set(false);
       }
