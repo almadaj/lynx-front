@@ -1,4 +1,4 @@
-import { Component, effect, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { MatIcon } from "@angular/material/icon";
 import { CompanyService } from '../../services/api-services/company.service';
 import { CompanyResponseDTO } from '../../models/company.model';
@@ -13,6 +13,7 @@ import { forkJoin } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/api-services/auth.service';
 
 @Component({
   selector: 'app-company',
@@ -26,6 +27,8 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./company.scss'],
 })
 export class Company implements OnInit {
+  protected readonly authService = inject(AuthService);
+  protected readonly Role = Role;
   protected readonly CnpjFormatter = CnpjFormatter;
   readonly modalAction = signal<'social' | 'teacher' | null>(null);
   company = signal<CompanyResponseDTO | null>(null);

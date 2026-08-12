@@ -10,6 +10,10 @@ import { CompanyService } from '../../../services/api-services/company.service';
 import { UserResponseDTO } from '../../../models/user.model';
 import { ToastComponent } from '../../../shared/toaster/toast';
 import { ToastService } from '../../../shared/toaster/toast.service';
+import { AuthService } from '../../../services/api-services/auth.service';
+import { Role, RoleHelper } from '../../../shared/enum/role.enum';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 @Component({
@@ -17,11 +21,15 @@ import { ToastService } from '../../../shared/toaster/toast.service';
     standalone: true,
     imports: [
         FormsModule,
+        MatIconModule,
+        MatMenuModule
     ],
     templateUrl: './edit-member.html',
     styleUrls: ['./edit-member.scss']
 })
 export class EditMember implements OnInit {
+    protected readonly authService = inject(AuthService);
+    protected readonly Role = Role;
     private readonly companyService = inject(CompanyService);
     userCompanyId: string | null = null;
     companyId: string | null = null;
@@ -35,8 +43,6 @@ export class EditMember implements OnInit {
         private toast: ToastService
     ) { }
 
-    // TODO: atenção aqui, acredito q o ideal seja renderizar userCompanyId,
-    // já q role não está no usuário,
     ngOnInit(): void {
         this.userCompanyId = this.route.snapshot.paramMap.get('userCompanyId');
         this.companyId = this.route.snapshot.paramMap.get('companyId');
@@ -47,7 +53,6 @@ export class EditMember implements OnInit {
 
     loadMemberInfo(): void {
         this.loading.set(true);
-
         this.companyService.getMemberById(this.companyId!, this.userCompanyId!).subscribe({
             next: (data) => {
                 this.user.set(data)
@@ -59,9 +64,13 @@ export class EditMember implements OnInit {
                 this.handleBackButton()
             }
         })
-
     }
 
+    toggleUserStatus(): void { }
+
+    changeRole(): void {
+        console.log("Mudei")
+    }
     handleBackButton(): void {
         this.router.navigate([`/company/${this.companyId}/member`]);
     }

@@ -65,11 +65,12 @@
                     <td>
                         <div class="actions">
                             <button class="icon-button view">Ver</button>
+                            @if (authService.hasPermission(Role.HEADTEACHER)) {
                             <button class="icon-button" (click)="editMember(item)">Editar</button>
+                            }
                         </div>
                     </td>
                 </tr>
-
                 }
 
             </tbody>

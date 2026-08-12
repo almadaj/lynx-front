@@ -5,7 +5,7 @@ import { LoginRequestDTO, LoginResponseDTO } from '../../models/auth.model';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { AuthUser } from '../../models/user.model';
-import { Role } from '../../shared/enum/role.enum';
+import { Role, RoleHelper } from '../../shared/enum/role.enum';
 import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
@@ -53,6 +53,16 @@ export class AuthService {
     hasRole(...roles: Role[]): boolean {
         const role = this.currentRole();
         return role !== null && roles.includes(role);
+    }
+
+    hasPermission(requiredRole: Role): boolean {
+        const role = this.currentRole();
+
+        if (!role) {
+            return false;
+        }
+
+        return RoleHelper.hasPermission(role, requiredRole);
     }
 
     login(login: LoginRequestDTO): Observable<AuthUser> {

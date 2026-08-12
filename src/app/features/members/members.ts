@@ -9,7 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CompanyService } from '../../services/api-services/company.service';
 import { UserResponseDTO } from '../../models/user.model';
-import { ROLE_LABELS } from '../../shared/enum/role.enum';
+import { Role, ROLE_LABELS } from '../../shared/enum/role.enum';
+import { AuthService } from '../../services/api-services/auth.service';
 
 @Component({
     selector: 'app-members',
@@ -21,6 +22,8 @@ import { ROLE_LABELS } from '../../shared/enum/role.enum';
     styleUrl: './members.scss'
 })
 export class Members implements OnInit {
+    protected readonly authService = inject(AuthService);
+    protected readonly Role = Role;
     private readonly route = inject(ActivatedRoute);
     private readonly companyService = inject(CompanyService);
     protected readonly ROLE_LABELS = ROLE_LABELS;

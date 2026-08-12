@@ -1,9 +1,51 @@
 <div class="page">
     <div class="header">
-        <button class="back-button" (click)="handleBackButton()">
-            ←
+        <div style="display: flex; flex-direction: row;">
+            <button class="back-button" (click)="handleBackButton()">
+                ←
+            </button>
+            <h1>Editar membro</h1>
+        </div>
+        <!-- TODO: finalizar esse componente, está próximo bem próximo -->
+        <!-- A ideia é montar o modal com somente os cargos possíveis para aquele user,
+         lembrando de não poder trocar o Principal (proprietario da instituição) -->
+        <button class="menu-button" type="button" [matMenuTriggerFor]="memberMenu" aria-label="Opções do membro">
+            <mat-icon>more_vert</mat-icon>
         </button>
-        <h1>Editar membro</h1>
+
+        <mat-menu #memberMenu="matMenu">
+            <button mat-menu-item [matMenuTriggerFor]="roleMenu">
+                <mat-icon>manage_accounts</mat-icon>
+                <span>Alterar função</span>
+            </button>
+
+            <button mat-menu-item (click)="toggleUserStatus()">
+                <mat-icon>
+                    {{ 'person_off' }}
+                </mat-icon>
+                <span>
+                    {{ 'Desativar usuário' }}
+                </span>
+            </button>
+        </mat-menu>
+
+        <mat-menu #roleMenu="matMenu">
+            <button mat-menu-item (click)="changeRole()">
+                <span>Aluno</span>
+            </button>
+
+            <button mat-menu-item (click)="changeRole()">
+                <span>Professor</span>
+            </button>
+
+            <button mat-menu-item (click)="changeRole()">
+                <span>Coordenador</span>
+            </button>
+
+            <button mat-menu-item (click)="changeRole()">
+                <span>Diretor</span>
+            </button>
+        </mat-menu>
     </div>
 
     <div class="profile-card">
@@ -15,14 +57,11 @@
         <div class="info">
             <h2>{{ user()?.name || '-' }}</h2>
             <p>{{ user()?.email || '-' }}</p>
+            <p>{{ user()?.birth || '-' }}</p>
             <div class="role">
-                <label>{{ this.user()?.companies?.[0]?.role || '-' }} @ {{ this.user()?.companies?.[0]?.companyName ||
+                <label>{{ this.user()?.companies?.[0]?.role || '-' }} @ {{
+                    this.user()?.companies?.[0]?.companyName ||
                     '-' }}</label>
-                <select>
-                    <option>Professor</option>
-                    <option>Coordenador</option>
-                    <option>Diretor</option>
-                </select>
             </div>
         </div>
     </div>

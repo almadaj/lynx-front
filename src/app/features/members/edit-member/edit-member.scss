@@ -7,16 +7,48 @@
 .header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 16px;
     margin-bottom: 32px;
 }
 
-.back-button {
+
+.back-button,
+.menu-button {
+    display: flex;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+
+    padding: 0;
     border: none;
+    border-radius: 50%;
+
     background: transparent;
     cursor: pointer;
-    font-size: 15px;
-    color: #666;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.1s ease;
+}
+
+.back-button:hover,
+.menu-button:hover {
+    background-color: #f1f1f1;
+}
+
+.back-button:active,
+.menu-button:active {
+    transform: scale(0.94);
+}
+
+.menu-button {
+    color: #555;
+}
+
+.menu-button mat-icon {
+    font-size: 24px;
 }
 
 .profile-card {
