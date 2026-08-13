@@ -15,6 +15,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { DateFormatter } from '../../../shared/common-functions/shared.functions';
 import { CommonModal } from '../../../shared/common-modal/common-modal';
+import { HttpErrorResponse } from '@angular/common/http';
+import { finalize } from 'rxjs';
 
 
 @Component({
@@ -78,20 +80,17 @@ export class EditMember implements OnInit {
             this.companyService.changeStatus(this.companyId, {
                 userCompanyId: this.userCompanyId.toString(),
                 status: !userStatus,
-            }).subscribe({
-                next: () => {
-                    this.toast.success("Status de usuário alterado")
-                },
-                error: (err) => {
-                    console.log(err)
-                    this.toast.error(err)
-                },
-                complete: () => {
-                    this.isModalOpen.set(false)
-                }
-            })
+            }).pipe(finalize(() => this.isModalOpen.set(false)))
+                .subscribe({
+                    next: () => {
+                        this.toast.success("Status de usuário alterado")
+                    },
+                    error: (err: HttpErrorResponse) => {
+                        console.log(err)
+                        this.toast.error(err.error.error)
+                    }
+                })
         }
-
     }
 
     changeRole(): void { }
