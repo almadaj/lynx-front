@@ -12,6 +12,14 @@
     margin-bottom: 32px;
 }
 
+.confirm-text {
+    max-width: 500px;
+    font-size: 18px;
+    margin: 0 auto;
+    text-align: center;
+    text-align-last: center;
+    line-height: 1.6;
+}
 
 .back-button,
 .menu-button {
@@ -78,7 +86,7 @@
 
 .info p {
     color: #666;
-    margin: 8px 0 24px;
+    margin: 8px 0 10px;
 }
 
 .role {

@@ -113,6 +113,6 @@ export class Members implements OnInit {
     }
 
     editMember(member: UserResponseDTO): void {
-        this.router.navigate(['/company', this.companyId(), 'member', member.companies[0].userCompanyId]);
+        this.router.navigate(['/company', this.companyId(), 'edit-member', member.companies[0].userCompanyId]);
     }
 }

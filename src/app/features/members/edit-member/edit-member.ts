@@ -8,12 +8,13 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CompanyService } from '../../../services/api-services/company.service';
 import { UserResponseDTO } from '../../../models/user.model';
-import { ToastComponent } from '../../../shared/toaster/toast';
 import { ToastService } from '../../../shared/toaster/toast.service';
 import { AuthService } from '../../../services/api-services/auth.service';
 import { Role, RoleHelper } from '../../../shared/enum/role.enum';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { DateFormatter } from '../../../shared/common-functions/shared.functions';
+import { CommonModal } from '../../../shared/common-modal/common-modal';
 
 
 @Component({
@@ -22,7 +23,8 @@ import { MatMenuModule } from '@angular/material/menu';
     imports: [
         FormsModule,
         MatIconModule,
-        MatMenuModule
+        MatMenuModule,
+        CommonModal
     ],
     templateUrl: './edit-member.html',
     styleUrls: ['./edit-member.scss']
@@ -30,11 +32,14 @@ import { MatMenuModule } from '@angular/material/menu';
 export class EditMember implements OnInit {
     protected readonly authService = inject(AuthService);
     protected readonly Role = Role;
+    protected readonly RoleHelper = RoleHelper;
     private readonly companyService = inject(CompanyService);
     userCompanyId: string | null = null;
     companyId: string | null = null;
+    isModalOpen = signal<boolean>(false)
     readonly loading = signal<boolean>(false);
     readonly user = signal<UserResponseDTO | null>(null);
+    readonly DateFormatter = DateFormatter;
 
 
     constructor(
@@ -66,11 +71,31 @@ export class EditMember implements OnInit {
         })
     }
 
-    toggleUserStatus(): void { }
+    toggleModalStatus(): void { this.isModalOpen.set(!this.isModalOpen()) }
 
-    changeRole(): void {
-        console.log("Mudei")
+    changeUserStatus(userStatus: boolean): void {
+        if (this.companyId && this.userCompanyId) {
+            this.companyService.changeStatus(this.companyId, {
+                userCompanyId: this.userCompanyId.toString(),
+                status: !userStatus,
+            }).subscribe({
+                next: () => {
+                    this.toast.success("Status de usuário alterado")
+                },
+                error: (err) => {
+                    console.log(err)
+                    this.toast.error(err)
+                },
+                complete: () => {
+                    this.isModalOpen.set(false)
+                }
+            })
+        }
+
     }
+
+    changeRole(): void { }
+
     handleBackButton(): void {
         this.router.navigate([`/company/${this.companyId}/member`]);
     }

@@ -17,7 +17,7 @@ export interface UserResponseDTO {
     birth: string;
     companies: UserCompanyResponse[];
     profilePhoto: string;
-    isActive: boolean;
+    active: boolean;
     isAdmin: boolean;
 }
 
@@ -26,7 +26,9 @@ export interface UserCompanyResponse {
     companyId: string;
     companyName: string;
     publicName: string;
+    active: boolean;
     role: Role;
+
 }
 
 export interface UserCompany {
@@ -41,4 +43,14 @@ export interface AuthUser {
     name: string;
     email: string;
     companies: UserCompany[];
+}
+
+export interface ChangeUserStatusDTO {
+    userCompanyId: string;
+    status: boolean;
+}
+
+export interface PromoteUserDTO {
+    userId: string;
+    role: Role;
 }

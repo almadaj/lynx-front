@@ -3,7 +3,7 @@ import { environment } from "../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { CompanyResponseDTO, NewTeacherDTO, UserCompanyResponse } from "../../models/company.model";
 import { Observable } from "rxjs";
-import { UserResponseDTO } from "../../models/user.model";
+import { ChangeUserStatusDTO, PromoteUserDTO, UserResponseDTO } from "../../models/user.model";
 
 @Injectable({
     providedIn: 'root'
@@ -37,5 +37,13 @@ export class CompanyService {
 
     getMemberById(companyId: string, userCompanyId: string): Observable<UserResponseDTO> {
         return this.http.get<UserResponseDTO>(`${this.apiUrl}/${companyId}/member/${userCompanyId}`)
+    }
+
+    changeStatus(companyId: string, dto: ChangeUserStatusDTO): Observable<UserCompanyResponse> {
+        return this.http.put<UserCompanyResponse>(`${this.apiUrl}/${companyId}/status`, dto)
+    }
+
+    promoteUser(companyId: string, dto: PromoteUserDTO): Observable<UserCompanyResponse> {
+        return this.http.put<UserCompanyResponse>(`${this.apiUrl}/${companyId}/promote`, dto)
     }
 }

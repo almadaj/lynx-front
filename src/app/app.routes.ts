@@ -48,7 +48,7 @@ export const routes: Routes = [
                         .then(m => m.Members)
             },
             {
-                path: 'company/:companyId/member/:userCompanyId',
+                path: 'company/:companyId/edit-member/:userCompanyId',
                 loadComponent: () =>
                     import('./features/members/edit-member/edit-member')
                         .then(m => m.EditMember)
