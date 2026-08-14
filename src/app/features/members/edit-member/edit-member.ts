@@ -26,7 +26,7 @@ import { finalize } from 'rxjs';
         FormsModule,
         MatIconModule,
         MatMenuModule,
-        CommonModal
+        CommonModal,
     ],
     templateUrl: './edit-member.html',
     styleUrls: ['./edit-member.scss']
@@ -39,10 +39,18 @@ export class EditMember implements OnInit {
     userCompanyId: string | null = null;
     companyId: string | null = null;
     isModalOpen = signal<boolean>(false)
+    isRoleModalOpen = signal<boolean>(false);
     readonly loading = signal<boolean>(false);
     readonly user = signal<UserResponseDTO | null>(null);
     readonly DateFormatter = DateFormatter;
+    selectedRole: Role = Role.STUDENT; //TODO: retornar a role correta do usuário
 
+    readonly availableRoles = [
+        Role.STUDENT,
+        Role.TEACHER,
+        Role.HEADTEACHER,
+        Role.PRINCIPAL
+    ];
 
     constructor(
         private router: Router,
@@ -93,9 +101,27 @@ export class EditMember implements OnInit {
         }
     }
 
-    changeRole(): void { }
+    changeRole(role: Role): void {
+        console.log('Nova role:', role);
+
+        this.isRoleModalOpen.set(false);
+    }
 
     handleBackButton(): void {
         this.router.navigate([`/company/${this.companyId}/member`]);
+    }
+
+    toggleRoleModal(): void {
+        this.isRoleModalOpen.set(!this.isRoleModalOpen());
+    }
+
+    closeRoleModal(): void {
+        this.isRoleModalOpen.set(false);
+    }
+
+    confirmRoleModal(): void {
+        console.log({
+            role: this.selectedRole
+        });
     }
 }

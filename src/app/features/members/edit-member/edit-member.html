@@ -1,4 +1,5 @@
 <div class="page">
+    <!-- TODO: Refact futuro -->
     <app-common-modal [isOpen]="isModalOpen()" [title]="'Alterar status de usuário'" [cancelButtonText]="'Fechar'"
         [confirmButtonText]="'Continuar'" (close)="toggleModalStatus()" (cancel)="toggleModalStatus()"
         (confirm)="changeUserStatus(this.user()!.companies[0].active)">
@@ -6,6 +7,25 @@
             <strong>{{ this.user()!.companies[0].active ? 'DESATIVAR' : 'ATIVAR' }}</strong>
             o usuário <strong>{{user()?.name}}</strong>?
         </p>
+    </app-common-modal>
+
+    <app-common-modal [isOpen]="isRoleModalOpen()" [title]="'Alterar papel de usuário'" [cancelButtonText]="'Fechar'"
+        [confirmButtonText]="'Continuar'" (close)="toggleRoleModal()" (cancel)="toggleRoleModal()"
+        (confirm)="confirmRoleModal()">
+        <div class="role-options">
+            @for (role of availableRoles; track role) {
+            <button type="button" class="role-option" [class.selected]="selectedRole === role"
+                (click)="selectedRole = role">
+                <span>
+                    {{ RoleHelper.translate(role) }}
+                </span>
+
+                @if (selectedRole === role) {
+                <span>✓</span>
+                }
+            </button>
+            }
+        </div>
     </app-common-modal>
 
     <div class="header">
@@ -22,7 +42,7 @@
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #memberMenu="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item (click)="toggleRoleModal()">
                 <mat-icon>manage_accounts</mat-icon>
                 <span>Alterar função</span>
             </button>
