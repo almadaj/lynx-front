@@ -11,6 +11,7 @@ export interface UserDTO {
 }
 
 export interface UserResponseDTO {
+    id: string;
     userCompanyId: string;
     name: string;
     email: string;

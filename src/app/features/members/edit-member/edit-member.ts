@@ -43,10 +43,9 @@ export class EditMember implements OnInit {
     readonly loading = signal<boolean>(false);
     readonly user = signal<UserResponseDTO | null>(null);
     readonly DateFormatter = DateFormatter;
-    selectedRole: Role = Role.STUDENT; //TODO: retornar a role correta do usuário
+    selectedRole: Role = Role.TEACHER; //TODO: retornar a role correta do usuário
 
     readonly availableRoles = [
-        Role.STUDENT,
         Role.TEACHER,
         Role.HEADTEACHER,
         Role.PRINCIPAL
@@ -120,8 +119,23 @@ export class EditMember implements OnInit {
     }
 
     confirmRoleModal(): void {
-        console.log({
-            role: this.selectedRole
-        });
+        const dto = ({
+            userId: this.user()?.id!,
+            role: this.selectedRole!
+        })
+        this.companyService.promoteUser(this.companyId!, dto)
+            .pipe(finalize(() => this.toggleRoleModal()))
+            .subscribe({
+                next: () => {
+                    this.toast.success("Alterado com sucesso")
+                    this.toggleRoleModal()
+                    this.loadMemberInfo()
+                },
+
+                error: (err: HttpErrorResponse) => {
+                    console.log(err)
+                    this.toast.error(err.error.error)
+                }
+            })
     }
 }
