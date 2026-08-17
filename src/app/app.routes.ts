@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guard/auth.guard';
 import { publicGuard } from './core/guard/public.guard';
+import { roleGuard } from './core/guard/role.guard';
+import { Role } from './shared/enum/role.enum';
 
 export const routes: Routes = [
     {
@@ -12,7 +14,7 @@ export const routes: Routes = [
     },
     {
         path: '',
-        canActivate: [authGuard],
+        canActivate: [authGuard, roleGuard],
         loadComponent: () =>
             import('./shared/sidebar/dashboard-layout')
                 .then(m => m.DashboardLayout),
@@ -28,6 +30,12 @@ export const routes: Routes = [
                 loadComponent: () =>
                     import('./features/home/dashboard/dashboard')
                         .then(m => m.Dashboard)
+            },
+            {
+                path: 'unauthorized',
+                loadComponent: () =>
+                    import('./features/unauthorized/unauthorized')
+                        .then(m => m.Unauthorized)
             },
             {
                 path: 'my-company',
@@ -51,7 +59,8 @@ export const routes: Routes = [
                 path: 'company/:companyId/edit-member/:userCompanyId',
                 loadComponent: () =>
                     import('./features/members/edit-member/edit-member')
-                        .then(m => m.EditMember)
+                        .then(m => m.EditMember),
+                canActivate: [roleGuard([Role.HEADTEACHER])]
             }
         ]
     }

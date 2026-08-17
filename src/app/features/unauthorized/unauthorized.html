@@ -1,0 +1,22 @@
+<div class="unauthorized">
+    <div class="unauthorized__content">
+        <div class="unauthorized__icon">
+            <span>🔒</span>
+        </div>
+        <span class="unauthorized__code">403</span>
+        <h1>Acesso não autorizado</h1>
+        <p>
+            Você não possui permissão para acessar esta página.
+            Se acredita que isso é um erro, entre em contato com o administrador.
+        </p>
+
+        <div class="unauthorized__actions">
+            <button type="button" class="secondary-button" (click)="goBack()">
+                Voltar
+            </button>
+            <button type="button" class="primary-button" (click)="goToDashboard()">
+                Ir para o início
+            </button>
+        </div>
+    </div>
+</div>

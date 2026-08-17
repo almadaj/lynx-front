@@ -5,9 +5,11 @@
             <p>Gerencie os membros da instituição.</p>
         </div>
 
+        @if (authService.hasPermission(Role.HEADTEACHER)) {
         <button class="add-button">
             + Adicionar membro
         </button>
+        }
     </header>
     <nav class="tabs">
         <button class="tab" [class.active]="selectedTab() === 'teachers'" (click)="selectedTab.set('teachers')">

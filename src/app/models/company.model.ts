@@ -9,7 +9,6 @@ export interface CompanySocialNetworkResponseDTO {
     url: string
 }
 
-
 export interface CompanyResponseDTO {
     id: string
     publicName: string
