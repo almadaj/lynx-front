@@ -5,27 +5,20 @@ import { UserService } from "../../../services/api-services/user.service";
 import { inject } from '@angular/core';
 import { BidiModule } from "@angular/cdk/bidi";
 import { CompanyService } from "../../../services/api-services/company.service";
-import { NewTeacherDTO } from "../../../models/company.model";
 import { Role } from "../../../shared/enum/role.enum";
-import { ToastService } from "../../../shared/toaster/toast.service";
 
 @Component({
-    selector: 'app-teacher-modal',
+    selector: 'app-student-modal',
     imports: [CommonModal, BidiModule],
-    templateUrl: './teacher-modal.html',
-    styleUrls: ['./teacher-modal.scss'],
+    templateUrl: './student-modal.html',
+    styleUrls: ['./student-modal.scss'],
 })
-export class TeacherModal {
+export class StudentModal {
     isOpenSignal = signal<boolean>(false)
     @Input() isOpen = false;
-    roleList = signal([
-        { value: 'TEACHER', label: 'Professor' },
-        { value: 'HEADTEACHER', label: 'Coordenador' }
-    ]);
     @Output() close = new EventEmitter<void>();
     email = signal('');
     company = signal<UserCompanyResponse | null>(null);
-    role = signal<Role | null>(null);
     isConfirm = signal<boolean>(false)
     errorMessage = signal('');
     autorizedCompanies = input<UserCompanyResponse[]>([]);
@@ -36,24 +29,32 @@ export class TeacherModal {
     private readonly userService = inject(UserService);
     private readonly companyService = inject(CompanyService);
 
+    readonly principalCompanies = computed(() =>
+        this.autorizedCompanies().filter(
+            company => company.role === Role.PRINCIPAL
+        )
+    );
+
     selectedCompany = computed(() =>
         this.autorizedCompanies().find(
             c => c.companyId === this.company()!.toString()
         )
     );
 
-    constructor(private toast: ToastService) {
+    constructor() {
         effect(() => {
-            const companies = this.autorizedCompanies();
+            const companies = this.principalCompanies();
+
             if (companies.length > 0) {
                 this.company.set(companies[0]);
+            } else {
+                this.company.set(null);
             }
         });
     }
 
     closeModal(): void {
         this.email.set("")
-        this.role.set(null)
         this.errorMessage.set("");
         this.step.set('form')
         this.close.emit();
@@ -74,22 +75,16 @@ export class TeacherModal {
     }
 
     confirmAssociation(): void {
-        const dto: NewTeacherDTO = {
-            email: this.foundUser()!.email,
-            role: this.role()!
-        };
-
         this.companyService
-            .addNewTeacherToCompany(this.selectedCompany()!.companyId, dto)
+            .addNewStudentToCompany(this.selectedCompany()!.companyId, this.foundUser()!.email)
             .subscribe({
                 next: (response) => {
-                    this.toast.success("Professor inserido!")
                     this.close.emit();
                 },
                 error: (err) => {
-                    this.toast.error("Não foi possível inserir professor!")
+                    console.error(err);
                     if (err.status === 409) { this.errorMessage.set("Usuário já pertence a essa instituição"); }
-                    else { this.errorMessage.set("Erro ao vincular professor"); }
+                    else { this.errorMessage.set("Erro ao vincular estudante"); }
 
                 }
             });

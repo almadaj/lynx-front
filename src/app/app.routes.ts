@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guard/auth.guard';
 import { publicGuard } from './core/guard/public.guard';
+import { roleGuard } from './core/guard/role.guard';
+import { Role } from './shared/enum/role.enum';
 
 export const routes: Routes = [
     {
@@ -12,7 +14,7 @@ export const routes: Routes = [
     },
     {
         path: '',
-        canActivate: [authGuard],
+        canActivate: [authGuard, roleGuard],
         loadComponent: () =>
             import('./shared/sidebar/dashboard-layout')
                 .then(m => m.DashboardLayout),
@@ -30,6 +32,12 @@ export const routes: Routes = [
                         .then(m => m.Dashboard)
             },
             {
+                path: 'unauthorized',
+                loadComponent: () =>
+                    import('./features/unauthorized/unauthorized')
+                        .then(m => m.Unauthorized)
+            },
+            {
                 path: 'my-company',
                 loadComponent: () =>
                     import('./features/company/company')
@@ -40,6 +48,19 @@ export const routes: Routes = [
                 loadComponent: () =>
                     import('./features/my-classes/my-classes')
                         .then(m => m.MyClasses)
+            },
+            {
+                path: 'company/:companyId/member',
+                loadComponent: () =>
+                    import('./features/members/members')
+                        .then(m => m.Members)
+            },
+            {
+                path: 'company/:companyId/edit-member/:userCompanyId',
+                loadComponent: () =>
+                    import('./features/members/edit-member/edit-member')
+                        .then(m => m.EditMember),
+                canActivate: [roleGuard([Role.HEADTEACHER])]
             }
         ]
     }

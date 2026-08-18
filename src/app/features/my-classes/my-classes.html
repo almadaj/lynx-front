@@ -2,15 +2,19 @@
     <div class="main-content">
         <div class="header">
             <h1 class="main-title">Minhas Turmas</h1>
+            @if (this.isPrincipal()) {
             <div style="gap: 10px;">
-                <button class="add-button student" style="margin-left: 10px;">
+                <button class="add-button student" style="margin-left: 10px;" (click)="openStudentModal()">
                     + Novo Aluno
                 </button>
                 <button class="add-button">
                     + Nova Turma
                 </button>
             </div>
+            }
         </div>
+        <app-student-modal [isOpen]="isModalNovoAlunoOpen()" (close)="closeModal()"
+            [autorizedCompanies]="userCompanies()" />
         <div class="turmas-list">
             @for (course of courses(); track course.id) {
             @if (isCourseActive(course.endDate)) {

@@ -1,3 +1,5 @@
+import { formatDate } from "@angular/common";
+
 export class CnpjFormatter {
     static format(cnpj: string): string {
         if (!cnpj) {
@@ -18,5 +20,35 @@ export class CnpjFormatter {
 
     static unformat(cnpj: string): string {
         return cnpj ? cnpj.replace(/\D/g, '') : cnpj;
+    }
+}
+
+export class DateFormatter {
+    static formatDate(date: string | null): string {
+        if (!date) {
+            return '-';
+        }
+
+        const [year, month, day] = date.split('-');
+
+        if (!year || !month || !day) {
+            return date;
+        }
+
+        return `${day}/${month}/${year}`;
+    }
+
+    static formatDateToISO(date: string): string {
+        if (!date) {
+            return date;
+        }
+
+        const parsedDate = new Date(date);
+
+        if (isNaN(parsedDate.getTime())) {
+            return date;
+        }
+
+        return formatDate(parsedDate, 'yyyy-MM-dd', 'en-US');
     }
 }

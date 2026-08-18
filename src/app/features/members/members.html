@@ -1,0 +1,93 @@
+<div class="members-page">
+    <header class="page-header">
+        <div>
+            <h1>Membros</h1>
+            <p>Gerencie os membros da instituição.</p>
+        </div>
+
+        @if (authService.hasPermission(Role.HEADTEACHER)) {
+        <button class="add-button">
+            + Adicionar membro
+        </button>
+        }
+    </header>
+    <nav class="tabs">
+        <button class="tab" [class.active]="selectedTab() === 'teachers'" (click)="selectedTab.set('teachers')">
+            Corpo Docente
+        </button>
+        <button class="tab" [class.active]="selectedTab() === 'students'" (click)="selectedTab.set('students')">
+            Alunos
+        </button>
+    </nav>
+
+    <section class="toolbar">
+        <div class="search">
+            <input type="text" placeholder="Buscar por nome ou e-mail..." />
+        </div>
+    </section>
+
+    <section class="table-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    @if(selectedTab() === 'teachers') {
+                    <th>Função</th>
+                    }
+                    <th class="actions-column">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of displayedMembers(); track item.userCompanyId) {
+                <tr>
+                    <td>
+                        <div class="member-info">
+                            <div class="avatar">
+                                @if(item.profilePhoto){
+                                <img [src]="item.profilePhoto">
+                                } @else {
+                                <span>{{item.name.charAt(0)}}</span>
+                                }
+                            </div>
+                            <span>{{item.name}}</span>
+                        </div>
+                    </td>
+
+                    <td>{{item.email}}</td>
+
+                    @if(selectedTab() === 'teachers') {
+                    <td>
+                        <span [class]="'role ' + item.companies[0].role.toLowerCase()">
+                            {{ ROLE_LABELS[item.companies[0].role] }}
+                        </span>
+                    </td>
+                    }
+
+                    <td>
+                        <div class="actions">
+                            <button class="icon-button view">Ver</button>
+                            @if (authService.hasPermission(Role.HEADTEACHER)) {
+                            @if(selectedTab() === 'teachers') {
+                            <button class="icon-button" (click)="editMember(item)">Editar</button>
+                            } @else {
+                            <button class="icon-button">Editar</button>
+                            }
+                            }
+                        </div>
+                    </td>
+                </tr>
+                }
+
+            </tbody>
+        </table>
+
+        @if(displayedMembers().length === 0) {
+        <div class="empty-state">
+            <h3>Nenhum membro encontrado</h3>
+            <p>Adicione um novo membro para começar.</p>
+        </div>
+        }
+
+    </section>
+</div>

@@ -4,12 +4,35 @@
     } @else {
     <div class="main-content">
         <div class="header">
-            <h1 class="main-title">Minha Instituição</h1>
-            @if (isPrincipal()) {
-            <button class="button">
-                <mat-icon class="menu-icon">edit_document</mat-icon>
-            </button>
+            <div style="display: flex; flex-direction: row;">
+                <h1 class="main-title">Minha Instituição</h1>
+                @if (isPrincipal()) {
+                <button class="button">
+                    <mat-icon class="menu-icon">edit_document</mat-icon>
+                </button>
+                }
+            </div>
+
+            @if(userCompanies().length > 1) {
+            <mat-form-field appearance="outline" class="company-select">
+                <mat-label>Instituição</mat-label>
+
+                <mat-select [value]="selectedCompany()?.companyId" (selectionChange)="changeCompany($event.value)">
+
+                    @for(company of userCompanies(); track company.companyId) {
+                    <mat-option [value]="company.companyId">
+                        {{ company.companyName }}
+                    </mat-option>
+                    }
+
+                </mat-select>
+            </mat-form-field>
+            } @else {
+            <span class="company-name">
+                {{ selectedCompany()?.companyName }}
+            </span>
             }
+
         </div>
         <div class="info-card">
             <h2 class="section-title">Dados Gerais</h2>
@@ -63,8 +86,11 @@
 
         <div class="info-card">
             <div class="header" style="justify-content: space-between;">
-                <h2 class="section-title">Corpo Docente</h2>
-                @if(isPrincipal()){
+                <div class="header">
+                    <h2 class="section-title">Corpo Docente</h2>
+                    <button class="see-all-button" (click)="seeAllMembers(company()?.id!)">Ver tudo</button>
+                </div>
+                @if (authService.hasPermission(Role.PRINCIPAL)) {
                 <button class="add-button" (click)="openTeacherModal()">
                     <mat-icon class="menu-icon">add</mat-icon>
                 </button>
@@ -78,8 +104,13 @@
                 <div class="teachers-column">
                     <span class="label">{{staff().length === 1 ? 'Professor' : 'Professores'}}</span>
                     <div class="pill-container">
-                        @for (teacher of staff(); track teacher.id) {
-                        <span class="pill professor">{{teacher.name}}</span>
+                        @for (teacher of staff().slice(0, 5); track teacher.userCompanyId) {
+                        <span class="pill professor">{{ teacher.name }}</span>
+                        }
+                        @if (staff().length > 5) {
+                        <span class="pill professor">
+                            + {{ staff().length - 5 }} membros
+                        </span>
                         }
                     </div>
                 </div>

@@ -1,5 +1,5 @@
-<app-common-modal [isOpen]="isOpen" [title]="'Adicionar Professor'" [cancelButtonText]="'Fechar'"
-    [confirmButtonText]="'Cadastrar Professor'" (close)="closeModal()" (cancel)="closeModal()"
+<app-common-modal [isOpen]="isOpen" [title]="'Adicionar Estudante'" [cancelButtonText]="'Fechar'"
+    [confirmButtonText]="'Cadastrar Estudante'" (close)="closeModal()" (cancel)="closeModal()"
     (confirm)="step() === 'form' ? confirmModal() : confirmAssociation()">
 
     @if (step() === 'form') {
@@ -16,20 +16,10 @@
                 <select class="input" [value]="company()" (change)="company.set($any($event.target).value)">
                     <option value="">Selecione...</option>
 
-                    @for (company of autorizedCompanies(); track company.companyId) {
+                    @for (company of principalCompanies(); track company.companyId) {
                     <option [value]="company.companyId">
                         {{ company.publicName }}
                     </option>
-                    }
-                </select>
-            </div>
-
-            <div style="flex: 1;">
-                <label class="label">Função:</label>
-                <select class="input" [value]="role()" (change)="role.set($any($event.target).value)">
-                    <option value="" selected>Selecione...</option>
-                    @for (role of roleList(); track role.value) {
-                    <option [value]="role.value">{{role.label}}</option>
                     }
                 </select>
             </div>
@@ -40,7 +30,7 @@
         <strong>{{foundUser()?.name }}</strong>
         do email <strong>{{ foundUser()?.email }}</strong> para a instituição
         <strong>{{ selectedCompany()?.companyName }}
-        </strong> na função de <strong>{{role()}}</strong>?
+        </strong> na função de <strong>ESTUDANTE</strong>?
     </p>
     }
     <p style="margin-top: 15px; margin-bottom: 0; color: #ff0000;">{{errorMessage()}}</p>
