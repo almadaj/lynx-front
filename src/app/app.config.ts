@@ -7,6 +7,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { credentialsInterceptor } from './core/interceptor/credentials.interceptor';
 import { AuthService } from './services/api-services/auth.service';
 import { catchError, of, tap } from 'rxjs';
+import { authErrorInterceptor } from './core/interceptor/auth-error.interceptor';
 
 export const appConfig: ApplicationConfig = {
 
@@ -17,7 +18,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withFetch(),
       withInterceptors([
-        credentialsInterceptor
+        credentialsInterceptor,
+        authErrorInterceptor
       ])
     )
   ]

@@ -15,7 +15,7 @@ export class CourseClassService {
     ) { }
 
     getMyCourseClasses(): Observable<CourseClassResponseDTO[]> {
-        return this.http.get<CourseClassResponseDTO[]>(`${this.apiUrl}/me`)
+        return this.http.get<CourseClassResponseDTO[]>(`${this.apiUrl}/my`)
     }
 
     getAllCourses(): Observable<CourseClassResponseDTO> {

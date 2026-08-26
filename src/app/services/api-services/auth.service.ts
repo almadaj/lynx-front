@@ -80,14 +80,22 @@ export class AuthService {
     }
 
     logout(): void {
-        if (isPlatformBrowser(this.platformId)) {
-            sessionStorage.removeItem('token');
-        }
-
-        this._user.set(null);
-        this._currentCompanyId.set(null);
-
-        this.router.navigate(['/']);
+        this.http.post(
+            `${this.apiUrl}/logout`,
+            {},
+            { withCredentials: true }
+        )
+            .subscribe({
+                next: () => {
+                    this._user.set(null);
+                    this._currentCompanyId.set(null);
+                    this.router.navigate(['/']);
+                },
+                error: (error) => {
+                    this.clearAuthState();
+                    this.router.navigate(['/']);
+                }
+            });
     }
 
     register(data: any): Observable<any> {
@@ -95,17 +103,21 @@ export class AuthService {
     }
 
     me(): Observable<AuthUser> {
-        return this.http
-            .get<AuthUser>(`${this.apiUrl}/me`,
-                {
-                    withCredentials: true
-                }
-            )
+        return this.http.get<AuthUser>(`${this.apiUrl}/me`,
+            {
+                withCredentials: true
+            }
+        )
             .pipe(
                 tap(user => {
                     this._user.set(user);
                 })
             );
+    }
+
+    clearAuthState(): void {
+        this._user.set(null);
+        this._currentCompanyId.set(null);
     }
 
     refreshToken(): Observable<any> {
