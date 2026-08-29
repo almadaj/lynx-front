@@ -2,9 +2,11 @@ import { HttpInterceptorFn } from "@angular/common/http";
 import { catchError, switchMap, throwError } from "rxjs";
 import { AuthService } from "../../services/api-services/auth.service";
 import { inject } from "@angular/core";
+import { Router } from "@angular/router";
 
 export const authErrorInterceptor: HttpInterceptorFn = (req, next) => {
     const authService = inject(AuthService);
+    const router = inject(Router)
 
     return next(req).pipe(
         catchError(error => {
@@ -14,7 +16,8 @@ export const authErrorInterceptor: HttpInterceptorFn = (req, next) => {
 
             if (
                 req.url.includes('/auth/login') ||
-                req.url.includes('/auth/refresh')
+                req.url.includes('/auth/refresh') ||
+                req.url.includes('/auth/logout')
             ) {
                 return throwError(() => error);
             }
@@ -25,6 +28,7 @@ export const authErrorInterceptor: HttpInterceptorFn = (req, next) => {
                 }),
                 catchError(refreshError => {
                     authService.clearAuthState();
+                    router.navigate(["/"])
                     return throwError(() => refreshError);
                 })
             );
