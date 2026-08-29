@@ -5,5 +5,5 @@ export const credentialsInterceptor: HttpInterceptorFn = (req, next) => {
         req.clone({
             withCredentials: true
         })
-    )
-}
+    );
+};

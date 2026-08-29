@@ -1,6 +1,6 @@
 import { computed, Injectable, signal, PLATFORM_ID, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, finalize, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
 import { LoginRequestDTO, LoginResponseDTO } from '../../models/auth.model';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
@@ -120,8 +120,27 @@ export class AuthService {
         this._currentCompanyId.set(null);
     }
 
-    refreshToken(): Observable<any> {
-        return this.http.post(`${this.apiUrl}/refresh`, {});
+    private refreshInProgress$: Observable<void> | null = null;
+
+    refresh(): Observable<void> {
+        if (!this.refreshInProgress$) {
+            this.refreshInProgress$ = this.http
+                .post<void>(
+                    `${this.apiUrl}/refresh`,
+                    {},
+                    {
+                        withCredentials: true
+                    }
+                )
+                .pipe(
+                    finalize(() => {
+                        this.refreshInProgress$ = null;
+                    }),
+                    shareReplay(1)
+                );
+        }
+
+        return this.refreshInProgress$;
     }
 
     isAuthenticated(): boolean {
