@@ -81,7 +81,7 @@ export class AuthService {
 
     logout(): void {
         this.http.post(
-            `${this.apiUrl}/logout`,
+            `${this.apiUrl}/refresh/logout`,
             {},
             { withCredentials: true }
         )
