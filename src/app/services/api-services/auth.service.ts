@@ -1,6 +1,6 @@
 import { computed, Injectable, signal, PLATFORM_ID, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, switchMap, tap } from 'rxjs';
+import { catchError, finalize, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
 import { LoginRequestDTO, LoginResponseDTO } from '../../models/auth.model';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
@@ -67,29 +67,35 @@ export class AuthService {
 
     login(login: LoginRequestDTO): Observable<AuthUser> {
         return this.http
-            .post<LoginResponseDTO>(
+            .post<void>(
                 `${this.apiUrl}/login`,
-                login
-            ).pipe(
-                tap(response => {
-                    sessionStorage.setItem(
-                        'token',
-                        response.token
-                    );
-                }),
+                login,
+                {
+                    withCredentials: true
+                }
+            )
+            .pipe(
                 switchMap(() => this.me())
             );
     }
 
     logout(): void {
-        if (isPlatformBrowser(this.platformId)) {
-            sessionStorage.removeItem('token');
-        }
-
-        this._user.set(null);
-        this._currentCompanyId.set(null);
-
-        this.router.navigate(['/']);
+        this.http.post(
+            `${this.apiUrl}/refresh/logout`,
+            {},
+            { withCredentials: true }
+        )
+            .subscribe({
+                next: () => {
+                    this._user.set(null);
+                    this._currentCompanyId.set(null);
+                    this.router.navigate(['/']);
+                },
+                error: (error) => {
+                    this.clearAuthState();
+                    this.router.navigate(['/']);
+                }
+            });
     }
 
     register(data: any): Observable<any> {
@@ -97,50 +103,60 @@ export class AuthService {
     }
 
     me(): Observable<AuthUser> {
-        return this.http
-            .get<AuthUser>(`${this.apiUrl}/me`)
+        return this.http.get<AuthUser>(`${this.apiUrl}/me`,
+            {
+                withCredentials: true
+            }
+        )
             .pipe(
                 tap(user => {
                     this._user.set(user);
-
-                    if (
-                        !this._currentCompanyId() &&
-                        user.companies.length > 0
-                    ) {
-                        this._currentCompanyId.set(
-                            user.companies[0].companyId
-                        );
-                    }
                 })
             );
     }
 
-    refreshToken(): Observable<any> {
-        return this.http.post(`${this.apiUrl}/refresh`, {});
+    clearAuthState(): void {
+        this._user.set(null);
+        this._currentCompanyId.set(null);
+    }
+
+    private refreshInProgress$: Observable<void> | null = null;
+
+    refresh(): Observable<void> {
+        if (!this.refreshInProgress$) {
+            this.refreshInProgress$ = this.http
+                .post<void>(
+                    `${this.apiUrl}/refresh`,
+                    {},
+                    {
+                        withCredentials: true
+                    }
+                )
+                .pipe(
+                    finalize(() => {
+                        this.refreshInProgress$ = null;
+                    }),
+                    shareReplay(1)
+                );
+        }
+
+        return this.refreshInProgress$;
     }
 
     isAuthenticated(): boolean {
-        if (!isPlatformBrowser(this.platformId)) {
-            return false;
-        }
-        const token = sessionStorage.getItem('token');
-        console.log('Token encontrado:', !!token);
-        return !!token;
+        return this._user() !== null;
     }
 
-    initialize(): void {
+    initialize(): Observable<AuthUser | null> {
         if (!isPlatformBrowser(this.platformId)) {
-            return;
+            return of(null);
         }
 
-        if (!this.isAuthenticated()) {
-            return;
-        }
-
-        this.me().subscribe({
-            error: error => {
-                console.error('Erro ao carregar autenticação:', error);
-            }
-        });
+        return this.me().pipe(
+            tap(),
+            catchError(error => {
+                return of(null);
+            })
+        );
     }
 }
