@@ -1,14 +1,15 @@
-<!-- TODO: reformar componente -->
-<app-common-modal [isOpen]="isOpen" [title]="'Adicionar Estudante'" [cancelButtonText]="'Fechar'"
-    [confirmButtonText]="'Cadastrar Estudante'" (close)="closeModal()" (cancel)="closeModal()"
-    (confirm)="step() === 'form' ? confirmModal() : confirmAssociation()">
+<app-common-modal [isOpen]="isOpen" [title]="'Adicionar Nova Turma'" [cancelButtonText]="'Fechar'"
+    [confirmButtonText]="'Adicionar Turma'" (close)="closeModal()" (cancel)="closeModal()"
+    (confirm)="step() === 'form-one' ? confirmModal() : confirmAssociation()">
 
-    @if (step() === 'form') {
+    @if (step() === 'form-one') {
     <div class="social-form">
         <div>
-            <label class="label">Digite o email:</label>
-            <input class="input" type="text" [value]="email()" (input)="email.set($any($event.target).value)"
-                placeholder="Ex: usuario@email.com" />
+            <label class="label">Digite o nome da turma:</label>
+            <input class="input" type="text" [value]="newClass()?.name ?? ''" (input)="newClass.set($any({
+            ...newClass(),
+            name: $any($event.target).value
+                }))" placeholder="Ex: Turma B" />
         </div>
 
         <div style="display: flex; justify-content: space-between; gap: 12px;">
@@ -25,13 +26,31 @@
                 </select>
             </div>
         </div>
+        <div>
+            <label class="label">Número máximo de alunos:</label>
+            <input class="input" type="number" min="1" [value]="newClass()?.maxStudents ?? '1'" (input)="newClass.set($any({
+            ...newClass(),
+            maxStudents: $any($event.target).value
+                }))" />
+        </div>
     </div>
-    } @else {
-    <p class="confirm-text">Você tem certeza que deseja associar
-        <strong>{{foundUser()?.name }}</strong>
-        do email <strong>{{ foundUser()?.email }}</strong> para a instituição
+    }@else if (step() === 'form-two'){
+    <div class="social-form">
+        <div>
+            <label class="label">Número máximo de alunos:</label>
+            <input class="input" type="number" [value]="newClass()?.maxStudents ?? '0'" (input)="newClass.set($any({
+            ...newClass(),
+            maxStudents: $any($event.target).value
+                }))" />
+        </div>
+    </div>
+    }
+    @else {
+    <p class="confirm-text">Você tem certeza que deseja criar a turma
+        <strong>{{newClass()?.name }}</strong>
+        para a instituição
         <strong>{{ selectedCompany()?.companyName }}
-        </strong> na função de <strong>ESTUDANTE</strong>?
+        </strong>?
     </p>
     }
     <p style="margin-top: 15px; margin-bottom: 0; color: #ff0000;">{{errorMessage()}}</p>

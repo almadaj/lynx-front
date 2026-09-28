@@ -6,9 +6,10 @@ import { inject } from '@angular/core';
 import { BidiModule } from "@angular/cdk/bidi";
 import { CompanyService } from "../../../services/api-services/company.service";
 import { Role } from "../../../shared/enum/role.enum";
+import { NewCourseClassDTO } from "../../../models/courseClass.model";
 
 @Component({
-    selector: 'app-student-modal',
+    selector: 'app-new-class-modal',
     imports: [CommonModal, BidiModule],
     templateUrl: './new-class-modal.html',
     styleUrls: ['./new-class-modal.scss'],
@@ -17,21 +18,21 @@ export class NewClassModal {
     isOpenSignal = signal<boolean>(false)
     @Input() isOpen = false;
     @Output() close = new EventEmitter<void>();
-    email = signal('');
+    newClass = signal<NewCourseClassDTO | null>(null);
     company = signal<UserCompanyResponse | null>(null);
     isConfirm = signal<boolean>(false)
     errorMessage = signal('');
     autorizedCompanies = input<UserCompanyResponse[]>([]);
 
     foundUser = signal<UserResponseDTO | null>(null);
-    step = signal<'form' | 'confirm'>('form');
+    step = signal<'form-one' | 'form-two' | 'confirm'>('form-one');
 
     private readonly userService = inject(UserService);
     private readonly companyService = inject(CompanyService);
 
     readonly principalCompanies = computed(() =>
         this.autorizedCompanies().filter(
-            company => company.role === Role.PRINCIPAL
+            company => company.role === Role.PRINCIPAL || Role.ADMIN
         )
     );
 
@@ -44,7 +45,6 @@ export class NewClassModal {
     constructor() {
         effect(() => {
             const companies = this.principalCompanies();
-
             if (companies.length > 0) {
                 this.company.set(companies[0]);
             } else {
@@ -54,24 +54,14 @@ export class NewClassModal {
     }
 
     closeModal(): void {
-        this.email.set("")
+        this.newClass.set(null);
         this.errorMessage.set("");
-        this.step.set('form')
+        this.step.set('form-one')
         this.close.emit();
     }
 
     confirmModal(): void {
-        this.userService.findByEmail(this.email()).subscribe({
-            next: (data) => {
-                this.foundUser.set(data)
-                this.step.set('confirm')
-                this.isConfirm.set(true)
-            },
-            error: (err) => {
-                console.error(err);
-                this.errorMessage.set("Usuário inválido");
-            }
-        });
+        this.step.set('form-two')
     }
 
     confirmAssociation(): void {
