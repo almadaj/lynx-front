@@ -81,6 +81,13 @@
     line-height: 1.6;
 }
 
+.same-row {
+    display: flex;
+    flex-direction: row;
+    //justify-content: space-between;
+    gap: 20px
+}
+
 @media (max-width: 480px) {
     .social-modal-card {
         width: 100%;

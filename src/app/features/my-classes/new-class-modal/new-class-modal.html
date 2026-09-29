@@ -27,8 +27,8 @@
             </div>
         </div>
         <div>
-            <label class="label">Número máximo de alunos:</label>
-            <input class="input" type="number" min="1" [value]="newClass()?.maxStudents ?? '1'" (input)="newClass.set($any({
+            <label class="label">Professor:</label>
+            <input class="input" type="number" [value]="newClass()?.maxStudents ?? '0'" (input)="newClass.set($any({
             ...newClass(),
             maxStudents: $any($event.target).value
                 }))" />
@@ -36,12 +36,47 @@
     </div>
     }@else if (step() === 'form-two'){
     <div class="social-form">
+        <div class="same-row">
+            <div>
+                <label class="label">Idioma:</label>
+                <input class="input" type="number" [value]="newClass()?.maxStudents ?? '0'" (input)="newClass.set($any({
+            ...newClass(),
+            maxStudents: $any($event.target).value
+                }))" />
+            </div>
+            <div>
+                <label class="label">Nível:</label>
+                <input class="input" type="number" [value]="newClass()?.maxStudents ?? '0'" (input)="newClass.set($any({
+            ...newClass(),
+            maxStudents: $any($event.target).value
+                }))" />
+            </div>
+            <div>
+                <label class="label">Número máximo de alunos:</label>
+                <input class="input" type="number" min="1" [value]="newClass()?.maxStudents ?? '1'" (input)="newClass.set($any({
+            ...newClass(),
+            maxStudents: $any($event.target).value
+                }))" />
+            </div>
+        </div>
         <div>
-            <label class="label">Número máximo de alunos:</label>
+            <label class="label">Professor:</label>
             <input class="input" type="number" [value]="newClass()?.maxStudents ?? '0'" (input)="newClass.set($any({
             ...newClass(),
             maxStudents: $any($event.target).value
                 }))" />
+        </div>
+        <div class="same-row">
+            <div>
+                <label class="label">Data de início:</label>
+                <input class="input" type="date" [value]="newClass()?.startDate ?? ''" (input)="newClass.set($any({...newClass(),
+                    startDate: $any($event.target).value
+                }))" />
+            </div>
+            <div>
+                <label class="label">Data de fim:</label>
+                <input class="input" type="date" [value]="newClass()?.endDate ?? ''" />
+            </div>
         </div>
     </div>
     }
