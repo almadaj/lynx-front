@@ -1,6 +1,5 @@
 <app-common-modal [isOpen]="isOpen" [title]="'Adicionar Nova Turma'" [cancelButtonText]="'Fechar'"
-    [confirmButtonText]="'Adicionar Turma'" (close)="closeModal()" (cancel)="closeModal()"
-    (confirm)="step() === 'form-one' ? confirmModal() : confirmAssociation()">
+    [confirmButtonText]="'Adicionar Turma'" (close)="closeModal()" (cancel)="closeModal()" (confirm)="nextStep()">
 
     @if (step() === 'form-one') {
     <div class="social-form">
@@ -26,14 +25,23 @@
                 </select>
             </div>
         </div>
-        <div>
-            <label class="label">Professor:</label>
-            <input class="input" type="number" [value]="newClass()?.maxStudents ?? '0'" (input)="newClass.set($any({
-            ...newClass(),
-            maxStudents: $any($event.target).value
-                }))" />
+
+        <div style="display: flex; justify-content: space-between; gap: 12px;">
+            <div style="flex: 1;">
+                <label class="label">Professor:</label>
+                <select class="input" [value]="selectedTeacher()"
+                    (change)="selectedTeacher.set($any($event.target).value)">
+                    <option value="">Selecione...</option>
+                    @for (item of teacher(); track item.id) {
+                    <option [value]="item.id">
+                        {{ item.name }}
+                    </option>
+                    }
+                </select>
+            </div>
         </div>
     </div>
+    <!-- TODO: terminar o restante do formulário -->
     }@else if (step() === 'form-two'){
     <div class="social-form">
         <div class="same-row">
