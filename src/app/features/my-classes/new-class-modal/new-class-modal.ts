@@ -113,7 +113,7 @@ export class NewClassModal {
         }
     }
 
-
     confirmAssociation(): void {
+        console.log(this.newClass())
     }
 }

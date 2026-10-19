@@ -14,7 +14,9 @@
         <div style="display: flex; justify-content: space-between; gap: 12px;">
             <div style="flex: 1;">
                 <label class="label">Instituição:</label>
-                <select class="input" [value]="company()" (change)="company.set($any($event.target).value)">
+                <select class="input" [value]="company()" (change)="newClass()?.companyId" (input)="newClass.set($any({...newClass(),
+                company:$any($event.target).value
+                }))">
                     <option value="">Selecione...</option>
 
                     @for (company of principalCompanies(); track company.companyId) {
@@ -29,8 +31,9 @@
         <div style="display: flex; justify-content: space-between; gap: 12px;">
             <div style="flex: 1;">
                 <label class="label">Professor:</label>
-                <select class="input" [value]="selectedTeacher()"
-                    (change)="selectedTeacher.set($any($event.target).value)">
+                <select class="input" [value]="selectedTeacher()" (change)="newClass()?.teacherId" (input)="newClass.set($any({...newClass(),
+                selectedTeacher: $any($event.target).value
+                }))">
                     <option value="">Selecione...</option>
                     @for (item of teacher(); track item.id) {
                     <option [value]="item.id">
@@ -41,38 +44,31 @@
             </div>
         </div>
     </div>
-    <!-- TODO: terminar o restante do formulário -->
+    <!-- TODO: faltando somente os selects de Idioma e Nível -->
     }@else if (step() === 'form-two'){
     <div class="social-form">
         <div class="same-row">
             <div>
                 <label class="label">Idioma:</label>
-                <input class="input" type="number" [value]="newClass()?.maxStudents ?? '0'" (input)="newClass.set($any({
+                <input class="input" [value]="newClass()?.language ?? ''" (input)="newClass.set($any({
             ...newClass(),
-            maxStudents: $any($event.target).value
+            language: $any($event.target).value
                 }))" />
             </div>
             <div>
                 <label class="label">Nível:</label>
-                <input class="input" type="number" [value]="newClass()?.maxStudents ?? '0'" (input)="newClass.set($any({
+                <input class="input" [value]="newClass()?.level ?? ''" (input)="newClass.set($any({
             ...newClass(),
-            maxStudents: $any($event.target).value
+            level: $any($event.target).value
                 }))" />
             </div>
             <div>
                 <label class="label">Número máximo de alunos:</label>
-                <input class="input" type="number" min="1" [value]="newClass()?.maxStudents ?? '1'" (input)="newClass.set($any({
+                <input class="input" type="number" min=1 [value]="newClass()?.maxStudents ?? 1" (input)="newClass.set($any({
             ...newClass(),
             maxStudents: $any($event.target).value
                 }))" />
             </div>
-        </div>
-        <div>
-            <label class="label">Professor:</label>
-            <input class="input" type="number" [value]="newClass()?.maxStudents ?? '0'" (input)="newClass.set($any({
-            ...newClass(),
-            maxStudents: $any($event.target).value
-                }))" />
         </div>
         <div class="same-row">
             <div>
@@ -83,7 +79,9 @@
             </div>
             <div>
                 <label class="label">Data de fim:</label>
-                <input class="input" type="date" [value]="newClass()?.endDate ?? ''" />
+                <input class="input" type="date" [value]="newClass()?.endDate ?? ''" (input)="newClass.set($any({...newClass(),
+                endDate: $any($event.target).value
+                }))" />
             </div>
         </div>
     </div>
