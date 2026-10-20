@@ -103,6 +103,22 @@ export class NewClassModal {
         this.close.emit();
     }
 
+    backStep(): void {
+        switch (this.step()) {
+            case 'form-one':
+                this.closeModal()
+                break
+
+            case 'form-two':
+                this.step.set('form-one')
+                break
+
+            case 'confirm':
+                this.step.set('form-two')
+                break
+        }
+    }
+
     nextStep(): void {
         switch (this.step()) {
             case 'form-one':
@@ -120,16 +136,13 @@ export class NewClassModal {
 
     confirmAssociation(): void {
         const newClass = this.newClass()
-
         if (
             !newClass ||
             !newClass.name?.trim() ||
             !newClass.teacherId ||
             !newClass.companyId ||
             !newClass.startDate ||
-            !newClass.maxStudents ||
-            newClass.maxStudents < 1 ||
-            !newClass.endDate
+            newClass.maxStudents < 1
         ) {
             this.toast.error('Preencha o restante do formulário.')
             return
@@ -137,6 +150,7 @@ export class NewClassModal {
 
         const payload = {
             ...newClass,
+            maxStudents: newClass.maxStudents ?? 1,
             startDate: `${newClass.startDate}T00:00:00`,
             endDate: `${newClass.endDate}T00:00:00`
         }
@@ -144,13 +158,23 @@ export class NewClassModal {
         this.courseClassService.create(payload).subscribe({
             next: () => {
                 this.toast.success('Turma criada com sucesso.')
-                this.close.emit()
+                this.closeModal()
             },
             error: (err) => {
                 console.error(err)
                 this.toast.error('Não foi possível criar nova turma.')
-                this.close.emit()
+                this.closeModal()
             },
         })
+    }
+    onMaxStudentsChange(event: Event): void {
+        const input = event.target as HTMLInputElement
+        const maxStudents = Number(input.value)
+
+        this.newClass.update(current =>
+            current
+                ? { ...current, maxStudents }
+                : current
+        )
     }
 }

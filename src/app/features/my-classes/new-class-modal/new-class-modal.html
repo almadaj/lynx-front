@@ -1,5 +1,5 @@
-<app-common-modal [isOpen]="isOpen" [title]="'Adicionar Nova Turma'" [cancelButtonText]="'Fechar'"
-    [confirmButtonText]="'Adicionar Turma'" (close)="closeModal()" (cancel)="closeModal()" (confirm)="nextStep()">
+<app-common-modal [isOpen]="isOpen" [title]="'Adicionar Nova Turma'" [cancelButtonText]="'Voltar'"
+    [confirmButtonText]="'Adicionar Turma'" (close)="closeModal()" (cancel)="backStep()" (confirm)="nextStep()">
 
     @if (step() === 'form-one') {
     <div class="social-form">
@@ -44,7 +44,7 @@
             </div>
         </div>
     </div>
-    <!-- TODO: faltando somente os selects de Idioma e Nível -->
+
     }@else if (step() === 'form-two'){
     <div class="social-form">
         <div class="same-row">
@@ -74,12 +74,11 @@
                     }
                 </select>
             </div>
+            <!-- TODO: ver se no padrão funciona -->
             <div>
                 <label class="label">Número máximo de alunos:</label>
-                <input class="input" type="number" min=1 [value]="newClass()?.maxStudents ?? 1" (input)="newClass.set($any({
-                ...newClass(),
-                maxStudents: $any($event.target).value
-                    }))" />
+                <input class="input" type="number" min="1" [value]="newClass()?.maxStudents ?? 1"
+                    (input)="onMaxStudentsChange($event)" />
             </div>
         </div>
         <div class="same-row">
