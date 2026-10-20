@@ -1,7 +1,6 @@
 import { Component, computed, DestroyRef, effect, EventEmitter, input, Input, Output, signal, untracked } from "@angular/core";
 import { CommonModal } from "../../../shared/common-modal/common-modal";
 import { UserCompanyResponse, UserResponseDTO } from "../../../models/user.model";
-import { UserService } from "../../../services/api-services/user.service";
 import { inject } from '@angular/core';
 import { BidiModule } from "@angular/cdk/bidi";
 import { CompanyService } from "../../../services/api-services/company.service";
@@ -9,6 +8,9 @@ import { Role } from "../../../shared/enum/role.enum";
 import { NewCourseClassDTO } from "../../../models/courseClass.model";
 import { catchError, EMPTY } from "rxjs";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Language, LanguageLevel } from "../../../models/language.model";
+import { CourseClassService } from "../../../services/api-services/courseClass.service";
+import { ToastService } from "../../../shared/toaster/toast.service";
 
 @Component({
     selector: 'app-new-class-modal',
@@ -25,6 +27,8 @@ export class NewClassModal {
     company = signal<UserCompanyResponse | null>(null);
     teacher = signal<UserResponseDTO[]>([]);
     selectedTeacher = signal<UserResponseDTO | null>(null);
+    language = Object.values(Language)
+    level = Object.values(LanguageLevel)
     isConfirm = signal<boolean>(false)
     errorMessage = signal('');
     autorizedCompanies = input<UserCompanyResponse[]>([]);
@@ -32,8 +36,9 @@ export class NewClassModal {
     foundUser = signal<UserResponseDTO | null>(null);
     step = signal<'form-one' | 'form-two' | 'confirm'>('form-one');
 
-    private readonly userService = inject(UserService);
     private readonly companyService = inject(CompanyService);
+    private readonly courseClassService = inject(CourseClassService);
+    private readonly toast = inject(ToastService)
 
     readonly principalCompanies = computed(() =>
         this.autorizedCompanies().filter(
@@ -114,6 +119,38 @@ export class NewClassModal {
     }
 
     confirmAssociation(): void {
-        console.log(this.newClass())
+        const newClass = this.newClass()
+
+        if (
+            !newClass ||
+            !newClass.name?.trim() ||
+            !newClass.teacherId ||
+            !newClass.companyId ||
+            !newClass.startDate ||
+            !newClass.maxStudents ||
+            newClass.maxStudents < 1 ||
+            !newClass.endDate
+        ) {
+            this.toast.error('Preencha o restante do formulário.')
+            return
+        }
+
+        const payload = {
+            ...newClass,
+            startDate: `${newClass.startDate}T00:00:00`,
+            endDate: `${newClass.endDate}T00:00:00`
+        }
+
+        this.courseClassService.create(payload).subscribe({
+            next: () => {
+                this.toast.success('Turma criada com sucesso.')
+                this.close.emit()
+            },
+            error: (err) => {
+                console.error(err)
+                this.toast.error('Não foi possível criar nova turma.')
+                this.close.emit()
+            },
+        })
     }
 }

@@ -15,7 +15,7 @@
             <div style="flex: 1;">
                 <label class="label">Instituição:</label>
                 <select class="input" [value]="company()" (change)="newClass()?.companyId" (input)="newClass.set($any({...newClass(),
-                company:$any($event.target).value
+                companyId:$any($event.target).value
                 }))">
                     <option value="">Selecione...</option>
 
@@ -32,7 +32,7 @@
             <div style="flex: 1;">
                 <label class="label">Professor:</label>
                 <select class="input" [value]="selectedTeacher()" (change)="newClass()?.teacherId" (input)="newClass.set($any({...newClass(),
-                selectedTeacher: $any($event.target).value
+                teacherId: $any($event.target).value
                 }))">
                     <option value="">Selecione...</option>
                     @for (item of teacher(); track item.id) {
@@ -50,24 +50,36 @@
         <div class="same-row">
             <div>
                 <label class="label">Idioma:</label>
-                <input class="input" [value]="newClass()?.language ?? ''" (input)="newClass.set($any({
-            ...newClass(),
-            language: $any($event.target).value
-                }))" />
+                <select class="input" [value]="language" (change)="newClass()?.language" (input)="newClass.set($any({...newClass(),
+                language: $any($event.target).value
+                }))">
+                    <option value="">Selecione...</option>
+                    @for (item of language; track item) {
+                    <option [value]="item">
+                        {{ item }}
+                    </option>
+                    }
+                </select>
             </div>
             <div>
                 <label class="label">Nível:</label>
-                <input class="input" [value]="newClass()?.level ?? ''" (input)="newClass.set($any({
-            ...newClass(),
-            level: $any($event.target).value
-                }))" />
+                <select class="input" [value]="level" (change)="newClass()?.language" (input)="newClass.set($any({...newClass(),
+                level: $any($event.target).value
+                }))">
+                    <option value="">Selecione...</option>
+                    @for (item of level; track item) {
+                    <option [value]="item">
+                        {{ item }}
+                    </option>
+                    }
+                </select>
             </div>
             <div>
                 <label class="label">Número máximo de alunos:</label>
                 <input class="input" type="number" min=1 [value]="newClass()?.maxStudents ?? 1" (input)="newClass.set($any({
-            ...newClass(),
-            maxStudents: $any($event.target).value
-                }))" />
+                ...newClass(),
+                maxStudents: $any($event.target).value
+                    }))" />
             </div>
         </div>
         <div class="same-row">
@@ -80,7 +92,7 @@
             <div>
                 <label class="label">Data de fim:</label>
                 <input class="input" type="date" [value]="newClass()?.endDate ?? ''" (input)="newClass.set($any({...newClass(),
-                endDate: $any($event.target).value
+                    endDate: $any($event.target).value
                 }))" />
             </div>
         </div>
