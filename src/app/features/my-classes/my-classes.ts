@@ -6,10 +6,11 @@ import { UserCompanyResponse } from '../../models/user.model';
 import { StudentModal } from './student-modal/student-modal';
 import { UserService } from '../../services/api-services/user.service';
 import { Role, RoleHelper } from '../../shared/enum/role.enum';
+import { NewClassModal } from './new-class-modal/new-class-modal';
 
 @Component({
   selector: 'app-my-classes',
-  imports: [MatIcon, StudentModal],
+  imports: [MatIcon, StudentModal, NewClassModal],
   templateUrl: './my-classes.html',
   styleUrl: './my-classes.scss',
 })
@@ -66,6 +67,10 @@ export class MyClasses implements OnInit {
 
   openStudentModal(): void {
     this.isModalNovoAlunoOpen.set(true);
+  }
+
+  openClassModal(): void {
+    this.isModalNovaTurmaOpen.set(true);
   }
 
   closeModal(): void {

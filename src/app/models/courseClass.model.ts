@@ -16,6 +16,17 @@ export interface CourseClassResponseDTO {
     students: StudentSummaryDTO[];
 }
 
+export interface NewCourseClassDTO {
+    name: string;
+    level: LanguageLevel;
+    language: Language;
+    maxStudents: number;
+    teacherId: string;
+    companyId: string;
+    startDate: string;
+    endDate: string;
+}
+
 export interface StudentSummaryDTO {
     id: string;
     name: string;

@@ -1,0 +1,109 @@
+<app-common-modal [isOpen]="isOpen" [title]="'Adicionar Nova Turma'" [cancelButtonText]="'Voltar'"
+    [confirmButtonText]="'Adicionar Turma'" (close)="closeModal()" (cancel)="backStep()" (confirm)="nextStep()">
+
+    @if (step() === 'form-one') {
+    <div class="social-form">
+        <div>
+            <label class="label">Digite o nome da turma:</label>
+            <input class="input" type="text" [value]="newClass()?.name ?? ''" (input)="newClass.set($any({
+            ...newClass(),
+            name: $any($event.target).value
+                }))" placeholder="Ex: Turma B" />
+        </div>
+
+        <div style="display: flex; justify-content: space-between; gap: 12px;">
+            <div style="flex: 1;">
+                <label class="label">Instituição:</label>
+                <select class="input" [value]="company()" (change)="newClass()?.companyId" (input)="newClass.set($any({...newClass(),
+                companyId:$any($event.target).value
+                }))">
+                    <option value="">Selecione...</option>
+
+                    @for (company of principalCompanies(); track company.companyId) {
+                    <option [value]="company.companyId">
+                        {{ company.publicName }}
+                    </option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; gap: 12px;">
+            <div style="flex: 1;">
+                <label class="label">Professor:</label>
+                <select class="input" [value]="selectedTeacher()" (change)="newClass()?.teacherId" (input)="newClass.set($any({...newClass(),
+                teacherId: $any($event.target).value
+                }))">
+                    <option value="">Selecione...</option>
+                    @for (item of teacher(); track item.id) {
+                    <option [value]="item.id">
+                        {{ item.name }}
+                    </option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+    }@else if (step() === 'form-two'){
+    <div class="social-form">
+        <div class="same-row">
+            <div>
+                <label class="label">Idioma:</label>
+                <select class="input" [value]="language" (change)="newClass()?.language" (input)="newClass.set($any({...newClass(),
+                language: $any($event.target).value
+                }))">
+                    <option value="">Selecione...</option>
+                    @for (item of language; track item) {
+                    <option [value]="item">
+                        {{ item }}
+                    </option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label class="label">Nível:</label>
+                <select class="input" [value]="level" (change)="newClass()?.language" (input)="newClass.set($any({...newClass(),
+                level: $any($event.target).value
+                }))">
+                    <option value="">Selecione...</option>
+                    @for (item of level; track item) {
+                    <option [value]="item">
+                        {{ item }}
+                    </option>
+                    }
+                </select>
+            </div>
+            <!-- TODO: ver se no padrão funciona -->
+            <div>
+                <label class="label">Número máximo de alunos:</label>
+                <input class="input" type="number" min="1" [value]="newClass()?.maxStudents ?? 1"
+                    (input)="onMaxStudentsChange($event)" />
+            </div>
+        </div>
+        <div class="same-row">
+            <div>
+                <label class="label">Data de início:</label>
+                <input class="input" type="date" [value]="newClass()?.startDate ?? ''" (input)="newClass.set($any({...newClass(),
+                    startDate: $any($event.target).value
+                }))" />
+            </div>
+            <div>
+                <label class="label">Data de fim:</label>
+                <input class="input" type="date" [value]="newClass()?.endDate ?? ''" (input)="newClass.set($any({...newClass(),
+                    endDate: $any($event.target).value
+                }))" />
+            </div>
+        </div>
+    </div>
+    }
+    @else {
+    <p class="confirm-text">Você tem certeza que deseja criar a turma
+        <strong>{{newClass()?.name }}</strong>
+        para a instituição
+        <strong>{{ selectedCompany()?.companyName }}
+        </strong>?
+    </p>
+    }
+    <p style="margin-top: 15px; margin-bottom: 0; color: #ff0000;">{{errorMessage()}}</p>
+</app-common-modal>

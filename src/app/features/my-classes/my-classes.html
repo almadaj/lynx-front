@@ -7,13 +7,15 @@
                 <button class="add-button student" style="margin-left: 10px;" (click)="openStudentModal()">
                     + Novo Aluno
                 </button>
-                <button class="add-button">
+                <button class="add-button" (click)="openClassModal()">
                     + Nova Turma
                 </button>
             </div>
             }
         </div>
         <app-student-modal [isOpen]="isModalNovoAlunoOpen()" (close)="closeModal()"
+            [autorizedCompanies]="userCompanies()" />
+        <app-new-class-modal [isOpen]="isModalNovaTurmaOpen()" (close)="closeModal()"
             [autorizedCompanies]="userCompanies()" />
         <div class="turmas-list">
             @for (course of courses(); track course.id) {
