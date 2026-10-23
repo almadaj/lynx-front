@@ -2,6 +2,8 @@
 import { Injectable, inject } from '@angular/core';
 import { ToastService } from '../../../shared/toaster/toast.service';
 import { environment } from '../../../environments/environment';
+import { NotificationResponse } from '../../../models/notification.model';
+import { AuthService } from '../../api-services/auth.service';
 
 interface ClassCreatedEvent {
     classId: string;
@@ -14,6 +16,7 @@ interface ClassCreatedEvent {
 })
 export class NotificationStreamService {
     private readonly toastService = inject(ToastService);
+    private readonly authService = inject(AuthService);
     private eventSource: EventSource | null = null;
 
     private apiUrl = `${environment.apiUrl}/api/notifications/stream`;
@@ -27,16 +30,14 @@ export class NotificationStreamService {
             { withCredentials: true },
         );
 
-        this.eventSource.addEventListener('class-created', (event) => {
+        this.eventSource.addEventListener('notification', (event) => {
             const messageEvent = event as MessageEvent<string>;
 
             try {
-                const data: ClassCreatedEvent = JSON.parse(
-                    messageEvent.data,
-                );
+                const data: NotificationResponse = JSON.parse(messageEvent.data)
 
                 this.toastService.success(
-                    `RabbitMQ hablou: ${data.name}`,
+                    `${data.title}: ${data.message}`,
                 );
             } catch {
                 console.error(
@@ -46,13 +47,24 @@ export class NotificationStreamService {
         });
 
         this.eventSource.onerror = () => {
-            // O EventSource tenta reconectar automaticamente.
-            // Não exibimos um toast a cada falha de conexão.
+            this.recoverConnection();
         };
     }
 
     stop(): void {
         this.eventSource?.close();
         this.eventSource = null;
+    }
+
+    private recoverConnection(): void {
+        this.authService.me().subscribe({
+            next: () => {
+                this.stop()
+                this.start()
+            },
+            error: () => {
+                this.stop()
+            },
+        })
     }
 }
