@@ -1,7 +1,8 @@
-import { Component, Inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { MatIcon } from "@angular/material/icon";
 import { AuthService } from '../../services/api-services/auth.service';
+import { NotificationService } from '../../services/api-services/notification.service';
 
 
 interface MenuItem {
@@ -20,9 +21,29 @@ interface MenuItem {
 export class Sidebar {
   constructor(
     private router: Router,
-    @Inject(AuthService) private authService: AuthService
+    // @Inject(AuthService) private authService: AuthService
   ) { }
   isOpen = signal<boolean>(true)
+  private readonly notificationService = inject(NotificationService)
+  private readonly authService = inject(AuthService)
+
+  readonly user = this.authService.user
+  readonly unreadCount = this.notificationService.unreadCount
+
+  get initials(): string {
+    const name = this.user()?.name?.trim()
+
+    if (!name) {
+      return '?'
+    }
+
+    return name
+      .split(/\s+/)
+      .slice(0, 2)
+      .map(part => part[0])
+      .join('')
+      .toUpperCase()
+  }
 
   menu = signal<MenuItem[]>([
     {

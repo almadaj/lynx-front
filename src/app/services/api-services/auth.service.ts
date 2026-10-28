@@ -46,6 +46,8 @@ export class AuthService {
         this.currentCompany()?.role ?? null
     );
 
+
+
     setCurrentCompany(companyId: string): void {
         this._currentCompanyId.set(companyId);
     }

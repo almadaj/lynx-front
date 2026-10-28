@@ -50,15 +50,44 @@
             }
         </ul>
     </div>
-    <div class="logoff-container">
-        <button class="logoff-button" (click)="logout()">
-            <mat-icon>logout</mat-icon>
+    <div class="sidebar-footer">
+        <button class="notification-button" type="button" aria-label="Notificações">
+            <mat-icon>notifications</mat-icon>
 
-            @if (isOpen()) {
-            <span class="menu-label">
-                <p>Sair</p>
+            @if (unreadCount() > 0) {
+            <span class="notification-badge">
+                {{ unreadCount() > 5 ? '5+' : unreadCount() }}
             </span>
             }
+
+            @if (isOpen()) {
+            <span class="menu-label">Notificações</span>
+            }
         </button>
+
+        <div class="profile-card">
+            <div class="avatar">
+                {{ initials }}
+            </div>
+
+            @if (isOpen()) {
+            <div class="profile-info">
+                <span class="profile-name">{{ user()?.name }}</span>
+                <span class="profile-email">{{ user()?.email }}</span>
+            </div>
+            }
+        </div>
+
+        <div class="logoff-container">
+            <button class="logoff-button" (click)="logout()">
+                <mat-icon>logout</mat-icon>
+
+                @if (isOpen()) {
+                <span class="menu-label">
+                    <p>Sair</p>
+                </span>
+                }
+            </button>
+        </div>
     </div>
 </nav>
