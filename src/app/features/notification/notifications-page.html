@@ -1,0 +1,103 @@
+<section class="notifications-page">
+    <header class="page-header">
+        <div>
+            <h1>Notificações</h1>
+            <p>Acompanhe as atividades da sua instituição.</p>
+        </div>
+
+        <div class="header-icon">
+            <mat-icon>notifications</mat-icon>
+        </div>
+    </header>
+
+    <nav class="filters" aria-label="Filtrar notificações">
+        <button type="button" [class.active]="filter() === 'all'" (click)="filter.set('all')">
+            Todas
+            <span>{{ notificationService.notifications().length }}</span>
+        </button>
+
+        <button type="button" [class.active]="filter() === 'unread'" (click)="filter.set('unread')">
+            Não lidas
+            <span>{{ notificationService.unreadCount() }}</span>
+        </button>
+    </nav>
+
+    @if (loading()) {
+    <div class="feedback">
+        <mat-icon>hourglass_empty</mat-icon>
+        <p>Carregando notificações...</p>
+    </div>
+    } @else if (error()) {
+    <div class="feedback">
+        <mat-icon>error_outline</mat-icon>
+        <p>Não foi possível carregar as notificações.</p>
+        <button type="button" (click)="loadNotifications()">
+            Tentar novamente
+        </button>
+    </div>
+    } @else if (filteredNotifications().length === 0) {
+    <div class="empty-state">
+        <mat-icon>notifications_none</mat-icon>
+        <h2>
+            {{ filter() === 'unread'
+            ? 'Tudo em dia!'
+            : 'Nenhuma notificação ainda' }}
+        </h2>
+        <p>
+            {{ filter() === 'unread'
+            ? 'Você não tem notificações pendentes de leitura.'
+            : 'Quando houver novidades, elas aparecerão aqui.' }}
+        </p>
+    </div>
+    } @else {
+    <div class="notification-list">
+        @for (
+        notification of filteredNotifications();
+        track notification.id
+        ) {
+        <article class="notification-item" [class.unread]="notification.readAt === null">
+            <div class="notification-icon">
+                <mat-icon>
+                    {{ notification.type === 'CLASS_CREATED'
+                    ? 'school'
+                    : 'notifications' }}
+                </mat-icon>
+            </div>
+
+            <div class="notification-content">
+                <div class="notification-title">
+                    <h2>{{ notification.title }}</h2>
+
+                    @if (notification.readAt === null) {
+                    <span class="unread-indicator" aria-label="Não lida"></span>
+                    }
+                </div>
+
+                <p>{{ notification.message }}</p>
+
+                <time>
+                    @if (notification.createdAt) {
+                    {{ notification.createdAt
+                    | date:'dd/MM/yyyy HH:mm' }}
+                    } @else {
+                    Data indisponível
+                    }
+                </time>
+            </div>
+
+            @if (notification.readAt === null) {
+            <button type="button" class="mark-read-button" (click)="markAsRead(notification.id)">
+                <mat-icon>done</mat-icon>
+                Marcar como lida
+            </button>
+            } @else {
+            <span class="read-label">
+                <mat-icon>done_all</mat-icon>
+                Lida
+            </span>
+            }
+        </article>
+        }
+    </div>
+    }
+</section>

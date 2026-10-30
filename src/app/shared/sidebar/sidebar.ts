@@ -21,7 +21,6 @@ interface MenuItem {
 export class Sidebar {
   constructor(
     private router: Router,
-    // @Inject(AuthService) private authService: AuthService
   ) { }
   isOpen = signal<boolean>(true)
   private readonly notificationService = inject(NotificationService)

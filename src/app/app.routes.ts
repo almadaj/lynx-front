@@ -50,6 +50,12 @@ export const routes: Routes = [
                         .then(m => m.MyClasses)
             },
             {
+                path: 'notifications',
+                loadComponent: () =>
+                    import('./features/notification/notifications-page')
+                        .then(m => m.NotificationsPage)
+            },
+            {
                 path: 'company/:companyId/member',
                 loadComponent: () =>
                     import('./features/members/members')

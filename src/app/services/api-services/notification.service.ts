@@ -20,8 +20,8 @@ export class NotificationService {
         return this.http.get<NotificationResponse[]>(`${this.apiUrl}`)
     }
 
-    markAsRead(id: string): void {
-        this.http.post(`${this.apiUrl}/${id}/read`, {})
+    markNotificationAsRead(id: string): Observable<void> {
+        return this.http.post<void>(`${this.apiUrl}/${id}/read`, {});
     }
 
     readonly unreadCount = computed(
@@ -41,13 +41,13 @@ export class NotificationService {
         this._notifications.set(notifications)
     }
 
-    // markAsRead(id: string): void {
-    //     this._notifications.update(notifications =>
-    //         notifications.map(notification =>
-    //             notification.id === id
-    //                 ? { ...notification, readAt: new Date().toISOString() }
-    //                 : notification,
-    //         ),
-    //     )
-    // }
+    markAsRead(id: string): void {
+        this._notifications.update(notifications =>
+            notifications.map(notification =>
+                notification.id === id
+                    ? { ...notification, readAt: new Date().toISOString() }
+                    : notification,
+            ),
+        )
+    }
 }
