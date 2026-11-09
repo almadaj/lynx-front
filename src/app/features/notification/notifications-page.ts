@@ -51,8 +51,6 @@ export class NotificationsPage implements OnInit {
     }
 
     markAsRead(id: string): void {
-        console.log('Clicou em marcar como lida:', id)
-
         const notification = this.notificationService
             .notifications()
             .find(item => item.id === id)
