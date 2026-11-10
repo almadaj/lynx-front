@@ -22,6 +22,10 @@ export class CourseClassService {
         return this.http.get<CourseClassResponseDTO>(`${this.apiUrl}/all`)
     }
 
+    getCourseById(id: string): Observable<CourseClassResponseDTO> {
+        return this.http.get<CourseClassResponseDTO>(`${this.apiUrl}/${id}`)
+    }
+
     create(dto: NewCourseClassDTO): Observable<CourseClassResponseDTO> {
         return this.http.post<CourseClassResponseDTO>(`${this.apiUrl}`, dto)
     }

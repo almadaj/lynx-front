@@ -50,6 +50,12 @@ export const routes: Routes = [
                         .then(m => m.MyClasses)
             },
             {
+                path: 'classes/:classId',
+                loadComponent: () =>
+                    import('./features/my-classes/view-class/view-class')
+                        .then(m => m.ViewClass)
+            },
+            {
                 path: 'notifications',
                 loadComponent: () =>
                     import('./features/notification/notifications-page')
