@@ -52,7 +52,7 @@ export const routes: Routes = [
             {
                 path: 'classes/:classId',
                 loadComponent: () =>
-                    import('./features/my-classes/view-class/view-class')
+                    import('./features/view-class/view-class')
                         .then(m => m.ViewClass)
             },
             {

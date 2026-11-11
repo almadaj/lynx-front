@@ -1,0 +1,165 @@
+@if (!this.loading()) {
+<div class="class-page">
+    <header class="page-header">
+        <div class="header-content">
+            <button class="back-btn" (click)="goBack()">
+                <span class="material-symbols-outlined">
+                    <mat-icon>arrow_back</mat-icon>
+                </span>
+                Voltar para turmas
+            </button>
+
+            <div class="title-section">
+                <div>
+                    <h1>{{ course()?.name || 'Nome da turma' }}</h1>
+                    <p>Visualização dos detalhes da turma</p>
+                </div>
+
+                <span class="status" [class.active]="isActive()">
+                    {{ isActive() ? 'Ativa' : 'Encerrada' }}
+                </span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button class="secondary-btn">
+                <span class="material-symbols-outlined">
+                    <mat-icon>edit</mat-icon>
+                </span>
+                Editar turma
+            </button>
+        </div>
+    </header>
+    <main class="page-content">
+        <mat-tab-group animationDuration="200ms" class="class-tabs">
+            <!-- INFORMAÇÕES -->
+            <mat-tab label="Informações">
+                <div class="tab-content">
+
+
+                    <section class="overview-grid">
+                        <article class="info-card">
+                            <div class="card-icon">
+                                <span class="material-symbols-outlined">
+                                    <mat-icon>calendar_month</mat-icon>
+                                </span>
+                            </div>
+
+                            <div class="card-info">
+                                <span class="card-label">Data de início</span>
+                                <strong>{{ DateFormatter.formatDate(course()!.startDate) }}</strong>
+                            </div>
+                        </article>
+
+                        <article class="info-card">
+                            <div class="card-icon">
+                                <span class="material-symbols-outlined">
+                                    <mat-icon>event_busy</mat-icon>
+                                </span>
+                            </div>
+
+                            <div class="card-info">
+                                <span class="card-label">Data de encerramento</span>
+                                <strong>{{ DateFormatter.formatDate(course()!.endDate)}}</strong>
+                            </div>
+                        </article>
+
+                        <article class="info-card">
+                            <div class="card-icon">
+                                <span class="material-symbols-outlined">
+                                    <mat-icon>groups</mat-icon>
+                                </span>
+                            </div>
+
+                            <div class="card-info">
+                                <span class="card-label">Alunos matriculados</span>
+                                <strong>
+                                    {{course()?.students?.length ? course()?.students?.length + '/' +
+                                    course()?.maxStudents + ' alunos': '-'}}
+                                </strong>
+                            </div>
+                        </article>
+
+                        <article class="info-card">
+                            <div class="card-icon">
+                                <span class="material-symbols-outlined">
+                                    <mat-icon>school</mat-icon>
+                                </span>
+                            </div>
+
+                            <div class="card-info">
+                                <span class="card-label">Modalidade</span>
+                                <strong>{{course()?.language}} {{course()?.level}}</strong>
+                            </div>
+                        </article>
+                    </section>
+
+                    <!-- Informações gerais -->
+                    <section class="details-card">
+                        <div class="section-header">
+                            <div>
+                                <h2>Informações gerais</h2>
+                                <p>Dados cadastrais e configurações da turma.</p>
+                            </div>
+                        </div>
+
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <span>Nome da turma</span>
+                                <strong>{{ course()?.name || 'Não informado' }}</strong>
+                            </div>
+
+                            <div class="detail-item">
+                                <span>Professor</span>
+                                <strong>{{ course()?.teacher?.name || 'Não informado' }}</strong>
+                            </div>
+
+                            <div class="detail-item">
+                                <span>Data de início</span>
+                                <strong>{{ DateFormatter.formatDate(course()?.startDate ?? 'Não informado') }}</strong>
+                            </div>
+
+                            <div class="detail-item">
+                                <span>Data de encerramento</span>
+                                <strong>{{ DateFormatter.formatDate(course()?.endDate || '-') }}</strong>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </mat-tab>
+
+            <!-- ALUNOS -->
+            <mat-tab label="Alunos">
+                <ng-template matTabContent>
+                    <app-class-students [classId]="classId()" />
+                </ng-template>
+            </mat-tab>
+
+            <!-- QUESTÕES -->
+            <mat-tab label="Questões">
+                <ng-template matTabContent>
+                    <!-- <app-class-questions [classId]="classId()" /> -->
+                </ng-template>
+            </mat-tab>
+
+            <!-- PROVAS -->
+            <mat-tab label="Provas">
+                <ng-template matTabContent>
+                    <!-- <app-class-assessments [classId]="classId()" /> -->
+                </ng-template>
+            </mat-tab>
+
+            <!-- MATERIAIS -->
+            <mat-tab label="Materiais">
+                <ng-template matTabContent>
+                    <!-- <app-class-materials [classId]="classId()" /> -->
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </main>
+</div>
+
+}@else {
+<p>Carregando...</p>
+}

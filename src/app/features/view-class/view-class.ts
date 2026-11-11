@@ -1,14 +1,17 @@
 import { Component, inject, OnInit, signal, computed } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Location } from "@angular/common";
+import { MatTabsModule } from '@angular/material/tabs'
 import { MatIconModule } from "@angular/material/icon";
-import { CourseClassService } from "../../../services/api-services/courseClass.service";
-import { CourseClassResponseDTO } from "../../../models/courseClass.model";
-import { DateFormatter } from '../../../shared/common-functions/shared.functions';
+import { CourseClassService } from "../../services/api-services/courseClass.service";
+import { CourseClassResponseDTO } from "../../models/courseClass.model";
+import { DateFormatter } from '../../shared/common-functions/shared.functions';
+import { ClassStudents } from "./class-students/class-students";
+
 
 @Component({
     selector: 'app-view-class',
-    imports: [MatIconModule],
+    imports: [MatIconModule, MatTabsModule, ClassStudents],
     templateUrl: './view-class.html',
     styleUrl: './view-class.scss',
 })
@@ -36,8 +39,6 @@ export class ViewClass implements OnInit {
     ngOnInit(): void {
         const classId = this.route.snapshot.paramMap.get('classId')
 
-        console.log('ID recebido pela rota:', classId)
-
         if (!classId) {
             this.error.set('Identificador da turma não encontrado.')
             return
@@ -64,8 +65,6 @@ export class ViewClass implements OnInit {
             next: (classCourse) => {
                 this.course.set(classCourse)
                 this.loading.set(false)
-
-                console.log('Turma carregada:', classCourse)
             },
             error: (error) => {
                 console.error('Erro ao buscar turma:', error)

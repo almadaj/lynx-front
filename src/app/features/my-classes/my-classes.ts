@@ -76,7 +76,6 @@ export class MyClasses implements OnInit {
   }
 
   viewClass(id: string) {
-    console.log('Clicou na turma:', id)
     this.router.navigate(['/classes', id])
   }
 

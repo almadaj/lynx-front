@@ -33,3 +33,11 @@ export interface StudentSummaryDTO {
     email: string;
     birth: string;
 }
+
+export interface StudentDTO {
+    id: string;
+    name: string;
+    email: string;
+    birth: string;
+    profilePhoto: string;
+}

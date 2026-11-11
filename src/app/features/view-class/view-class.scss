@@ -120,6 +120,7 @@
 
 .overview-grid {
     display: grid;
+    margin-top: 16px;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
 }
@@ -175,6 +176,7 @@
     border: 1px solid #e2e8f0;
     border-radius: 12px;
     background: #fff;
+    margin-top: 10px;
 }
 
 .section-header {

@@ -1,0 +1,48 @@
+<section class="students-container">
+    <header class="students-header">
+        <div>
+            <h2>Alunos matriculados</h2>
+            <p>Gerencie e consulte os alunos desta turma.</p>
+        </div>
+
+        <span class="students-count">
+            {{ students().length }} alunos
+        </span>
+    </header>
+
+    @if (loading()) {
+    <div class="loading-state">
+        <p>Carregando alunos...</p>
+    </div>
+    } @else if (error()) {
+    <div class="error-state">
+        {{ error() }}
+        <button (click)="fetchStudents()">Tentar novamente</button>
+    </div>
+    } @else if (students().length === 0) {
+    <div class="empty-state">
+        <p>Nenhum aluno ativo encontrado nesta turma.</p>
+    </div>
+    } @else {
+    <div class="students-list">
+        @for (student of students(); track student.id) {
+        <article class="student-card">
+            <div class="student-avatar">
+                @if (student.profilePhoto) {
+                <img [src]="student.profilePhoto" [alt]="student.name">
+                } @else {
+                <span class="material-symbols-outlined">
+                    <mat-icon>person</mat-icon>
+                </span>
+                }
+            </div>
+
+            <div class="student-info">
+                <h3>{{ student.name }}</h3>
+                <p>{{ student.email }}</p>
+            </div>
+        </article>
+        }
+    </div>
+    }
+</section>
