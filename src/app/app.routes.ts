@@ -68,6 +68,12 @@ export const routes: Routes = [
                         .then(m => m.Members)
             },
             {
+                path: 'question',
+                loadComponent: () =>
+                    import('./features/question/question')
+                        .then(m => m.Question)
+            },
+            {
                 path: 'company/:companyId/edit-member/:userCompanyId',
                 loadComponent: () =>
                     import('./features/members/edit-member/edit-member')
