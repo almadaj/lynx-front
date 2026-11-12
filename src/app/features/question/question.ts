@@ -4,11 +4,12 @@ import { MatIconModule } from '@angular/material/icon'
 import { QuestionService } from '../../services/api-services/question.service'
 import { Component, inject, signal } from '@angular/core'
 import { QuestionResponseDTO } from '../../models/question.model'
+import { MatSelectModule } from '@angular/material/select'
 
 @Component({
     selector: 'app-question',
     standalone: true,
-    imports: [FormsModule, MatIconModule],
+    imports: [FormsModule, MatIconModule, MatSelectModule],
     templateUrl: './question.html',
     styleUrl: './question.scss'
 })
@@ -69,11 +70,15 @@ export class Question {
         this.loading.set(true)
         this.error.set(null)
 
-        this.questionService.findAll(
-            this.search(),
-            this.page(),
-            this.size()
-        ).subscribe({
+        this.questionService.findAll({
+            search: this.search(),
+            difficulty: this.selectedDifficulty(),
+            questionType: this.selectedQuestionType(),
+            language: this.selectedLanguage(),
+            privacy: this.selectedPrivacy(),
+            page: this.page(),
+            size: this.size()
+        }).subscribe({
             next: response => {
                 this.questions.set(response.content)
                 this.totalPages.set(response.totalPages)

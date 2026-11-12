@@ -33,6 +33,7 @@
     </section>
 
 
+
     <section class="filters-bar">
         <div class="filters-label">
             <mat-icon>tune</mat-icon>
@@ -40,56 +41,65 @@
         </div>
 
         <div class="filter-pills">
+
             <div class="filter-pill">
-                <mat-icon>signal_cellular_alt</mat-icon>
-                <select [ngModel]="selectedDifficulty()" (ngModelChange)="selectedDifficulty.set($event)">
-                    <option value="">Dificuldade</option>
+                <mat-icon class="filter-icon">signal_cellular_alt</mat-icon>
+
+                <mat-select placeholder="Dificuldade" [ngModel]="selectedDifficulty()"
+                    (ngModelChange)="selectedDifficulty.set($event)" panelClass="question-filter-panel">
                     @for (item of difficulties; track item.value) {
-                    <option [value]="item.value">{{ item.label }}</option>
+                    <mat-option [value]="item.value">
+                        {{ item.label }}
+                    </mat-option>
                     }
-                </select>
-                <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
+                </mat-select>
             </div>
 
             <div class="filter-pill">
-                <mat-icon>format_list_bulleted</mat-icon>
-                <select [ngModel]="selectedQuestionType()" (ngModelChange)="selectedQuestionType.set($event)">
-                    <option value="">Tipo de questão</option>
+                <mat-icon class="filter-icon">format_list_bulleted</mat-icon>
+
+                <mat-select placeholder="Tipo de questão" [ngModel]="selectedQuestionType()"
+                    (ngModelChange)="selectedQuestionType.set($event)" panelClass="question-filter-panel">
                     @for (item of questionTypes; track item.value) {
-                    <option [value]="item.value">{{ item.label }}</option>
+                    <mat-option [value]="item.value">
+                        {{ item.label }}
+                    </mat-option>
                     }
-                </select>
-                <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
+                </mat-select>
             </div>
 
             <div class="filter-pill">
-                <mat-icon>language</mat-icon>
-                <select [ngModel]="selectedLanguage()" (ngModelChange)="selectedLanguage.set($event)">
-                    <option value="">Idioma</option>
+                <mat-icon class="filter-icon">language</mat-icon>
+
+                <mat-select placeholder="Idioma" [ngModel]="selectedLanguage()"
+                    (ngModelChange)="selectedLanguage.set($event)" panelClass="question-filter-panel">
                     @for (item of languages; track item.value) {
-                    <option [value]="item.value">{{ item.label }}</option>
+                    <mat-option [value]="item.value">
+                        {{ item.label }}
+                    </mat-option>
                     }
-                </select>
-                <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
+                </mat-select>
             </div>
 
             <div class="filter-pill">
-                <mat-icon>lock_open</mat-icon>
-                <select [ngModel]="selectedPrivacy()" (ngModelChange)="selectedPrivacy.set($event)">
-                    <option value="">Visibilidade</option>
+                <mat-icon class="filter-icon">lock_open</mat-icon>
+
+                <mat-select placeholder="Visibilidade" [ngModel]="selectedPrivacy()"
+                    (ngModelChange)="selectedPrivacy.set($event)" panelClass="question-filter-panel">
                     @for (item of privacies; track item.value) {
-                    <option [value]="item.value">{{ item.label }}</option>
+                    <mat-option [value]="item.value">
+                        {{ item.label }}
+                    </mat-option>
                     }
-                </select>
-                <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
+                </mat-select>
             </div>
+
         </div>
 
         <button class="clear-filters" (click)="clearFilters()">
             Limpar
         </button>
     </section>
-
 
     <section class="questions-section">
         <div class="section-header">
