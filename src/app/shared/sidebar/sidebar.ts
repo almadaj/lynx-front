@@ -53,12 +53,13 @@ export class Sidebar {
     {
       label: 'Acadêmico',
       route: '/academy',
-      icon: 'school'
-      // children: [
-      //   { label: 'Turmas', route: '/dashboard/turmas' },
-      //   { label: 'Disciplinas', route: '/dashboard/disciplinas' },
-      //   { label: 'Avaliações', route: '/dashboard/avaliacoes' }
-      // ]
+      icon: 'school',
+      children: [
+        //   { label: 'Turmas', route: '/dashboard/turmas' },
+        //   { label: 'Disciplinas', route: '/dashboard/disciplinas' },
+        //   { label: 'Avaliações', route: '/dashboard/avaliacoes' }
+        //   { label: 'Questões', route: '/question' }
+      ]
     },
     {
       label: "Minha Instituição",
@@ -69,7 +70,12 @@ export class Sidebar {
       label: "Turmas",
       route: "/classes",
       icon: 'book'
-    }
+    },
+    {
+      label: "Questões",
+      route: "/question",
+      icon: 'poll'
+    },
   ]);
 
 

@@ -24,19 +24,22 @@ export class CnpjFormatter {
 }
 
 export class DateFormatter {
+
     static formatDate(date: string | null): string {
         if (!date) {
-            return '-';
+            return '-'
         }
 
-        const [year, month, day] = date.split('-');
+        const [datePart] = date.split('T')
+        const [year, month, day] = datePart.split('-')
 
         if (!year || !month || !day) {
-            return date;
+            return date
         }
 
-        return `${day}/${month}/${year}`;
+        return `${day}/${month}/${year}`
     }
+
 
     static formatDateToISO(date: string): string {
         if (!date) {

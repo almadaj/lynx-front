@@ -1,0 +1,76 @@
+.students-container {
+    padding: 24px 0;
+}
+
+.students-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+        margin: 0 0 6px;
+    }
+
+    p {
+        margin: 0;
+        color: #777;
+    }
+}
+
+.students-count {
+    font-size: 14px;
+    color: #555;
+}
+
+.students-list {
+    display: grid;
+    gap: 12px;
+}
+
+.student-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.student-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #eef2ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.student-info {
+    h3 {
+        margin: 0 0 5px;
+        font-size: 15px;
+    }
+
+    p {
+        margin: 0;
+        color: #777;
+        font-size: 13px;
+    }
+}
+
+.loading-state,
+.empty-state,
+.error-state {
+    padding: 32px;
+    text-align: center;
+    color: #777;
+}

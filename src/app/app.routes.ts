@@ -50,6 +50,12 @@ export const routes: Routes = [
                         .then(m => m.MyClasses)
             },
             {
+                path: 'classes/:classId',
+                loadComponent: () =>
+                    import('./features/view-class/view-class')
+                        .then(m => m.ViewClass)
+            },
+            {
                 path: 'notifications',
                 loadComponent: () =>
                     import('./features/notification/notifications-page')
@@ -60,6 +66,12 @@ export const routes: Routes = [
                 loadComponent: () =>
                     import('./features/members/members')
                         .then(m => m.Members)
+            },
+            {
+                path: 'question',
+                loadComponent: () =>
+                    import('./features/question/question')
+                        .then(m => m.Question)
             },
             {
                 path: 'company/:companyId/edit-member/:userCompanyId',

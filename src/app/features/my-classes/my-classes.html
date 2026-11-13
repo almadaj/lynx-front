@@ -44,15 +44,16 @@
                     </div>
                 </div>
 
-                <!-- TODO: ajustar essa lógica -->
+                @if(isCourseActive(course.endDate)){
                 <div class="turma-actions">
                     <span class="status" [class.active]="isCourseActive(course.endDate)">
                         Ativa
                     </span>
 
-                    <button class="action-btn">Ver</button>
+                    <button class="action-btn" (click)="viewClass(course.id)">Ver</button>
                     <button class="action-btn">Editar</button>
-                </div>
+                </div>}
+
             </div>
             }@else {
             <div class="turma-card inactive">

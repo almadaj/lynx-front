@@ -1,0 +1,201 @@
+<div class="question-bank">
+
+    <header class="page-header">
+        <div>
+            <span class="page-eyebrow">ACERVO ACADÊMICO</span>
+            <h1>Banco de questões</h1>
+            <p>Gerencie e organize suas questões em um único lugar.</p>
+        </div>
+
+        <button class="primary-button" (click)="createQuestion()">
+            <mat-icon>add</mat-icon>
+            Nova questão
+        </button>
+    </header>
+
+    <section class="search-section">
+        <div class="search-box">
+            <mat-icon>search</mat-icon>
+
+            <input type="text" placeholder="Buscar por título ou enunciado..." [ngModel]="search()"
+                (ngModelChange)="search.set($event)" (keyup.enter)="searchQuestions()" />
+
+            @if (search()) {
+            <button class="clear-search" (click)="search.set(''); searchQuestions()">
+                <mat-icon>close</mat-icon>
+            </button>
+            }
+
+            <button class="search-button" (click)="searchQuestions()">
+                Buscar
+            </button>
+        </div>
+    </section>
+
+
+
+    <section class="filters-bar">
+        <div class="filters-label">
+            <mat-icon>tune</mat-icon>
+            <span>Filtros</span>
+        </div>
+
+        <div class="filter-pills">
+
+            <div class="filter-pill">
+                <mat-icon class="filter-icon">signal_cellular_alt</mat-icon>
+
+                <mat-select placeholder="Dificuldade" [ngModel]="selectedDifficulty()"
+                    (ngModelChange)="selectedDifficulty.set($event)" panelClass="question-filter-panel">
+                    @for (item of difficulties; track item.value) {
+                    <mat-option [value]="item.value">
+                        {{ item.label }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </div>
+
+            <div class="filter-pill">
+                <mat-icon class="filter-icon">format_list_bulleted</mat-icon>
+
+                <mat-select placeholder="Tipo de questão" [ngModel]="selectedQuestionType()"
+                    (ngModelChange)="selectedQuestionType.set($event)" panelClass="question-filter-panel">
+                    @for (item of questionTypes; track item.value) {
+                    <mat-option [value]="item.value">
+                        {{ item.label }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </div>
+
+            <div class="filter-pill">
+                <mat-icon class="filter-icon">language</mat-icon>
+
+                <mat-select placeholder="Idioma" [ngModel]="selectedLanguage()"
+                    (ngModelChange)="selectedLanguage.set($event)" panelClass="question-filter-panel">
+                    @for (item of languages; track item.value) {
+                    <mat-option [value]="item.value">
+                        {{ item.label }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </div>
+
+            <div class="filter-pill">
+                <mat-icon class="filter-icon">lock_open</mat-icon>
+
+                <mat-select placeholder="Visibilidade" [ngModel]="selectedPrivacy()"
+                    (ngModelChange)="selectedPrivacy.set($event)" panelClass="question-filter-panel">
+                    @for (item of privacies; track item.value) {
+                    <mat-option [value]="item.value">
+                        {{ item.label }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </div>
+
+        </div>
+
+        <button class="clear-filters" (click)="clearFilters()">
+            Limpar
+        </button>
+    </section>
+
+    <section class="questions-section">
+        <div class="section-header">
+            <div>
+                <h2>Questões cadastradas</h2>
+                <p>{{ totalElements() }} questões encontradas</p>
+            </div>
+        </div>
+
+        @if (loading()) {
+        <div class="feedback-state">
+            <mat-icon class="loading-icon">sync</mat-icon>
+            <span>Carregando questões...</span>
+        </div>
+        } @else if (error()) {
+        <div class="feedback-state error-state">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ error() }}</span>
+            <button (click)="fetchQuestions()">Tentar novamente</button>
+        </div>
+        } @else if (questions().length === 0) {
+        <div class="empty-state">
+            <div class="empty-icon">
+                <mat-icon>library_books</mat-icon>
+            </div>
+            <h3>Nenhuma questão encontrada</h3>
+            <p>Experimente alterar sua busca ou cadastre uma nova questão.</p>
+            <button class="primary-button" (click)="createQuestion()">
+                <mat-icon>add</mat-icon>
+                Criar questão
+            </button>
+        </div>
+        } @else {
+        <div class="questions-list">
+            @for (question of questions(); track question.id) {
+            <article class="question-card">
+
+                <div class="question-content">
+                    <div class="question-meta">
+                        <span class="meta-tag difficulty">
+                            {{ getDifficultyLabel(question.difficulty) }}
+                        </span>
+
+                        <span class="meta-tag">
+                            {{ getQuestionTypeLabel(question.questionType) }}
+                        </span>
+
+                        <span class="meta-tag">
+                            {{ getLanguageLabel(question.language) }}
+                        </span>
+
+                        <span class="meta-tag privacy">
+                            <mat-icon>
+                                {{ question.privacy === 0 ? 'public' : question.privacy === 1 ? 'domain' : 'lock' }}
+                            </mat-icon>
+                            {{ getPrivacyLabel(question.privacy) }}
+                        </span>
+                    </div>
+
+                    <h3>{{ question.header }}</h3>
+                    <p class="question-body">{{ question.body }}</p>
+                </div>
+
+                <div class="question-actions">
+                    <button title="Visualizar" (click)="viewQuestion(question.id)">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+
+                    <button title="Editar" (click)="editQuestion(question.id)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+
+                    <button class="delete-action" title="Excluir" (click)="deleteQuestion(question.id)">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
+                </div>
+
+            </article>
+            }
+        </div>
+
+        <div class="pagination">
+            <span>
+                Página {{ page() + 1 }} de {{ totalPages() || 1 }}
+            </span>
+
+            <div class="pagination-actions">
+                <button [disabled]="page() === 0 || loading()" (click)="previousPage()">
+                    <mat-icon>chevron_left</mat-icon>
+                </button>
+
+                <button [disabled]="page() >= totalPages() - 1 || loading()" (click)="nextPage()">
+                    <mat-icon>chevron_right</mat-icon>
+                </button>
+            </div>
+        </div>
+        }
+    </section>
+</div>

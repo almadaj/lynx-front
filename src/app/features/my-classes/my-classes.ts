@@ -1,4 +1,4 @@
-import { Component, effect, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { CourseClassResponseDTO } from '../../models/courseClass.model';
 import { CourseClassService } from '../../services/api-services/courseClass.service';
@@ -7,6 +7,7 @@ import { StudentModal } from './student-modal/student-modal';
 import { UserService } from '../../services/api-services/user.service';
 import { Role, RoleHelper } from '../../shared/enum/role.enum';
 import { NewClassModal } from './new-class-modal/new-class-modal';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-classes',
@@ -25,6 +26,7 @@ export class MyClasses implements OnInit {
   currentDate = signal<number>(0)
   courses = signal<CourseClassResponseDTO[]>([])
   error = signal<string | null>(null)
+  private router = inject(Router)
 
   constructor(
     private courseService: CourseClassService,
@@ -71,6 +73,10 @@ export class MyClasses implements OnInit {
 
   openClassModal(): void {
     this.isModalNovaTurmaOpen.set(true);
+  }
+
+  viewClass(id: string) {
+    this.router.navigate(['/classes', id])
   }
 
   closeModal(): void {

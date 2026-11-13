@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { CourseClassResponseDTO, NewCourseClassDTO } from "../../models/courseClass.model";
+import { CourseClassResponseDTO, NewCourseClassDTO, StudentDTO } from "../../models/courseClass.model";
 
 @Injectable({
     providedIn: 'root'
@@ -20,6 +20,14 @@ export class CourseClassService {
 
     getAllCourses(): Observable<CourseClassResponseDTO> {
         return this.http.get<CourseClassResponseDTO>(`${this.apiUrl}/all`)
+    }
+
+    getCourseById(id: string): Observable<CourseClassResponseDTO> {
+        return this.http.get<CourseClassResponseDTO>(`${this.apiUrl}/${id}`)
+    }
+
+    getStudentsByCourseId(id: string): Observable<StudentDTO[]> {
+        return this.http.get<StudentDTO[]>(`${this.apiUrl}/${id}/students`)
     }
 
     create(dto: NewCourseClassDTO): Observable<CourseClassResponseDTO> {
