@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Page, QuestionResponseDTO } from "../../models/question.model";
+import { Page, QuestionAlternativeResponseDTO, QuestionResponseDTO } from "../../models/question.model";
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +12,18 @@ export class QuestionService {
     constructor(
         private http: HttpClient,
     ) { }
+
+    findById(id: string) {
+        return this.http.get<QuestionResponseDTO>(
+            `${this.apiUrl}/${id}`
+        )
+    }
+
+    findAlternatives(questionId: string) {
+        return this.http.get<QuestionAlternativeResponseDTO[]>(
+            `${this.apiUrl}/${questionId}/alternatives`
+        )
+    }
 
     findAll(filters: {
         search: string

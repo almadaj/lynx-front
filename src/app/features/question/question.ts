@@ -142,8 +142,8 @@ export class Question {
         return this.privacies.find(item => Number(item.value) === value)?.label ?? 'Não informado'
     }
 
-    viewQuestion(id: string): void {
-        // Implementaremos a visualização posteriormente.
+    viewQuestion(id: string) {
+        this.router.navigate(['/question', id])
     }
 
     editQuestion(id: string): void {

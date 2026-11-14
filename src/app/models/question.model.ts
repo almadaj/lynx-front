@@ -16,6 +16,13 @@ export interface QuestionResponseDTO {
     language: Language
 }
 
+export interface QuestionAlternativeResponseDTO {
+    id: string
+    alternativeText: string
+    altOrder: number
+    correct: boolean
+}
+
 export interface Page<T> {
     content: T[]
     totalElements: number
