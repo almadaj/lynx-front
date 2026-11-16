@@ -69,12 +69,14 @@ export const routes: Routes = [
             },
             {
                 path: 'question',
+                canActivate: [roleGuard([Role.TEACHER])],
                 loadComponent: () =>
                     import('./features/question/question')
                         .then(m => m.Question)
             },
             {
                 path: 'question/:id',
+                canActivate: [roleGuard([Role.TEACHER])],
                 loadComponent: () =>
                     import('./features/question/question-details/question-details')
                         .then(m => m.QuestionDetails)
