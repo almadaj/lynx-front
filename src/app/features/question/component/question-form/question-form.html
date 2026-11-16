@@ -1,0 +1,165 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="question-form">
+
+    <section class="form-section">
+        <div class="section-heading">
+            <div>
+                <h2>Informações da questão</h2>
+                <p>Defina as características e a visibilidade da questão.</p>
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-field">
+                <label for="questionType">Tipo de questão</label>
+                <select id="questionType" formControlName="questionType">
+                    @for (type of questionTypes; track type) {
+                    <option [value]="type">{{ type === 'MULTIPLE_CHOICE' ? 'Múltipla escolha' : 'Discursiva' }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label for="difficulty">Dificuldade</label>
+                <select id="difficulty" formControlName="difficulty">
+                    @for (difficulty of difficulties; track difficulty) {
+                    <option [value]="difficulty">{{ difficulty }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label for="language">Idioma</label>
+                <select id="language" formControlName="language">
+                    @for (language of languages; track language) {
+                    <option [value]="language">{{ language }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label for="privacy" class="label-with-info">
+                    Visibilidade
+
+                    <mat-icon class="info-icon"
+                        matTooltip="Pública: disponível para todos os usuários.&#10;Institucional: disponível para usuários com permissão de professor na instituição.&#10;Privada: disponível somente para você."
+                        matTooltipClass="privacy-tooltip" matTooltipPosition="above"
+                        aria-label="Informações sobre as opções de visibilidade">
+                        info_outline
+                    </mat-icon>
+                </label>
+                <select id="privacy" formControlName="privacy">
+                    <option [value]="0">Pública</option>
+                    <option [value]="1">Institucional</option>
+                    <option [value]="2">Privada (somente eu)</option>
+                </select>
+            </div>
+
+            <div class="form-field full-width">
+                <label for="companyId">Instituição</label>
+
+                <select id="companyId" formControlName="companyId"
+                    (change)="onCompanyChange($any($event.target).value)">
+                    @for (company of companies(); track company.companyId) {
+                    <option [value]="company.companyId">
+                        {{ company.publicName || company.companyName }}
+                    </option>
+                    }
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <div class="section-heading">
+            <div>
+                <h2>Conteúdo da questão</h2>
+                <p>Adicione o enunciado e as informações complementares.</p>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label for="header">Cabeçalho</label>
+            <input id="header" type="text" formControlName="header" placeholder="Ex.: Interpretação de texto" />
+        </div>
+
+        <div class="form-field">
+            <label for="body">Enunciado <span class="required">*</span></label>
+            <textarea id="body" formControlName="body" rows="6"
+                placeholder="Digite o enunciado da questão..."></textarea>
+        </div>
+
+        <div class="form-field">
+            <label for="footer">Rodapé</label>
+            <textarea id="footer" formControlName="footer" rows="3"
+                placeholder="Informações complementares (opcional)"></textarea>
+        </div>
+
+        @if (!isMultipleChoice) {
+        <div class="form-field">
+            <label for="expectedAnswer">Resposta esperada</label>
+            <textarea id="expectedAnswer" formControlName="expectedAnswer" rows="4"
+                placeholder="Descreva a resposta esperada..."></textarea>
+        </div>
+        }
+    </section>
+
+    @if (isMultipleChoice) {
+    <section class="form-section">
+        <div class="section-heading alternatives-heading">
+            <div>
+                <h2>Alternativas</h2>
+                <p>Adicione as opções e indique qual é a correta.</p>
+            </div>
+
+            <button type="button" class="add-button" (click)="addAlternative()">
+                <span>+</span>
+                Adicionar alternativa
+            </button>
+        </div>
+
+        <div formArrayName="alternatives" class="alternatives-list">
+            @for (alternative of alternatives.controls; track $index; let i = $index) {
+            <div class="alternative-item" [formGroupName]="i">
+                <div class="alternative-indicator">
+                    {{ i + 1 }}
+                </div>
+
+                <div class="form-field alternative-input">
+                    <label [for]="'alternative-' + i">Alternativa {{ i + 1 }}</label>
+                    <input [id]="'alternative-' + i" type="text" formControlName="alternativeText"
+                        placeholder="Digite a alternativa..." />
+                </div>
+
+                <label class="correct-option">
+                    <input type="checkbox" formControlName="correct" />
+                    <span>Correta</span>
+                </label>
+
+                <button type="button" class="remove-button" (click)="removeAlternative(i)"
+                    aria-label="Remover alternativa">
+                    ×
+                </button>
+            </div>
+            }
+
+            @if (alternatives.length === 0) {
+            <div class="empty-alternatives">
+                <p>Nenhuma alternativa adicionada.</p>
+                <span>Comece adicionando as opções de resposta.</span>
+            </div>
+            }
+        </div>
+    </section>
+    }
+
+    <div class="form-actions">
+        <button type="button" class="cancel-button">
+            Cancelar
+        </button>
+
+        <button type="submit" class="submit-button">
+            Salvar questão
+        </button>
+    </div>
+
+</form>

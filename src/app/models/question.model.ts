@@ -9,11 +9,34 @@ export interface QuestionResponseDTO {
     privacy: number;
     difficulty: Difficulty;
     questionType: QuestionType;
-    header: string;
-    body: string;
-    footer: string;
-    expectedAnswer: string;
+    header: string | null;
+    body: string | null;
+    footer: string | null;
+    expectedAnswer: string | null;
     language: Language
+}
+
+export interface RegisterQuestionDTO {
+    companyId: string
+    privacy: number
+    questionType: QuestionType
+    difficulty: Difficulty
+    header: string
+    body: string
+    footer: string
+    expectedAnswer: string
+    language: Language
+}
+
+export interface UpdateQuestion {
+    privacy?: number
+    questionType?: QuestionType
+    difficulty?: Difficulty
+    header?: string
+    body?: string
+    footer?: string
+    expectedAnswer?: string
+    language?: Language
 }
 
 export interface QuestionAlternativeResponseDTO {

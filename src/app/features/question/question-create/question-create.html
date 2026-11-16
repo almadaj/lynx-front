@@ -1,0 +1,21 @@
+<div class="create-page">
+    <header class="page-header">
+        <button type="button" class="back-button" (click)="cancel()">
+            <mat-icon>arrow_back</mat-icon>
+            Voltar
+        </button>
+
+        <div>
+            <h1>Nova questão</h1>
+            <p>Cadastre uma nova questão no banco de questões.</p>
+        </div>
+    </header>
+
+    @if (error()) {
+    <div class="error-message">
+        {{ error() }}
+    </div>
+    }
+
+    <app-question-form (submitted)="createQuestion($event)" />
+</div>

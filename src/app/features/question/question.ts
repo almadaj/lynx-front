@@ -123,7 +123,7 @@ export class Question {
     }
 
     createQuestion(): void {
-        this.router.navigate(['/questions/new'])
+        this.router.navigate(['/question/new'])
     }
 
     getDifficultyLabel(value: string): string {
