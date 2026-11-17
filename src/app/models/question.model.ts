@@ -46,6 +46,19 @@ export interface QuestionAlternativeResponseDTO {
     correct: boolean
 }
 
+export interface ClassifyQuestionRequest {
+    statement: string
+    expectedAnswer?: string
+    alternatives?: string[]
+}
+
+export interface ClassifyQuestionResponse {
+    difficulty: Difficulty
+    confidence: number
+    reason: string
+    explication: string
+}
+
 export interface Page<T> {
     content: T[]
     totalElements: number

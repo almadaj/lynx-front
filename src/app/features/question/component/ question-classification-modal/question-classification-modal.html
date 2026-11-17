@@ -1,0 +1,62 @@
+<div class="modal-overlay" (click)="close()">
+    <div class="modal-container" (click)="$event.stopPropagation()" role="dialog" aria-modal="true"
+        aria-labelledby="classification-title">
+        <header class="modal-header">
+            <div class="header-icon">
+                <mat-icon>auto_awesome</mat-icon>
+            </div>
+
+            <div>
+                <h2 id="classification-title">Classificação por IA</h2>
+                <p>Análise automática da questão</p>
+            </div>
+
+            <button type="button" class="close-button" (click)="close()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </header>
+
+        <div class="modal-content">
+            <section class="difficulty-result">
+                <span class="result-label">Dificuldade identificada</span>
+
+                <h3>{{ difficultyLabels[result.difficulty] }}</h3>
+
+                <div class="confidence">
+                    <div class="confidence-info">
+                        <span>Confiança da classificação</span>
+                        <strong>{{ (result.confidence * 100).toFixed(0) }}%</strong>
+                    </div>
+
+                    <div class="confidence-track">
+                        <div class="confidence-fill" [style.width.%]="result.confidence * 100"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="explanation-section">
+                <div class="section-title">
+                    <mat-icon>psychology</mat-icon>
+                    <h3>Justificativa</h3>
+                </div>
+
+                <p>{{ result.reason }}</p>
+            </section>
+
+            <section class="explanation-section">
+                <div class="section-title">
+                    <mat-icon>lightbulb</mat-icon>
+                    <h3>Explicação da resposta</h3>
+                </div>
+
+                <p>{{ result.explication }}</p>
+            </section>
+        </div>
+
+        <footer class="modal-footer">
+            <button type="button" (click)="close()">
+                Fechar
+            </button>
+        </footer>
+    </div>
+</div>

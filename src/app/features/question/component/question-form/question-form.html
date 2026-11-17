@@ -20,11 +20,34 @@
 
             <div class="form-field">
                 <label for="difficulty">Dificuldade</label>
-                <select id="difficulty" formControlName="difficulty">
-                    @for (difficulty of difficulties; track difficulty) {
-                    <option [value]="difficulty">{{ difficulty }}</option>
+
+                <div class="difficulty-control">
+                    <select id="difficulty" formControlName="difficulty">
+                        @for (difficulty of difficulties; track difficulty) {
+                        <option [value]="difficulty">{{ difficulty }}</option>
+                        }
+                    </select>
+
+                    <button type="button" class="ai-button" [disabled]="!canClassify || classifying()"
+                        (click)="classifyWithAI()">
+                        <mat-icon>auto_awesome</mat-icon>
+
+                        @if (classifying()) {
+                        Classificando...
+                        } @else {
+                        Classificar com IA
+                        }
+                    </button>
+                    @if (classificationError()) {
+                    <p class="classification-error">
+                        {{ classificationError() }}
+                    </p>
                     }
-                </select>
+
+                    @if (classificationResult(); as result) {
+                    <app-question-classification-modal [result]="result" (closed)="classificationResult.set(null)" />
+                    }
+                </div>
             </div>
 
             <div class="form-field">
