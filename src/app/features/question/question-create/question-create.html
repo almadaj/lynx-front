@@ -11,11 +11,6 @@
         </div>
     </header>
 
-    @if (error()) {
-    <div class="error-message">
-        {{ error() }}
-    </div>
-    }
-
-    <app-question-form (submitted)="createQuestion($event)" />
+    <app-question-form [loading]="loading()" (submitted)="createQuestion($event)" (cancelled)="cancel()"
+        (validationFailed)="onValidationFailed()" />
 </div>

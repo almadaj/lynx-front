@@ -1,6 +1,6 @@
 
 import { Component, EventEmitter, Input, Output, inject, signal } from "@angular/core"
-import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms"
+import { AbstractControl, FormArray, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms"
 import { ClassifyQuestionRequest, ClassifyQuestionResponse, RegisterQuestionDTO } from "../../../../models/question.model"
 import { Difficulty } from "../../../../shared/enum/difficulty.enum"
 import { QuestionType } from "../../../../shared/enum/question-type.enum"
@@ -11,6 +11,7 @@ import { UserService } from "../../../../services/api-services/user.service"
 import { UserCompany } from "../../../../models/user.model"
 import { QuestionClassificationService } from "../../../../services/ia-integration/question-classification.service"
 import { QuestionClassificationModal } from "../ question-classification-modal/ question-classification-modal"
+import { ToastService } from "../../../../shared/toaster/toast.service"
 
 @Component({
     selector: "app-question-form",
@@ -28,9 +29,13 @@ export class QuestionForm {
     private fb = inject(FormBuilder)
     private userService = inject(UserService)
     private classificationService = inject(QuestionClassificationService)
+    private toastService = inject(ToastService)
 
     @Input() initialData?: RegisterQuestionDTO
+    @Input() loading = false
     @Output() submitted = new EventEmitter<RegisterQuestionDTO>()
+    @Output() cancelled = new EventEmitter<void>()
+    @Output() validationFailed = new EventEmitter<void>()
 
     readonly difficulties = Object.values(Difficulty)
     readonly questionTypes = Object.values(QuestionType)
@@ -43,6 +48,37 @@ export class QuestionForm {
 
     constructor() {
         this.fetchCompanyInfo()
+        this.form.get("questionType")?.valueChanges.subscribe(() => {
+            this.alternatives.updateValueAndValidity()
+        })
+    }
+
+    private alternativesValidator = (control: AbstractControl): ValidationErrors | null => {
+        const questionType = control.parent?.get("questionType")?.value
+
+        if (questionType !== QuestionType.MULTIPLE_CHOICE) {
+            return null
+        }
+
+        const alternatives = (control as FormArray).controls
+
+        const filledAlternatives = alternatives.filter(
+            alternative => !!alternative.get("alternativeText")?.value?.trim()
+        )
+
+        const correctAlternatives = filledAlternatives.filter(
+            alternative => alternative.get("correct")?.value === true
+        )
+
+        if (filledAlternatives.length < 2) {
+            return { minAlternatives: true }
+        }
+
+        if (correctAlternatives.length !== 1) {
+            return { exactlyOneCorrect: true }
+        }
+
+        return null
     }
 
     readonly form = this.fb.group({
@@ -55,7 +91,9 @@ export class QuestionForm {
         footer: [""],
         expectedAnswer: [""],
         language: [Language.PORTUGUESE, Validators.required],
-        alternatives: this.fb.array([])
+        alternatives: this.fb.array([], {
+            validators: [this.alternativesValidator]
+        })
     })
 
     get alternatives(): FormArray {
@@ -81,6 +119,7 @@ export class QuestionForm {
 
         return !!this.form.get('expectedAnswer')?.value?.trim()
     }
+
 
     fetchCompanyInfo(): void {
         this.userService.findMyInfo().subscribe({
@@ -121,17 +160,25 @@ export class QuestionForm {
 
         const statement = [header, body, footer]
             .filter(value => value?.trim())
-            .join('\n\n')
+            .join("\n\n")
 
         const alternatives = this.isMultipleChoice
             ? this.alternatives.controls
-                .map(control => control.get('alternativeText')?.value?.trim())
+                .map(control => control.get("alternativeText")?.value?.trim())
                 .filter((value): value is string => !!value)
             : []
 
+        const correctAlternative = this.isMultipleChoice
+            ? this.alternatives.controls.find(
+                control => control.get("correct")?.value === true
+            )
+            : null
+
         return {
             statement,
-            expectedAnswer: expectedAnswer ?? '',
+            expectedAnswer: this.isMultipleChoice
+                ? correctAlternative?.get("alternativeText")?.value?.trim() ?? ""
+                : expectedAnswer ?? "",
             alternatives
         }
     }
@@ -160,6 +207,16 @@ export class QuestionForm {
         })
     }
 
+    setCorrectAlternative(index: number): void {
+        this.alternatives.controls.forEach((control, i) => {
+            control.get('correct')?.setValue(i === index)
+        })
+    }
+
+    getAlternativeLabel(index: number): string {
+        return String.fromCharCode(65 + index)
+    }
+
     removeAlternative(index: number): void {
         this.alternatives.removeAt(index)
     }
@@ -167,6 +224,7 @@ export class QuestionForm {
     onSubmit(): void {
         if (this.form.invalid) {
             this.form.markAllAsTouched()
+            this.validationFailed.emit()
             return
         }
 

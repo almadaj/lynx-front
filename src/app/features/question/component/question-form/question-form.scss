@@ -121,16 +121,121 @@
 .alternatives-list {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
 }
 
 .alternative-item {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 14px;
-    border: 1px solid var(--border, #e5e7eb);
-    border-radius: 10px;
+    padding: 12px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 9px;
+    background: #fff;
+    transition: border-color 0.2s, background 0.2s;
+
+    &:hover {
+        border-color: #cbd5e1;
+    }
+
+    &.is-correct {
+        border-color: #86bda0;
+        background: #f5faf7;
+    }
+}
+
+.alternative-letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.alternative-item.is-correct .alternative-letter {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.alternative-text {
+    flex: 1;
+    min-width: 0;
+    height: 40px;
+    padding: 0 10px;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #1e293b;
+    font-size: 14px;
+
+    &::placeholder {
+        color: #94a3b8;
+    }
+}
+
+.correct-option {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+    cursor: pointer;
+    color: #64748b;
+    font-size: 12px;
+
+    input {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        accent-color: #16a34a;
+        cursor: pointer;
+    }
+}
+
+.alternative-item.is-correct .correct-option {
+    color: #15803d;
+    font-weight: 600;
+}
+
+.remove-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+
+    mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+    }
+
+    &:hover {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+}
+
+@media (max-width: 600px) {
+    .alternative-item {
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .correct-option span {
+        display: none;
+    }
 }
 
 .alternative-indicator {

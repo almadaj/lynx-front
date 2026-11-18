@@ -142,25 +142,23 @@
 
         <div formArrayName="alternatives" class="alternatives-list">
             @for (alternative of alternatives.controls; track $index; let i = $index) {
-            <div class="alternative-item" [formGroupName]="i">
-                <div class="alternative-indicator">
-                    {{ i + 1 }}
-                </div>
+            <div class="alternative-item" [class.is-correct]="alternative.get('correct')?.value" [formGroupName]="i">
+                <span class="alternative-letter">
+                    {{ getAlternativeLabel(i) }}
+                </span>
 
-                <div class="form-field alternative-input">
-                    <label [for]="'alternative-' + i">Alternativa {{ i + 1 }}</label>
-                    <input [id]="'alternative-' + i" type="text" formControlName="alternativeText"
-                        placeholder="Digite a alternativa..." />
-                </div>
+                <input class="alternative-text" type="text" formControlName="alternativeText"
+                    [placeholder]="'Digite a alternativa ' + getAlternativeLabel(i) + '...'" />
 
                 <label class="correct-option">
-                    <input type="checkbox" formControlName="correct" />
+                    <input type="radio" name="correctAlternative" [checked]="alternative.get('correct')?.value"
+                        (change)="setCorrectAlternative(i)" />
                     <span>Correta</span>
                 </label>
 
                 <button type="button" class="remove-button" (click)="removeAlternative(i)"
-                    aria-label="Remover alternativa">
-                    ×
+                    [attr.aria-label]="'Remover alternativa ' + getAlternativeLabel(i)">
+                    <mat-icon>close</mat-icon>
                 </button>
             </div>
             }
@@ -176,13 +174,16 @@
     }
 
     <div class="form-actions">
-        <button type="button" class="cancel-button">
+        <button type="button" class="cancel-button" (click)="cancelled.emit()">
             Cancelar
         </button>
 
-        <button type="submit" class="submit-button">
-            Salvar questão
+        <button type="submit" class="submit-button" [disabled]="loading">
+            @if (loading) {
+            Salvando...
+            } @else {
+            Criar questão
+            }
         </button>
     </div>
-
 </form>

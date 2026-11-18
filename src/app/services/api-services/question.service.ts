@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Page, QuestionAlternativeResponseDTO, QuestionResponseDTO } from "../../models/question.model";
+import { Page, QuestionAlternativeResponseDTO, QuestionResponseDTO, RegisterQuestionDTO } from "../../models/question.model";
+import { Observable } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -22,6 +23,12 @@ export class QuestionService {
     findAlternatives(questionId: string) {
         return this.http.get<QuestionAlternativeResponseDTO[]>(
             `${this.apiUrl}/${questionId}/alternatives`
+        )
+    }
+
+    create(dto: RegisterQuestionDTO): Observable<QuestionResponseDTO> {
+        return this.http.post<QuestionResponseDTO>(
+            `${this.apiUrl}`, dto
         )
     }
 
