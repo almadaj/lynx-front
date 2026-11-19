@@ -46,6 +46,17 @@
     border-bottom: 1px solid var(--modal-border);
 }
 
+.content-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: #111827;
+    text-align: center;
+}
+
+.modal-body p {
+    white-space: pre-line;
+}
+
 .modal-title {
     margin: 0;
     font-size: 1.125rem;

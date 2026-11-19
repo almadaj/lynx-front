@@ -17,7 +17,9 @@
         <div class="modal-body">
             @if(contentComponent){
             <ng-container *ngComponentOutlet="contentComponent"></ng-container>
-            } @else {
+            } @else if (content) {
+            <p class="content-text">{{ content }}</p>
+            }@else {
             <ng-content></ng-content>
             }
         </div>

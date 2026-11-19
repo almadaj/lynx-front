@@ -32,6 +32,10 @@ export class QuestionService {
         )
     }
 
+    delete(id: string): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/${id}`)
+    }
+
     findAll(filters: {
         search: string
         difficulty: string

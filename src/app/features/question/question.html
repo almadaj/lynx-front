@@ -172,13 +172,17 @@
                         <mat-icon>edit</mat-icon>
                     </button>
 
-                    <button class="delete-action" title="Excluir" (click)="deleteQuestion(question.id)">
+                    <button class="delete-action" title="Excluir" (click)="openDeleteModal(question.id)">
                         <mat-icon>delete_outline</mat-icon>
                     </button>
                 </div>
 
             </article>
             }
+            <app-common-modal [isOpen]="deleteModalOpen()" title="Excluir questão"
+                [content]="'Tem certeza que deseja excluir esta questão?\nEssa ação não poderá ser desfeita.'"
+                confirmButtonText="Excluir questão" cancelButtonText="Cancelar" (close)="closeDeleteModal()"
+                (cancel)="closeDeleteModal()" (confirm)="confirmDeleteQuestion()" />
         </div>
 
         <div class="pagination">
