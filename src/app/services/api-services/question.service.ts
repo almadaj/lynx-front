@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Page, QuestionAlternativeResponseDTO, QuestionResponseDTO, RegisterQuestionDTO } from "../../models/question.model";
+import { Page, QuestionAlternativeResponseDTO, QuestionResponseDTO, RegisterAlternativeDTO, RegisterQuestionDTO } from "../../models/question.model";
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -69,6 +69,16 @@ export class QuestionService {
         return this.http.get<Page<QuestionResponseDTO>>(
             this.apiUrl,
             { params }
+        )
+    }
+
+    addAlternatives(
+        questionId: string,
+        alternatives: RegisterAlternativeDTO[]
+    ): Observable<void> {
+        return this.http.post<void>(
+            `${this.apiUrl}/${questionId}/alternatives`,
+            alternatives
         )
     }
 }

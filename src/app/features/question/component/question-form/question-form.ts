@@ -1,7 +1,16 @@
 
 import { Component, EventEmitter, Input, Output, inject, signal } from "@angular/core"
-import { AbstractControl, FormArray, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms"
-import { ClassifyQuestionRequest, ClassifyQuestionResponse, RegisterQuestionDTO } from "../../../../models/question.model"
+import {
+    AbstractControl,
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    ValidationErrors,
+    Validators
+} from "@angular/forms"
+import { ClassifyQuestionRequest, ClassifyQuestionResponse, QuestionFormSubmission, RegisterAlternativeDTO, RegisterQuestionDTO } from "../../../../models/question.model"
 import { Difficulty } from "../../../../shared/enum/difficulty.enum"
 import { QuestionType } from "../../../../shared/enum/question-type.enum"
 import { Language } from "../../../../models/language.model"
@@ -12,6 +21,11 @@ import { UserCompany } from "../../../../models/user.model"
 import { QuestionClassificationService } from "../../../../services/ia-integration/question-classification.service"
 import { QuestionClassificationModal } from "../ question-classification-modal/ question-classification-modal"
 import { ToastService } from "../../../../shared/toaster/toast.service"
+
+type AlternativeForm = FormGroup<{
+    alternativeText: FormControl<string>
+    correct: FormControl<boolean>
+}>
 
 @Component({
     selector: "app-question-form",
@@ -25,6 +39,7 @@ import { ToastService } from "../../../../shared/toaster/toast.service"
     templateUrl: "./question-form.html",
     styleUrl: "./question-form.scss"
 })
+
 export class QuestionForm {
     private fb = inject(FormBuilder)
     private userService = inject(UserService)
@@ -33,7 +48,7 @@ export class QuestionForm {
 
     @Input() initialData?: RegisterQuestionDTO
     @Input() loading = false
-    @Output() submitted = new EventEmitter<RegisterQuestionDTO>()
+    @Output() submitted = new EventEmitter<QuestionFormSubmission>()
     @Output() cancelled = new EventEmitter<void>()
     @Output() validationFailed = new EventEmitter<void>()
 
@@ -52,6 +67,7 @@ export class QuestionForm {
             this.alternatives.updateValueAndValidity()
         })
     }
+
 
     private alternativesValidator = (control: AbstractControl): ValidationErrors | null => {
         const questionType = control.parent?.get("questionType")?.value
@@ -91,13 +107,11 @@ export class QuestionForm {
         footer: [""],
         expectedAnswer: [""],
         language: [Language.PORTUGUESE, Validators.required],
-        alternatives: this.fb.array([], {
-            validators: [this.alternativesValidator]
-        })
+        alternatives: this.createAlternativesArray()
     })
 
-    get alternatives(): FormArray {
-        return this.form.get("alternatives") as FormArray
+    get alternatives(): FormArray<AlternativeForm> {
+        return this.form.get("alternatives") as FormArray<AlternativeForm>
     }
 
     get isMultipleChoice(): boolean {
@@ -120,6 +134,11 @@ export class QuestionForm {
         return !!this.form.get('expectedAnswer')?.value?.trim()
     }
 
+    private createAlternativesArray(): FormArray<AlternativeForm> {
+        return this.fb.array<AlternativeForm>([], {
+            validators: [this.alternativesValidator]
+        })
+    }
 
     fetchCompanyInfo(): void {
         this.userService.findMyInfo().subscribe({
@@ -147,12 +166,12 @@ export class QuestionForm {
     }
 
     addAlternative(): void {
-        this.alternatives.push(
-            this.fb.group({
-                alternativeText: ["", Validators.required],
-                correct: [false]
-            })
-        )
+        const alternative: AlternativeForm = this.fb.group({
+            alternativeText: this.fb.nonNullable.control("", Validators.required),
+            correct: this.fb.nonNullable.control(false)
+        })
+
+        this.alternatives.push(alternative)
     }
 
     private buildClassificationRequest(): ClassifyQuestionRequest {
@@ -230,6 +249,17 @@ export class QuestionForm {
 
         const { alternatives, ...questionData } = this.form.getRawValue()
 
-        this.submitted.emit(questionData as RegisterQuestionDTO)
+        const alternativesData: RegisterAlternativeDTO[] = this.isMultipleChoice
+            ? alternatives.map((alternative, index) => ({
+                altOrder: index + 1,
+                alternativeText: alternative.alternativeText.trim(),
+                isCorrect: alternative.correct
+            }))
+            : []
+
+        this.submitted.emit({
+            question: questionData as RegisterQuestionDTO,
+            alternatives: alternativesData
+        })
     }
 }

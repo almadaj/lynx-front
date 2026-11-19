@@ -59,6 +59,17 @@ export interface ClassifyQuestionResponse {
     explication: string
 }
 
+export interface RegisterAlternativeDTO {
+    altOrder: number;
+    alternativeText: string;
+    isCorrect: boolean;
+}
+
+export interface QuestionFormSubmission {
+    question: RegisterQuestionDTO
+    alternatives: RegisterAlternativeDTO[]
+}
+
 export interface Page<T> {
     content: T[]
     totalElements: number
