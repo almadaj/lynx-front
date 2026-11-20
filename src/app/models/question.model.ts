@@ -14,6 +14,7 @@ export interface QuestionResponseDTO {
     footer: string | null;
     expectedAnswer: string | null;
     language: Language
+    alternatives: QuestionAlternativeResponseDTO[]
 }
 
 export interface RegisterQuestionDTO {

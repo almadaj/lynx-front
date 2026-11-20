@@ -50,23 +50,11 @@ export class QuestionDetails implements OnInit {
                 }
 
                 return this.questionService.findById(id).pipe(
-                    switchMap(question => {
-                        if (question.questionType !== QuestionType.MULTIPLE_CHOICE) {
-                            return of({
-                                question,
-                                alternatives: [],
-                                error: null
-                            })
-                        }
-
-                        return this.questionService.findAlternatives(id).pipe(
-                            map(alternatives => ({
-                                question,
-                                alternatives,
-                                error: null
-                            }))
-                        )
-                    }),
+                    map(question => ({
+                        question,
+                        alternatives: question.alternatives ?? [],
+                        error: null
+                    })),
                     catchError(() => of({
                         question: null,
                         alternatives: [],
