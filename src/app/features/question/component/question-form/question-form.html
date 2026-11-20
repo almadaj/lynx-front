@@ -182,7 +182,7 @@
             @if (loading) {
             Salvando...
             } @else {
-            Criar questão
+            {{ initialData ? 'Salvar alterações' : 'Criar questão' }}
             }
         </button>
     </div>

@@ -30,14 +30,15 @@ export interface RegisterQuestionDTO {
 }
 
 export interface UpdateQuestion {
-    privacy?: number
-    questionType?: QuestionType
-    difficulty?: Difficulty
-    header?: string
-    body?: string
-    footer?: string
-    expectedAnswer?: string
-    language?: Language
+    privacy: number
+    questionType: QuestionType
+    difficulty: Difficulty
+    header: string | null
+    body: string
+    footer: string | null
+    expectedAnswer: string | null
+    language: Language
+    alternatives: RegisterAlternativeDTO[]
 }
 
 export interface QuestionAlternativeResponseDTO {

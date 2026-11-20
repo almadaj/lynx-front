@@ -1,5 +1,14 @@
 
-import { Component, EventEmitter, Input, Output, inject, signal } from "@angular/core"
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    OnChanges,
+    SimpleChanges,
+    inject,
+    signal
+} from "@angular/core"
 import {
     AbstractControl,
     FormArray,
@@ -10,7 +19,14 @@ import {
     ValidationErrors,
     Validators
 } from "@angular/forms"
-import { ClassifyQuestionRequest, ClassifyQuestionResponse, QuestionFormSubmission, RegisterAlternativeDTO, RegisterQuestionDTO } from "../../../../models/question.model"
+import {
+    ClassifyQuestionRequest,
+    ClassifyQuestionResponse,
+    QuestionFormSubmission,
+    QuestionResponseDTO,
+    RegisterAlternativeDTO,
+    RegisterQuestionDTO
+} from "../../../../models/question.model"
 import { Difficulty } from "../../../../shared/enum/difficulty.enum"
 import { QuestionType } from "../../../../shared/enum/question-type.enum"
 import { Language } from "../../../../models/language.model"
@@ -40,13 +56,13 @@ type AlternativeForm = FormGroup<{
     styleUrl: "./question-form.scss"
 })
 
-export class QuestionForm {
+export class QuestionForm implements OnChanges {
     private fb = inject(FormBuilder)
     private userService = inject(UserService)
     private classificationService = inject(QuestionClassificationService)
     private toastService = inject(ToastService)
 
-    @Input() initialData?: RegisterQuestionDTO
+    @Input() initialData?: QuestionResponseDTO
     @Input() loading = false
     @Output() submitted = new EventEmitter<QuestionFormSubmission>()
     @Output() cancelled = new EventEmitter<void>()
@@ -68,6 +84,42 @@ export class QuestionForm {
         })
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['initialData'] && this.initialData) {
+            this.populateForm(this.initialData)
+        }
+    }
+
+    private populateForm(data: QuestionResponseDTO): void {
+        this.form.patchValue({
+            companyId: data.companyId,
+            privacy: data.privacy,
+            questionType: data.questionType,
+            difficulty: data.difficulty,
+            header: data.header ?? '',
+            body: data.body ?? '',
+            footer: data.footer ?? '',
+            expectedAnswer: data.expectedAnswer ?? '',
+            language: data.language
+        })
+
+        this.alternatives.clear()
+
+        for (const alternative of data.alternatives ?? []) {
+            this.alternatives.push(
+                this.fb.group({
+                    alternativeText: this.fb.nonNullable.control(
+                        alternative.alternativeText,
+                        Validators.required
+                    ),
+                    correct: this.fb.nonNullable.control(
+                        alternative.correct
+                    )
+                })
+            )
+        }
+        this.alternatives.updateValueAndValidity()
+    }
 
     private alternativesValidator = (control: AbstractControl): ValidationErrors | null => {
         const questionType = control.parent?.get("questionType")?.value
@@ -148,7 +200,7 @@ export class QuestionForm {
                 const company = user.companies[0] ?? null
                 this.selectedCompany.set(company)
 
-                if (company) {
+                if (company && !this.initialData) {
                     this.form.patchValue({
                         companyId: company.companyId
                     })

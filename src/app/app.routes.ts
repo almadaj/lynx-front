@@ -82,6 +82,13 @@ export const routes: Routes = [
                         .then(m => m.QuestionCreate)
             },
             {
+                path: 'question/:id/edit',
+                canActivate: [roleGuard([Role.TEACHER])],
+                loadComponent: () =>
+                    import('./features/question/question-edit/question-edit')
+                        .then(m => m.QuestionEdit)
+            },
+            {
                 path: 'question/:id',
                 canActivate: [roleGuard([Role.TEACHER])],
                 loadComponent: () =>

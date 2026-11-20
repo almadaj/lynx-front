@@ -151,8 +151,8 @@ export class Question {
         this.router.navigate(['/question', id])
     }
 
-    editQuestion(id: string): void {
-        // Implementaremos a edição posteriormente.
+    editQuestion(question: QuestionResponseDTO) {
+        this.router.navigate(['/question', question.id, 'edit'])
     }
 
     openDeleteModal(id: string): void {

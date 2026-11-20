@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Page, QuestionAlternativeResponseDTO, QuestionResponseDTO, RegisterAlternativeDTO, RegisterQuestionDTO } from "../../models/question.model";
+import { Page, QuestionAlternativeResponseDTO, QuestionResponseDTO, RegisterAlternativeDTO, RegisterQuestionDTO, UpdateQuestion } from "../../models/question.model";
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -29,6 +29,13 @@ export class QuestionService {
     create(dto: RegisterQuestionDTO): Observable<QuestionResponseDTO> {
         return this.http.post<QuestionResponseDTO>(
             `${this.apiUrl}`, dto
+        )
+    }
+
+    update(id: string, dto: UpdateQuestion): Observable<QuestionResponseDTO> {
+        return this.http.put<QuestionResponseDTO>(
+            `${this.apiUrl}/${id}`,
+            dto
         )
     }
 
