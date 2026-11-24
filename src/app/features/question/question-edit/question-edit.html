@@ -1,0 +1,29 @@
+@if (loading()) {
+<div class="loading-container">
+    <p>Carregando questão...</p>
+</div>
+} @else if (error()) {
+<div class="error-container">
+    <p>{{ error() }}</p>
+    <button type="button" (click)="cancel()">
+        Voltar
+    </button>
+</div>
+} @else if (question(); as currentQuestion) {
+<div class="edit-page">
+    <header class="page-header">
+        <button type="button" class="back-button" (click)="cancel()">
+            <mat-icon>arrow_back</mat-icon>
+            Voltar
+        </button>
+
+        <div>
+            <h1>Editar questão</h1>
+            <p>Atualize as informações e as alternativas da questão.</p>
+        </div>
+    </header>
+
+    <app-question-form [initialData]="currentQuestion" [loading]="saving()" (submitted)="updateQuestion($event)"
+        (cancelled)="goBack()" (validationFailed)="onValidationFailed()" />
+</div>
+}

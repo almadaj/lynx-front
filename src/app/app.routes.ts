@@ -69,9 +69,31 @@ export const routes: Routes = [
             },
             {
                 path: 'question',
+                canActivate: [roleGuard([Role.TEACHER])],
                 loadComponent: () =>
                     import('./features/question/question')
                         .then(m => m.Question)
+            },
+            {
+                path: 'question/new',
+                canActivate: [roleGuard([Role.TEACHER])],
+                loadComponent: () =>
+                    import('./features/question/question-create/question-create')
+                        .then(m => m.QuestionCreate)
+            },
+            {
+                path: 'question/:id/edit',
+                canActivate: [roleGuard([Role.TEACHER])],
+                loadComponent: () =>
+                    import('./features/question/question-edit/question-edit')
+                        .then(m => m.QuestionEdit)
+            },
+            {
+                path: 'question/:id',
+                canActivate: [roleGuard([Role.TEACHER])],
+                loadComponent: () =>
+                    import('./features/question/question-details/question-details')
+                        .then(m => m.QuestionDetails)
             },
             {
                 path: 'company/:companyId/edit-member/:userCompanyId',

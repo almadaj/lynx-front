@@ -9,11 +9,67 @@ export interface QuestionResponseDTO {
     privacy: number;
     difficulty: Difficulty;
     questionType: QuestionType;
-    header: string;
-    body: string;
-    footer: string;
-    expectedAnswer: string;
+    header: string | null;
+    body: string | null;
+    footer: string | null;
+    expectedAnswer: string | null;
     language: Language
+    alternatives: QuestionAlternativeResponseDTO[]
+}
+
+export interface RegisterQuestionDTO {
+    companyId: string
+    privacy: number
+    questionType: QuestionType
+    difficulty: Difficulty
+    header: string
+    body: string
+    footer: string
+    expectedAnswer: string
+    language: Language
+}
+
+export interface UpdateQuestion {
+    privacy: number
+    questionType: QuestionType
+    difficulty: Difficulty
+    header: string | null
+    body: string
+    footer: string | null
+    expectedAnswer: string | null
+    language: Language
+    alternatives: RegisterAlternativeDTO[]
+}
+
+export interface QuestionAlternativeResponseDTO {
+    id: string
+    alternativeText: string
+    altOrder: number
+    correct: boolean
+}
+
+export interface ClassifyQuestionRequest {
+    statement: string
+    expectedAnswer?: string
+    alternatives?: string[]
+}
+
+export interface ClassifyQuestionResponse {
+    difficulty: Difficulty
+    confidence: number
+    reason: string
+    explication: string
+}
+
+export interface RegisterAlternativeDTO {
+    altOrder: number;
+    alternativeText: string;
+    isCorrect: boolean;
+}
+
+export interface QuestionFormSubmission {
+    question: RegisterQuestionDTO
+    alternatives: RegisterAlternativeDTO[]
 }
 
 export interface Page<T> {

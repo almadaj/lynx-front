@@ -3,13 +3,15 @@ import { Router, RouterLink, RouterModule } from '@angular/router';
 import { MatIcon } from "@angular/material/icon";
 import { AuthService } from '../../services/api-services/auth.service';
 import { NotificationService } from '../../services/api-services/notification.service';
+import { Role } from '../enum/role.enum';
 
 
 interface MenuItem {
   label: string
   icon?: string
   route?: string
-  children?: MenuItem[]
+  children?: MenuItem[],
+  role?: Role[]
 }
 
 @Component({
@@ -74,10 +76,14 @@ export class Sidebar {
     {
       label: "Questões",
       route: "/question",
-      icon: 'poll'
+      icon: 'poll',
+      role: [Role.TEACHER]
     },
   ]);
 
+  hasAccess(roles?: Role[]): boolean {
+    return !roles || roles.some(role => this.authService.hasPermission(role))
+  }
 
   open(): void {
     this.isOpen.set(true);

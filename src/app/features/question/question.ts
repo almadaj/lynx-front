@@ -5,21 +5,26 @@ import { QuestionService } from '../../services/api-services/question.service'
 import { Component, inject, signal } from '@angular/core'
 import { QuestionResponseDTO } from '../../models/question.model'
 import { MatSelectModule } from '@angular/material/select'
+import { ToastService } from '../../shared/toaster/toast.service'
+import { CommonModal } from '../../shared/common-modal/common-modal'
 
 @Component({
     selector: 'app-question',
     standalone: true,
-    imports: [FormsModule, MatIconModule, MatSelectModule],
+    imports: [FormsModule, MatIconModule, MatSelectModule, CommonModal],
     templateUrl: './question.html',
     styleUrl: './question.scss'
 })
 export class Question {
     private questionService = inject(QuestionService)
+    private toastService = inject(ToastService)
     private router = inject(Router)
 
     questions = signal<QuestionResponseDTO[]>([])
     loading = signal(false)
     error = signal<string | null>(null)
+    selectedQuestionId = signal<string | null>(null)
+    deleteModalOpen = signal(false)
 
     search = signal('')
     selectedDifficulty = signal('')
@@ -123,7 +128,7 @@ export class Question {
     }
 
     createQuestion(): void {
-        this.router.navigate(['/questions/new'])
+        this.router.navigate(['/question/new'])
     }
 
     getDifficultyLabel(value: string): string {
@@ -142,15 +147,58 @@ export class Question {
         return this.privacies.find(item => Number(item.value) === value)?.label ?? 'Não informado'
     }
 
-    viewQuestion(id: string): void {
-        // Implementaremos a visualização posteriormente.
+    viewQuestion(id: string) {
+        this.router.navigate(['/question', id])
     }
 
-    editQuestion(id: string): void {
-        // Implementaremos a edição posteriormente.
+    editQuestion(question: QuestionResponseDTO) {
+        this.router.navigate(['/question', question.id, 'edit'])
     }
 
-    deleteQuestion(id: string): void {
-        // Implementaremos a exclusão posteriormente.
+    openDeleteModal(id: string): void {
+        this.selectedQuestionId.set(id)
+        this.deleteModalOpen.set(true)
+    }
+
+    closeDeleteModal(): void {
+        this.deleteModalOpen.set(false)
+        this.selectedQuestionId.set(null)
+    }
+
+    confirmDeleteQuestion(): void {
+        const id = this.selectedQuestionId()
+
+        if (!id) return
+
+        this.questionService.delete(id).subscribe({
+            next: () => {
+                const updatedQuestions = this.questions().filter(
+                    question => question.id !== id
+                )
+
+                const updatedTotal = Math.max(0, this.totalElements() - 1)
+                const updatedTotalPages = Math.ceil(updatedTotal / this.size())
+
+                this.questions.set(updatedQuestions)
+                this.totalElements.set(updatedTotal)
+                this.totalPages.set(updatedTotalPages)
+
+                this.toastService.success('Questão excluída com sucesso!')
+
+                this.closeDeleteModal()
+
+                if (this.page() >= updatedTotalPages && updatedTotalPages > 0) {
+                    this.page.set(updatedTotalPages - 1)
+                    this.fetchQuestions()
+                }
+            },
+            error: err => {
+                console.error('Erro ao excluir questão:', err)
+
+                this.toastService.error(
+                    'Não foi possível excluir a questão.'
+                )
+            }
+        })
     }
 }

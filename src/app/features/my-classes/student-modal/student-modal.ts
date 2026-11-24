@@ -31,7 +31,7 @@ export class StudentModal {
 
     readonly principalCompanies = computed(() =>
         this.autorizedCompanies().filter(
-            company => company.role === Role.PRINCIPAL
+            company => company.role === Role.PRINCIPAL || Role.ADMIN
         )
     );
 

@@ -1,0 +1,132 @@
+<main class="question-details-page">
+
+    <header class="page-header">
+        <button class="back-button" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Voltar ao banco
+        </button>
+
+        <div class="page-heading">
+            <div>
+                <span class="eyebrow">BANCO DE QUESTÕES</span>
+                <h1>Detalhes da questão</h1>
+                <p>Visualize o enunciado e as informações da questão.</p>
+            </div>
+        </div>
+    </header>
+
+    @if (loading()) {
+    <section class="state-container">
+        <mat-icon class="state-icon">hourglass_empty</mat-icon>
+        <p>Carregando questão...</p>
+    </section>
+    } @else if (error()) {
+    <section class="state-container error-state">
+        <mat-icon class="state-icon">error_outline</mat-icon>
+        <h2>Não foi possível carregar</h2>
+        <p>{{ error() }}</p>
+
+        <button class="primary-button" (click)="goBack()">
+            Voltar ao banco
+        </button>
+    </section>
+    } @else if (question(); as q) {
+
+    <section class="question-content">
+
+        <div class="metadata">
+            <span class="metadata-item">
+                <mat-icon>signal_cellular_alt</mat-icon>
+                {{ getDifficultyLabel(q.difficulty) }}
+            </span>
+
+            <span class="metadata-item">
+                <mat-icon>language</mat-icon>
+                {{ getLanguageLabel(q.language) }}
+            </span>
+
+            <span class="metadata-item">
+                <mat-icon>category</mat-icon>
+                {{ q.questionType === questionType.MULTIPLE_CHOICE
+                ? 'Múltipla escolha'
+                : 'Discursiva' }}
+            </span>
+        </div>
+
+        <article class="question-card">
+
+            @if (q.header) {
+            <h2>{{ q.header }}</h2>
+            }
+
+            <div class="question-body">
+                {{ q.body }}
+            </div>
+
+            @if (q.footer) {
+            <div class="question-footer">
+                {{ q.footer }}
+            </div>
+            }
+
+        </article>
+
+        @if (q.questionType === questionType.MULTIPLE_CHOICE) {
+
+        <section class="alternatives-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Alternativas</h2>
+                    <p>Opções de resposta desta questão.</p>
+                </div>
+
+                <span class="count-badge">
+                    {{ alternatives().length }}
+                    {{ alternatives().length === 1 ? 'alternativa' : 'alternativas' }}
+                </span>
+            </div>
+
+            @if (alternatives().length > 0) {
+            <div class="alternatives-list">
+                @for (alternative of alternatives(); track alternative.id) {
+                <div class="alternative-item" [class.correct-alternative]="alternative.correct">
+                    <span class="alternative-text">
+                        {{ alternative.alternativeText }}
+                    </span>
+
+                    @if (alternative.correct) {
+                    <span class="correct-label">
+                        <mat-icon>check_circle</mat-icon>
+                        Correta
+                    </span>
+                    }
+                </div>
+                }
+            </div>
+            } @else {
+            <div class="empty-alternatives">
+                <mat-icon>info_outline</mat-icon>
+                <p>Nenhuma alternativa cadastrada.</p>
+            </div>
+            }
+        </section>
+
+        } @else {
+
+        <section class="expected-answer-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Resposta esperada</h2>
+                    <p>Referência para correção da questão discursiva.</p>
+                </div>
+            </div>
+
+            <div class="expected-answer">
+                {{ q.expectedAnswer || 'Nenhuma resposta esperada cadastrada.' }}
+            </div>
+        </section>
+
+        }
+    </section>
+    }
+</main>

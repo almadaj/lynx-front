@@ -22,6 +22,7 @@
             @for (item of menu(); track item.label) {
             <li>
                 @if (item.route) {
+                @if (hasAccess(item.role)) {
                 <a [routerLink]="item.route" routerLinkActive="active" class="menu-link">
                     <mat-icon class="menu-icon">
                         {{item.icon}}
@@ -32,6 +33,7 @@
                     </span>
                     }
                 </a>
+                }
                 }
 
                 @if (item.children?.length) {

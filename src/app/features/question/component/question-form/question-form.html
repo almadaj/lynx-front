@@ -1,0 +1,189 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="question-form">
+
+    <section class="form-section">
+        <div class="section-heading">
+            <div>
+                <h2>Informações da questão</h2>
+                <p>Defina as características e a visibilidade da questão.</p>
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-field">
+                <label for="questionType">Tipo de questão</label>
+                <select id="questionType" formControlName="questionType">
+                    @for (type of questionTypes; track type) {
+                    <option [value]="type">{{ type === 'MULTIPLE_CHOICE' ? 'Múltipla escolha' : 'Discursiva' }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label for="difficulty">Dificuldade</label>
+
+                <div class="difficulty-control">
+                    <select id="difficulty" formControlName="difficulty">
+                        @for (difficulty of difficulties; track difficulty) {
+                        <option [value]="difficulty">{{ difficulty }}</option>
+                        }
+                    </select>
+
+                    <button type="button" class="ai-button" [disabled]="!canClassify || classifying()"
+                        (click)="classifyWithAI()">
+                        <mat-icon>auto_awesome</mat-icon>
+
+                        @if (classifying()) {
+                        Classificando...
+                        } @else {
+                        Classificar com IA
+                        }
+                    </button>
+                    @if (classificationError()) {
+                    <p class="classification-error">
+                        {{ classificationError() }}
+                    </p>
+                    }
+
+                    @if (classificationResult(); as result) {
+                    <app-question-classification-modal [result]="result" (closed)="classificationResult.set(null)" />
+                    }
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label for="language">Idioma</label>
+                <select id="language" formControlName="language">
+                    @for (language of languages; track language) {
+                    <option [value]="language">{{ language }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label for="privacy" class="label-with-info">
+                    Visibilidade
+
+                    <mat-icon class="info-icon"
+                        matTooltip="Pública: disponível para todos os usuários.&#10;Institucional: disponível para usuários com permissão de professor na instituição.&#10;Privada: disponível somente para você."
+                        matTooltipClass="privacy-tooltip" matTooltipPosition="above"
+                        aria-label="Informações sobre as opções de visibilidade">
+                        info_outline
+                    </mat-icon>
+                </label>
+                <select id="privacy" formControlName="privacy">
+                    <option [value]="0">Pública</option>
+                    <option [value]="1">Institucional</option>
+                    <option [value]="2">Privada (somente eu)</option>
+                </select>
+            </div>
+
+            <div class="form-field full-width">
+                <label for="companyId">Instituição</label>
+
+                <select id="companyId" formControlName="companyId"
+                    (change)="onCompanyChange($any($event.target).value)">
+                    @for (company of companies(); track company.companyId) {
+                    <option [value]="company.companyId">
+                        {{ company.publicName || company.companyName }}
+                    </option>
+                    }
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <div class="section-heading">
+            <div>
+                <h2>Conteúdo da questão</h2>
+                <p>Adicione o enunciado e as informações complementares.</p>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label for="header">Cabeçalho</label>
+            <input id="header" type="text" formControlName="header" placeholder="Ex.: Interpretação de texto" />
+        </div>
+
+        <div class="form-field">
+            <label for="body">Enunciado <span class="required">*</span></label>
+            <textarea id="body" formControlName="body" rows="6"
+                placeholder="Digite o enunciado da questão..."></textarea>
+        </div>
+
+        <div class="form-field">
+            <label for="footer">Rodapé</label>
+            <textarea id="footer" formControlName="footer" rows="3"
+                placeholder="Informações complementares (opcional)"></textarea>
+        </div>
+
+        @if (!isMultipleChoice) {
+        <div class="form-field">
+            <label for="expectedAnswer">Resposta esperada</label>
+            <textarea id="expectedAnswer" formControlName="expectedAnswer" rows="4"
+                placeholder="Descreva a resposta esperada..."></textarea>
+        </div>
+        }
+    </section>
+
+    @if (isMultipleChoice) {
+    <section class="form-section">
+        <div class="section-heading alternatives-heading">
+            <div>
+                <h2>Alternativas</h2>
+                <p>Adicione as opções e indique qual é a correta.</p>
+            </div>
+
+            <button type="button" class="add-button" (click)="addAlternative()">
+                <span>+</span>
+                Adicionar alternativa
+            </button>
+        </div>
+
+        <div formArrayName="alternatives" class="alternatives-list">
+            @for (alternative of alternatives.controls; track $index; let i = $index) {
+            <div class="alternative-item" [class.is-correct]="alternative.get('correct')?.value" [formGroupName]="i">
+                <span class="alternative-letter">
+                    {{ getAlternativeLabel(i) }}
+                </span>
+
+                <input class="alternative-text" type="text" formControlName="alternativeText"
+                    [placeholder]="'Digite a alternativa ' + getAlternativeLabel(i) + '...'" />
+
+                <label class="correct-option">
+                    <input type="radio" name="correctAlternative" [checked]="alternative.get('correct')?.value"
+                        (change)="setCorrectAlternative(i)" />
+                    <span>Correta</span>
+                </label>
+
+                <button type="button" class="remove-button" (click)="removeAlternative(i)"
+                    [attr.aria-label]="'Remover alternativa ' + getAlternativeLabel(i)">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+            }
+
+            @if (alternatives.length === 0) {
+            <div class="empty-alternatives">
+                <p>Nenhuma alternativa adicionada.</p>
+                <span>Comece adicionando as opções de resposta.</span>
+            </div>
+            }
+        </div>
+    </section>
+    }
+
+    <div class="form-actions">
+        <button type="button" class="cancel-button" (click)="cancelled.emit()">
+            Cancelar
+        </button>
+
+        <button type="submit" class="submit-button" [disabled]="loading">
+            @if (loading) {
+            Salvando...
+            } @else {
+            {{ initialData ? 'Salvar alterações' : 'Criar questão' }}
+            }
+        </button>
+    </div>
+</form>

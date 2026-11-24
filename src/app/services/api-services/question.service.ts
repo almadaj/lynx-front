@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Page, QuestionResponseDTO } from "../../models/question.model";
+import { Page, QuestionAlternativeResponseDTO, QuestionResponseDTO, RegisterAlternativeDTO, RegisterQuestionDTO, UpdateQuestion } from "../../models/question.model";
+import { Observable } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +13,35 @@ export class QuestionService {
     constructor(
         private http: HttpClient,
     ) { }
+
+    findById(id: string) {
+        return this.http.get<QuestionResponseDTO>(
+            `${this.apiUrl}/${id}`
+        )
+    }
+
+    findAlternatives(questionId: string) {
+        return this.http.get<QuestionAlternativeResponseDTO[]>(
+            `${this.apiUrl}/${questionId}/alternatives`
+        )
+    }
+
+    create(dto: RegisterQuestionDTO): Observable<QuestionResponseDTO> {
+        return this.http.post<QuestionResponseDTO>(
+            `${this.apiUrl}`, dto
+        )
+    }
+
+    update(id: string, dto: UpdateQuestion): Observable<QuestionResponseDTO> {
+        return this.http.put<QuestionResponseDTO>(
+            `${this.apiUrl}/${id}`,
+            dto
+        )
+    }
+
+    delete(id: string): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/${id}`)
+    }
 
     findAll(filters: {
         search: string
@@ -50,6 +80,16 @@ export class QuestionService {
         return this.http.get<Page<QuestionResponseDTO>>(
             this.apiUrl,
             { params }
+        )
+    }
+
+    addAlternatives(
+        questionId: string,
+        alternatives: RegisterAlternativeDTO[]
+    ): Observable<void> {
+        return this.http.post<void>(
+            `${this.apiUrl}/${questionId}/alternatives`,
+            alternatives
         )
     }
 }
