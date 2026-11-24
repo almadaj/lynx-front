@@ -1,29 +1,73 @@
-<div class="login-container">
-    <form [formGroup]="loginForm" (ngSubmit)="submit()" class="login-card">
+<div class="auth-container">
+    <main class="auth-card">
 
-        <h1>Viens Avec Moi🇫🇷</h1>
-        <p>Salut, nouvellement!</p>
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" formControlName="email" placeholder="seu@email.com" />
-        </div>
-        <div class="form-group">
-            <label>Senha</label>
-            <input type="password" formControlName="password" placeholder="••••••••" />
-        </div>
-        <div class="error-container">
+        <header class="auth-header">
+            <div class="brand">
+                <span class="brand-icon">L</span>
+                <span>Lynx</span>
+            </div>
+
+            <h1>Bom ter você de volta.</h1>
+            <p>Entre na sua conta e continue sua jornada.</p>
+        </header>
+
+        <form [formGroup]="loginForm" (ngSubmit)="submit()">
+
+            <div class="form-group">
+                <label for="email">E-mail</label>
+
+                <input id="email" type="email" formControlName="email" placeholder="seu@email.com" autocomplete="email"
+                    [class.invalid]="loginForm.controls.email.touched && loginForm.controls.email.invalid" />
+
+                @if (loginForm.controls.email.touched && loginForm.controls.email.hasError('required')) {
+                <small>Informe seu e-mail.</small>
+                }
+            </div>
+
+            <div class="form-group">
+                <div class="label-row">
+                    <label for="password">Senha</label>
+                </div>
+
+                <div class="password-wrapper">
+                    <input id="password" [type]="showPassword() ? 'text' : 'password'" formControlName="password"
+                        placeholder="Digite sua senha" autocomplete="current-password"
+                        [class.invalid]="loginForm.controls.password.touched && loginForm.controls.password.invalid" />
+
+                    <button type="button" class="password-toggle" (click)="changePasswordVisibility()"
+                        [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'">
+                        <mat-icon>
+                            {{ showPassword() ? 'visibility_off' : 'visibility' }}
+                        </mat-icon>
+                    </button>
+                </div>
+
+                @if (loginForm.controls.password.touched && loginForm.controls.password.hasError('required')) {
+                <small>Informe sua senha.</small>
+                }
+            </div>
+
             @if (errorMessage()) {
-            <p>{{errorMessage()}}</p>
+            <div class="error-message" role="alert">
+                {{ errorMessage() }}
+            </div>
             }
-        </div>
 
-        <button type="submit" [disabled]="isLoading()">
-            @if (isLoading()) {
-            Entrando...
-            } @else {
-            Entrar
-            }
-        </button>
+            <button type="submit" class="submit-button" [disabled]="isLoading()">
+                @if (isLoading()) {
+                <span class="loader"></span>
+                Entrando...
+                } @else {
+                Entrar na minha conta
+                }
+            </button>
 
-    </form>
+        </form>
+
+        <footer class="auth-footer">
+            <span>Ainda não tem uma conta?</span>
+            <a routerLink="/register">Criar conta</a>
+        </footer>
+
+    </main>
 </div>

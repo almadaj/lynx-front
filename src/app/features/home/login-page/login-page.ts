@@ -1,18 +1,26 @@
-import { Component, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../services/api-services/auth.service';
+
+import { Component, signal } from '@angular/core'
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
+import { Router } from '@angular/router'
+import { finalize, takeUntil } from 'rxjs'
+import { Subject } from 'rxjs'
+import { AuthService } from '../../../services/api-services/auth.service'
+import { MatIcon } from '@angular/material/icon'
 
 @Component({
   selector: 'app-login-page',
-  imports: [ReactiveFormsModule],
+  standalone: true,
+  imports: [ReactiveFormsModule, MatIcon],
   templateUrl: './login-page.html',
-  styleUrl: './login-page.scss',
+  styleUrl: './login-page.scss'
 })
 export class LoginPage {
-  loginForm: FormGroup;
-  isLoading = signal(false);
-  errorMessage = signal<string>('')
+  loginForm
+  isLoading = signal(false)
+  errorMessage = signal('')
+  showPassword = signal<boolean>(false)
+
+  private destroy$ = new Subject<void>()
 
   constructor(
     private fb: FormBuilder,
@@ -21,35 +29,46 @@ export class LoginPage {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    });
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    })
+
+    this.loginForm.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.errorMessage.set(''))
+  }
+
+  changePasswordVisibility(): void {
+    console.log(this.showPassword)
+    this.showPassword.set(!this.showPassword())
   }
 
   submit(): void {
     if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      this.errorMessage.set('Email/senha inválidos');
-      return;
+      this.loginForm.markAllAsTouched()
+      return
     }
 
-    const { email, password } = this.loginForm.value;
+    const { email, password } = this.loginForm.getRawValue()
 
-    this.isLoading.set(true);
+    if (!email || !password) return
 
-    this.authService.login({ email, password }).subscribe({
-      next: () => {
-        this.router.navigate(['/dashboard']);
-      },
+    this.isLoading.set(true)
 
-      error: (err) => {
-        this.errorMessage.set('Credenciais inválidas');
-        console.error(err);
-        this.isLoading.set(false);
-      },
+    this.authService.login({ email, password })
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/dashboard'])
+        },
+        error: (err) => {
+          this.errorMessage.set('E-mail ou senha incorretos.')
+          console.error('Erro ao realizar login:', err)
+        }
+      })
+  }
 
-      complete: () => {
-        this.isLoading.set(false);
-      }
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next()
+    this.destroy$.complete()
   }
 }
