@@ -196,9 +196,11 @@
         color: #315fce;
         font-weight: 700;
         text-decoration: none;
+        cursor: pointer;
 
         &:hover {
             text-decoration: underline;
+            cursor: pointer;
         }
     }
 }
