@@ -1,0 +1,398 @@
+<div class="register-container">
+
+    <header class="register-header">
+        <a routerLink="/" class="brand">
+            <span class="brand-icon">L</span>
+            lynx
+        </a>
+
+        <div class="login-link">
+            Já possui uma conta?
+            <a routerLink="/">Entrar</a>
+        </div>
+    </header>
+
+    <main class="register-content">
+
+        <div class="progress-section">
+            <div class="progress-info">
+                <span>Seu cadastro</span>
+                <span>Etapa {{ currentStep() + 1 }} de {{ steps().length }}</span>
+            </div>
+
+            <div class="progress-track">
+                <div class="progress-fill" [style.width.%]="progress()"></div>
+            </div>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="next()">
+
+            @switch (currentStepName()) {
+
+            @case ('profile') {
+            <section class="step-content">
+                <div class="step-heading">
+                    <span class="step-eyebrow">Vamos começar</span>
+                    <h1>Como você pretende utilizar o Lynx?</h1>
+                    <p>
+                        Escolha seu perfil para prepararmos
+                        uma experiência adequada para você.
+                    </p>
+                </div>
+
+                <div class="profile-options">
+
+                    <button type="button" class="profile-card" (click)="selectUserType('STUDENT')">
+                        <div class="profile-icon student-icon">🎓</div>
+
+                        <div class="profile-info">
+                            <h2>Sou aluno</h2>
+                            <p>
+                                Quero aprender, resolver questões
+                                e acompanhar minhas atividades.
+                            </p>
+                        </div>
+
+                        <span class="profile-arrow">→</span>
+                    </button>
+
+                    <button type="button" class="profile-card" (click)="selectUserType('TEACHER')">
+                        <div class="profile-icon teacher-icon">📚</div>
+
+                        <div class="profile-info">
+                            <h2>Sou professor</h2>
+                            <p>
+                                Quero criar questões, organizar
+                                atividades e gerenciar uma instituição.
+                            </p>
+                        </div>
+
+                        <span class="profile-arrow">→</span>
+                    </button>
+
+                </div>
+            </section>
+            }
+
+            @case ('name') {
+            <section class="step-content">
+                <button type="button" class="back-button" (click)="previous()">
+                    ← Voltar
+                </button>
+
+                <div class="step-heading">
+                    <span class="step-eyebrow">Primeiro, vamos nos conhecer</span>
+                    <h1>Como podemos chamar você?</h1>
+                    <p>
+                        Informe seu nome completo para personalizarmos
+                        sua experiência no Lynx.
+                    </p>
+                </div>
+
+                <div class="field-group">
+                    <label for="fullName">Nome completo</label>
+
+                    <input id="fullName" type="text" formControlName="fullName" placeholder="Ex.: Maria Silva"
+                        autocomplete="name" autofocus />
+
+                    @if (
+                    registerForm.controls.fullName.touched &&
+                    registerForm.controls.fullName.hasError('required')
+                    ) {
+                    <span class="field-error">
+                        Informe seu nome.
+                    </span>
+                    }
+
+                    @if (
+                    registerForm.controls.fullName.touched &&
+                    registerForm.controls.fullName.hasError('minlength')
+                    ) {
+                    <span class="field-error">
+                        O nome precisa ter pelo menos 3 caracteres.
+                    </span>
+                    }
+                </div>
+
+                <button type="submit" class="continue-button">
+                    Continuar <span>→</span>
+                </button>
+            </section>
+            }
+
+            @case ('email') {
+            <section class="step-content">
+                <button type="button" class="back-button" (click)="previous()">
+                    ← Voltar
+                </button>
+
+                <div class="step-heading">
+                    <span class="step-eyebrow">Sua identificação</span>
+                    <h1>Qual é o seu e-mail?</h1>
+                    <p>
+                        Utilize um endereço de e-mail válido
+                        para acessar sua conta.
+                    </p>
+                </div>
+
+                <div class="field-group">
+                    <label for="email">E-mail</label>
+
+                    <input id="email" type="email" formControlName="email" placeholder="voce@email.com"
+                        autocomplete="email" />
+
+                    @if (
+                    registerForm.controls.email.touched &&
+                    registerForm.controls.email.hasError('required')
+                    ) {
+                    <span class="field-error">
+                        Informe seu e-mail.
+                    </span>
+                    }
+
+                    @if (
+                    registerForm.controls.email.touched &&
+                    registerForm.controls.email.hasError('email')
+                    ) {
+                    <span class="field-error">
+                        Informe um endereço de e-mail válido.
+                    </span>
+                    }
+                </div>
+
+                <button type="submit" class="continue-button">
+                    Continuar <span>→</span>
+                </button>
+            </section>
+            }
+
+            @case ('password') {
+            <section class="step-content">
+                <button type="button" class="back-button" (click)="previous()">
+                    ← Voltar
+                </button>
+
+                <div class="step-heading">
+                    <span class="step-eyebrow">Segurança da conta</span>
+                    <h1>Crie sua senha</h1>
+                    <p>
+                        Escolha uma senha com pelo menos
+                        8 caracteres.
+                    </p>
+                </div>
+
+                <div class="field-group">
+                    <label for="password">Senha</label>
+
+                    <input id="password" type="password" formControlName="password" placeholder="Digite sua senha"
+                        autocomplete="new-password" />
+
+                    @if (
+                    registerForm.controls.password.touched &&
+                    registerForm.controls.password.hasError('required')
+                    ) {
+                    <span class="field-error">
+                        Informe uma senha.
+                    </span>
+                    }
+
+                    @if (
+                    registerForm.controls.password.touched &&
+                    registerForm.controls.password.hasError('minlength')
+                    ) {
+                    <span class="field-error">
+                        A senha precisa ter pelo menos 8 caracteres.
+                    </span>
+                    }
+                </div>
+
+                <button type="submit" class="continue-button">
+                    Continuar <span>→</span>
+                </button>
+            </section>
+            }
+
+            @case ('confirmPassword') {
+            <section class="step-content">
+                <button type="button" class="back-button" (click)="previous()">
+                    ← Voltar
+                </button>
+
+                <div class="step-heading">
+                    <span class="step-eyebrow">Só mais um passo</span>
+                    <h1>Confirme sua senha</h1>
+                    <p>
+                        Digite novamente a senha que você acabou de criar.
+                    </p>
+                </div>
+
+                <div class="field-group">
+                    <label for="confirmPassword">Confirme sua senha</label>
+
+                    <input id="confirmPassword" type="password" formControlName="confirmPassword"
+                        placeholder="Digite sua senha novamente" autocomplete="new-password" />
+
+                    @if (
+                    registerForm.controls.confirmPassword.touched &&
+                    registerForm.controls.confirmPassword.hasError('required')
+                    ) {
+                    <span class="field-error">
+                        Confirme sua senha.
+                    </span>
+                    }
+
+                    @if (passwordMismatch) {
+                    <span class="field-error">
+                        As senhas não coincidem.
+                    </span>
+                    }
+                </div>
+
+                <button type="submit" class="continue-button">
+                    Continuar <span>→</span>
+                </button>
+            </section>
+            }
+
+            @case ('institution') {
+            <section class="step-content">
+                <button type="button" class="back-button" (click)="previous()">
+                    ← Voltar
+                </button>
+
+                <div class="step-heading">
+                    <span class="step-eyebrow">Seu espaço de trabalho</span>
+                    <h1>Qual é o nome da sua instituição?</h1>
+                    <p>
+                        Vamos preparar o ambiente da sua instituição
+                        para você começar a organizar suas atividades.
+                    </p>
+                </div>
+
+                <div class="field-group">
+                    <label for="institutionName">Nome da instituição</label>
+
+                    <input id="institutionName" type="text" formControlName="institutionName"
+                        placeholder="Ex.: Colégio Aprender" />
+
+                    @if (
+                    registerForm.controls.institutionName.touched &&
+                    registerForm.controls.institutionName.invalid
+                    ) {
+                    <span class="field-error">
+                        Informe o nome da instituição.
+                    </span>
+                    }
+                </div>
+
+                <button type="submit" class="continue-button">
+                    Continuar <span>→</span>
+                </button>
+            </section>
+            }
+
+            @case ('review') {
+            <section class="step-content">
+                <button type="button" class="back-button" (click)="previous()">
+                    ← Voltar
+                </button>
+
+                <div class="step-heading">
+                    <span class="step-eyebrow">Quase lá!</span>
+                    <h1>Confira seus dados</h1>
+                    <p>
+                        Revise as informações antes de finalizar
+                        seu cadastro.
+                    </p>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-item">
+                        <span>Perfil</span>
+                        <strong>
+                            {{ selectedUserType() === 'STUDENT'
+                            ? 'Aluno'
+                            : 'Professor' }}
+                        </strong>
+                    </div>
+
+                    <div class="review-item">
+                        <span>Nome completo</span>
+                        <strong>{{ registerForm.controls.fullName.value }}</strong>
+                    </div>
+
+                    <div class="review-item">
+                        <span>E-mail</span>
+                        <strong>{{ registerForm.controls.email.value }}</strong>
+                    </div>
+
+                    @if (selectedUserType() === 'TEACHER') {
+                    <div class="review-item">
+                        <span>Instituição</span>
+                        <strong>
+                            {{ registerForm.controls.institutionName.value }}
+                        </strong>
+                    </div>
+                    }
+                </div>
+
+                <p class="review-note">
+                    Sua senha não será exibida nesta tela.
+                </p>
+
+                <button type="button" class="continue-button" disabled>
+                    Cadastro será habilitado após a integração
+                </button>
+            </section>
+            }
+
+            }
+
+
+        </form>
+
+        @if (registrationSuccess()) {
+        <section class="success-content">
+
+            <div class="success-icon">✓</div>
+
+            <span class="step-eyebrow">Cadastro concluído</span>
+
+            <h1>Sua conta está pronta!</h1>
+
+            <p>
+                Adicione uma foto para personalizar seu perfil.
+                Você também pode fazer isso depois.
+            </p>
+
+            <div class="avatar-upload">
+                <label for="profileImage" class="avatar-preview">
+
+                    @if (profileImagePreview()) {
+                    <img [src]="profileImagePreview()" alt="Foto de perfil" />
+                    } @else {
+                    <span>+</span>
+                    }
+
+                </label>
+
+                <input id="profileImage" type="file" accept="image/*" (change)="onProfileImageSelected($event)"
+                    hidden />
+            </div>
+
+            <button type="button" class="continue-button" (click)="continueAfterProfile()">
+                Continuar
+            </button>
+
+            <button type="button" class="skip-button" (click)="continueAfterProfile()">
+                Fazer isso depois
+            </button>
+
+        </section>
+        }
+    </main>
+
+    <footer class="register-footer">
+        © 2026 Lynx. Todos os direitos reservados.
+    </footer>
+</div>

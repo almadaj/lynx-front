@@ -1,0 +1,350 @@
+:host {
+    display: block;
+    min-height: 100vh;
+}
+
+.register-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f7f8fc;
+    color: #1e293b;
+}
+
+.register-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 7%;
+    background: #ffffff;
+    border-bottom: 1px solid #e9edf4;
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #253c72;
+        font-size: 24px;
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+    .brand-icon {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: #315fce;
+        color: #ffffff;
+    }
+
+    .login-link {
+        color: #64748b;
+        font-size: 13px;
+
+        a {
+            margin-left: 5px;
+            color: #315fce;
+            font-weight: 700;
+            text-decoration: none;
+        }
+    }
+}
+
+.register-content {
+    width: 100%;
+    max-width: 650px;
+    margin: auto;
+    padding: 55px 24px;
+    box-sizing: border-box;
+}
+
+.progress-section {
+    margin-bottom: 48px;
+
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .progress-track {
+        height: 5px;
+        overflow: hidden;
+        border-radius: 10px;
+        background: #e4e9f2;
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: inherit;
+        background: #315fce;
+        transition: width 0.35s ease;
+    }
+}
+
+.step-content {
+    animation: fadeIn 0.3s ease;
+}
+
+.step-heading {
+    margin-bottom: 32px;
+
+    .step-eyebrow {
+        color: #315fce;
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+    }
+
+    h1 {
+        margin: 12px 0;
+        color: #1e293b;
+        font-size: clamp(26px, 5vw, 34px);
+        line-height: 1.2;
+        letter-spacing: -1px;
+    }
+
+    p {
+        max-width: 480px;
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+}
+
+.profile-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.profile-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+    padding: 22px;
+    border: 1px solid #e1e6ef;
+    border-radius: 13px;
+    background: #ffffff;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+        border-color: #9bb3ed;
+        box-shadow: 0 8px 25px rgba(37, 78, 174, 0.07);
+        transform: translateY(-2px);
+    }
+
+    .profile-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 55px;
+        height: 55px;
+        border-radius: 12px;
+        font-size: 25px;
+    }
+
+    .student-icon {
+        background: #edf3ff;
+    }
+
+    .teacher-icon {
+        background: #f1edff;
+    }
+
+    .profile-info {
+        flex: 1;
+
+        h2 {
+            margin: 0 0 6px;
+            color: #26344c;
+            font-size: 16px;
+        }
+
+        p {
+            margin: 0;
+            color: #748197;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+    }
+
+    .profile-arrow {
+        color: #315fce;
+        font-size: 23px;
+    }
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 28px;
+
+    label {
+        color: #34425a;
+        font-size: 13px;
+        font-weight: 650;
+    }
+
+    input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 16px;
+        border: 1px solid #dce3ed;
+        border-radius: 10px;
+        outline: none;
+        background: #ffffff;
+        color: #1e293b;
+        font: inherit;
+        font-size: 14px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+
+        &::placeholder {
+            color: #a4adbb;
+        }
+
+        &:focus {
+            border-color: #315fce;
+            box-shadow: 0 0 0 3px rgba(49, 95, 206, 0.10);
+        }
+
+        &.ng-invalid.ng-touched {
+            border-color: #dc5555;
+        }
+    }
+
+    .field-error {
+        color: #dc5555;
+        font-size: 12px;
+    }
+}
+
+.continue-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    background: #315fce;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover:not(:disabled) {
+        background: #254da9;
+    }
+
+    &:disabled {
+        background: #aebbd5;
+        cursor: not-allowed;
+        font-size: 12px;
+    }
+}
+
+.back-button {
+    margin-bottom: 25px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #315fce;
+    font-size: 13px;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.review-card {
+    margin-bottom: 18px;
+    padding: 8px 22px;
+    border: 1px solid #e1e6ef;
+    border-radius: 13px;
+    background: #ffffff;
+}
+
+.review-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px 0;
+    border-bottom: 1px solid #edf0f5;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    span {
+        color: #8490a3;
+        font-size: 11px;
+    }
+
+    strong {
+        color: #26344c;
+        font-size: 14px;
+        font-weight: 650;
+        overflow-wrap: anywhere;
+    }
+}
+
+.review-note {
+    margin-bottom: 24px;
+    color: #8490a3;
+    font-size: 12px;
+}
+
+.register-footer {
+    padding: 20px;
+    color: #94a0b2;
+    font-size: 11px;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 550px) {
+    .register-header {
+        padding: 20px;
+
+        .login-link {
+            font-size: 11px;
+        }
+    }
+
+    .register-content {
+        padding: 35px 20px;
+    }
+
+    .profile-card {
+        gap: 12px;
+        padding: 16px;
+
+        .profile-icon {
+            width: 45px;
+            height: 45px;
+            font-size: 21px;
+        }
+    }
+}
