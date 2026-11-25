@@ -1,5 +1,4 @@
 <div class="register-container">
-
     <header class="register-header">
         <a routerLink="/" class="brand">
             <span class="brand-icon">L</span>
@@ -24,7 +23,7 @@
                 <div class="progress-fill" [style.width.%]="progress()"></div>
             </div>
         </div>
-
+        @if (!registrationSuccess()) {
         <form [formGroup]="registerForm" (ngSubmit)="next()">
 
             @switch (currentStepName()) {
@@ -118,6 +117,43 @@
                     Continuar <span>→</span>
                 </button>
             </section>
+            }
+
+            @case ('birth') {
+            <section class="step-content">
+                <button type="button" class="back-button" (click)="previous()">
+                    ← Voltar
+                </button>
+
+                <div class="step-heading">
+                    <span class="step-eyebrow">Primeiro, vamos nos conhecer</span>
+                    <h1>Como podemos chamar você?</h1>
+                    <p>
+                        Informe seu nome completo para personalizarmos
+                        sua experiência no Lynx.
+                    </p>
+                </div>
+
+                <div class="field-group">
+                    <label for="birth">Data de Nascimento</label>
+
+                    <input type="date" formControlName="birth" [max]="maxBirthDate" />
+
+                    @if (
+                    registerForm.controls.birth.touched &&
+                    registerForm.controls.birth.hasError('required')
+                    ) {
+                    <span class="field-error">
+                        Informe sua data de nascimento.
+                    </span>
+                    }
+                </div>
+
+                <button type="submit" class="continue-button">
+                    Continuar <span>→</span>
+                </button>
+            </section>
+
             }
 
             @case ('email') {
@@ -254,43 +290,6 @@
             </section>
             }
 
-            @case ('institution') {
-            <section class="step-content">
-                <button type="button" class="back-button" (click)="previous()">
-                    ← Voltar
-                </button>
-
-                <div class="step-heading">
-                    <span class="step-eyebrow">Seu espaço de trabalho</span>
-                    <h1>Qual é o nome da sua instituição?</h1>
-                    <p>
-                        Vamos preparar o ambiente da sua instituição
-                        para você começar a organizar suas atividades.
-                    </p>
-                </div>
-
-                <div class="field-group">
-                    <label for="institutionName">Nome da instituição</label>
-
-                    <input id="institutionName" type="text" formControlName="institutionName"
-                        placeholder="Ex.: Colégio Aprender" />
-
-                    @if (
-                    registerForm.controls.institutionName.touched &&
-                    registerForm.controls.institutionName.invalid
-                    ) {
-                    <span class="field-error">
-                        Informe o nome da instituição.
-                    </span>
-                    }
-                </div>
-
-                <button type="submit" class="continue-button">
-                    Continuar <span>→</span>
-                </button>
-            </section>
-            }
-
             @case ('review') {
             <section class="step-content">
                 <button type="button" class="back-button" (click)="previous()">
@@ -326,31 +325,23 @@
                         <strong>{{ registerForm.controls.email.value }}</strong>
                     </div>
 
-                    @if (selectedUserType() === 'TEACHER') {
                     <div class="review-item">
-                        <span>Instituição</span>
-                        <strong>
-                            {{ registerForm.controls.institutionName.value }}
-                        </strong>
+                        <span>Data de nascimento</span>
+                        <strong>{{ registerForm.controls.birth.value }}</strong>
                     </div>
-                    }
+
                 </div>
 
-                <p class="review-note">
-                    Sua senha não será exibida nesta tela.
-                </p>
-
-                <button type="button" class="continue-button" disabled>
-                    Cadastro será habilitado após a integração
-                </button>
+                <div style="display: flex; justify-content: center">
+                    <button type="button" class="continue-button" (click)="submitRegistration()">
+                        Criar conta
+                    </button>
+                </div>
             </section>
             }
-
             }
-
-
         </form>
-
+        }
         @if (registrationSuccess()) {
         <section class="success-content">
 

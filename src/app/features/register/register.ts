@@ -8,12 +8,15 @@ import {
     Validators
 } from '@angular/forms'
 import { RouterLink, Router } from '@angular/router'
+import { RegisterRequestDTO } from '../../models/auth.model'
+import { AuthService } from '../../services/api-services/auth.service'
 
 type UserType = 'STUDENT' | 'TEACHER'
 
 type RegisterStep =
     | 'profile'
     | 'name'
+    | 'birth'
     | 'email'
     | 'password'
     | 'confirmPassword'
@@ -33,25 +36,24 @@ type RegisterStep =
 export class Register {
     private router = inject(Router)
     private fb = inject(FormBuilder)
+    private authService = inject(AuthService)
 
     currentStep = signal(0)
     selectedUserType = signal<UserType | null>(null)
     profileImage = signal<File | null>(null)
     profileImagePreview = signal<string | null>(null)
     registrationSuccess = signal(false)
+    readonly maxBirthDate = new Date().toISOString().split('T')[0]
 
     readonly steps = computed<RegisterStep[]>(() => {
         const commonSteps: RegisterStep[] = [
             'profile',
             'name',
+            'birth',
             'email',
             'password',
             'confirmPassword'
         ]
-
-        if (this.selectedUserType() === 'TEACHER') {
-            commonSteps.push('institution')
-        }
 
         commonSteps.push('review')
 
@@ -91,7 +93,9 @@ export class Register {
                 Validators.required
             ]],
 
-            institutionName: ['']
+            birth: ['', [
+                Validators.required
+            ]],
         },
         {
             validators: (control: AbstractControl): ValidationErrors | null => {
@@ -161,6 +165,9 @@ export class Register {
             case 'name':
                 return this.validateField('fullName')
 
+            case 'birth':
+                return this.validateField('birth')
+
             case 'email':
                 return this.validateField('email')
 
@@ -177,6 +184,31 @@ export class Register {
             default:
                 return true
         }
+    }
+
+    submitRegistration(): void {
+        if (this.registerForm.invalid) {
+            this.registerForm.markAllAsTouched()
+            return
+        }
+
+        const formValue = this.registerForm.getRawValue()
+
+        const payload: RegisterRequestDTO = {
+            name: formValue.fullName!,
+            email: formValue.email!,
+            password: formValue.password!,
+            birth: formValue.birth!
+        }
+
+        this.authService.register(payload).subscribe({
+            next: () => {
+                this.registrationSuccess.set(true)
+            },
+            error: (error) => {
+                console.error('Erro ao cadastrar usuário', error)
+            }
+        })
     }
 
     continueAfterProfile(): void {

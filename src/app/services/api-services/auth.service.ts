@@ -1,7 +1,7 @@
 import { computed, Injectable, signal, PLATFORM_ID, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, finalize, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
-import { LoginRequestDTO, LoginResponseDTO } from '../../models/auth.model';
+import { LoginRequestDTO, RegisterRequestDTO } from '../../models/auth.model';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { AuthUser } from '../../models/user.model';
@@ -100,8 +100,14 @@ export class AuthService {
             });
     }
 
-    register(data: any): Observable<any> {
-        return this.http.post(`${this.apiUrl}/register`, data);
+    register(data: RegisterRequestDTO): Observable<AuthUser> {
+        return this.http.post<void>(
+            `${this.apiUrl}/register`,
+            data,
+            { withCredentials: true }
+        ).pipe(
+            switchMap(() => this.me())
+        )
     }
 
     me(): Observable<AuthUser> {

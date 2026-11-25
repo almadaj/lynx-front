@@ -6,3 +6,10 @@ export interface LoginRequestDTO {
 export interface LoginResponseDTO {
     token: string;
 }
+
+export interface RegisterRequestDTO {
+    name: string;
+    email: string;
+    password: string;
+    birth: string;
+}
