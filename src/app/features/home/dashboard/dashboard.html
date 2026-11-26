@@ -1,6 +1,72 @@
+@if (hasCompanies()) {
 @if (authService.hasPermission(Role.STUDENT)) {
-<p>dashboard works!</p>
+<p>Dashboard do aluno</p>
+} @else if(authService.hasPermission(Role.TEACHER)){
+<p>Dashboard institucional</p>
 }
-@else {
-<p>Testando pra entender quando não tem COMPANY</p>
+} @else {
+<section class="onboarding">
+    <div class="onboarding-header">
+        <h1>Vamos começar?</h1>
+        <p>
+            Escolha como deseja começar a utilizar o Lynx.
+        </p>
+    </div>
+
+    <div class="onboarding-actions">
+        <button type="button" class="action-card" [class.active]="activeAction() === 'join'"
+            [attr.aria-pressed]="activeAction() === 'join'" (click)="toggleAction('join')">
+            <mat-icon>key</mat-icon>
+
+            <div class="action-content">
+                <strong>Entrar em uma instituição</strong>
+                <small>Utilize o código de acesso disponibilizado pela sua instituição.</small>
+            </div>
+        </button>
+
+        <button type="button" class="action-card" [class.active]="activeAction() === 'create'"
+            [attr.aria-pressed]="activeAction() === 'create'" (click)="toggleAction('create')">
+            <mat-icon>school</mat-icon>
+
+            <div class="action-content">
+                <strong>Criar uma instituição</strong>
+                <small>Cadastre sua instituição e comece a organizar seu ambiente de ensino.</small>
+            </div>
+        </button>
+    </div>
+
+    @if (activeAction() === 'join') {
+    <div class="action-panel">
+        <h2>Código de acesso</h2>
+        <p>Insira o código disponibilizado pela instituição.</p>
+
+        <input type="text" placeholder="Ex.: LYNX-8F2A91" [value]="institutionCode()"
+            (input)="onInstitutionCodeChange($any($event.target).value)" />
+
+        @if (errorMessage()) {
+        <p class="error-message">{{ errorMessage() }}</p>
+        }
+
+        <button type="button" class="primary-button" (click)="linkInstitution()">
+            <mat-icon>vpn_key</mat-icon>
+            Vincular à instituição
+        </button>
+    </div>
+    }
+
+    @if (activeAction() === 'create') {
+    <div class="action-panel">
+        <h2>Criar instituição</h2>
+        <p>
+            Em breve você poderá cadastrar sua instituição
+            e convidar alunos e professores.
+        </p>
+
+        <button type="button" class="primary-button" (click)="createInstitution()">
+            <mat-icon>vpn_key</mat-icon>
+            Continuar
+        </button>
+    </div>
+    }
+</section>
 }
