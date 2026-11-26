@@ -56,6 +56,7 @@ export class Sidebar {
       label: 'Acadêmico',
       route: '/academy',
       icon: 'school',
+      role: [Role.STUDENT],
       children: [
         //   { label: 'Turmas', route: '/dashboard/turmas' },
         //   { label: 'Disciplinas', route: '/dashboard/disciplinas' },
@@ -66,12 +67,14 @@ export class Sidebar {
     {
       label: "Minha Instituição",
       route: "/my-company",
-      icon: 'store'
+      icon: 'store',
+      role: [Role.STUDENT]
     },
     {
       label: "Turmas",
       route: "/classes",
-      icon: 'book'
+      icon: 'book',
+      role: [Role.STUDENT]
     },
     {
       label: "Questões",

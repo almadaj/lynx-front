@@ -69,7 +69,13 @@
 
         <div class="profile-card">
             <div class="avatar">
-                {{ initials }}
+                @if (user()?.profilePhoto; as photoUrl) {
+                <img [src]="photoUrl" alt="Foto de perfil" />
+                } @else {
+                <span class="avatar-initials">
+                    {{ initials }}
+                </span>
+                }
             </div>
 
             @if (isOpen()) {

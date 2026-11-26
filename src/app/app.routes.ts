@@ -34,6 +34,7 @@ export const routes: Routes = [
             },
             {
                 path: 'academy',
+                canActivate: [roleGuard([Role.STUDENT])],
                 loadComponent: () =>
                     import('./features/home/dashboard/dashboard')
                         .then(m => m.Dashboard)
@@ -46,12 +47,14 @@ export const routes: Routes = [
             },
             {
                 path: 'my-company',
+                canActivate: [roleGuard([Role.STUDENT])],
                 loadComponent: () =>
                     import('./features/company/company')
                         .then(m => m.Company)
             },
             {
                 path: 'classes',
+                canActivate: [roleGuard([Role.STUDENT])],
                 loadComponent: () =>
                     import('./features/my-classes/my-classes')
                         .then(m => m.MyClasses)

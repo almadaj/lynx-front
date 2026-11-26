@@ -3,10 +3,6 @@ export interface LoginRequestDTO {
     password: string
 }
 
-export interface LoginResponseDTO {
-    token: string;
-}
-
 export interface RegisterRequestDTO {
     name: string;
     email: string;

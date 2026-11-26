@@ -344,41 +344,43 @@
         }
         @if (registrationSuccess()) {
         <section class="success-content">
-
             <div class="success-icon">✓</div>
-
             <span class="step-eyebrow">Cadastro concluído</span>
-
             <h1>Sua conta está pronta!</h1>
-
             <p>
                 Adicione uma foto para personalizar seu perfil.
                 Você também pode fazer isso depois.
             </p>
-
             <div class="avatar-upload">
                 <label for="profileImage" class="avatar-preview">
-
                     @if (profileImagePreview()) {
                     <img [src]="profileImagePreview()" alt="Foto de perfil" />
                     } @else {
                     <span>+</span>
                     }
-
                 </label>
-
                 <input id="profileImage" type="file" accept="image/*" (change)="onProfileImageSelected($event)"
                     hidden />
             </div>
 
-            <button type="button" class="continue-button" (click)="continueAfterProfile()">
+            <button type="button" style="align-self: center;" class="continue-button" [disabled]="isUploadingPhoto()"
+                (click)="continueAfterProfile()">
+                @if (isUploadingPhoto()) {
+                Enviando foto...
+                } @else {
                 Continuar
+                }
             </button>
 
-            <button type="button" class="skip-button" (click)="continueAfterProfile()">
-                Fazer isso depois
+            <button type="button" class="skip-button" (click)="skipProfilePhoto()" [disabled]="isUploadingPhoto()">
+                Pular por enquanto
             </button>
 
+            @if (photoUploadError()) {
+            <p class="error-message">
+                {{ photoUploadError() }}
+            </p>
+            }
         </section>
         }
     </main>

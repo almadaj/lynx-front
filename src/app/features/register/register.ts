@@ -10,6 +10,8 @@ import {
 import { RouterLink, Router } from '@angular/router'
 import { RegisterRequestDTO } from '../../models/auth.model'
 import { AuthService } from '../../services/api-services/auth.service'
+import { UserService } from '../../services/api-services/user.service'
+import { finalize } from 'rxjs/internal/operators/finalize'
 
 type UserType = 'STUDENT' | 'TEACHER'
 
@@ -37,7 +39,10 @@ export class Register {
     private router = inject(Router)
     private fb = inject(FormBuilder)
     private authService = inject(AuthService)
+    private userService = inject(UserService)
 
+    isUploadingPhoto = signal(false)
+    photoUploadError = signal<string | null>(null)
     currentStep = signal(0)
     selectedUserType = signal<UserType | null>(null)
     profileImage = signal<File | null>(null)
@@ -143,9 +148,17 @@ export class Register {
 
         if (!file) return
 
-        if (!file.type.startsWith('image/')) return
+        this.photoUploadError.set(null)
+
+        if (!file.type.startsWith('image/')) {
+            this.photoUploadError.set('Selecione um arquivo de imagem válido.')
+            input.value = ''
+            return
+        }
 
         if (file.size > 5 * 1024 * 1024) {
+            this.photoUploadError.set('A imagem deve ter no máximo 5 MB.')
+            input.value = ''
             return
         }
 
@@ -212,15 +225,47 @@ export class Register {
     }
 
     continueAfterProfile(): void {
-        // Se for professor, depois iremos direcionar
-        // para a escolha de vínculo institucional.
+        if (this.isUploadingPhoto()) return
 
+        const file = this.profileImage()
+
+        if (!file) {
+            this.finishProfileStep()
+            return
+        }
+
+        this.isUploadingPhoto.set(true)
+        this.photoUploadError.set(null)
+
+        this.userService.uploadProfilePhoto(file)
+            .pipe(
+                finalize(() => this.isUploadingPhoto.set(false))
+            )
+            .subscribe({
+                next: () => {
+                    this.finishProfileStep()
+                },
+                error: error => {
+                    console.error('Erro ao enviar foto:', error)
+                    this.photoUploadError.set(
+                        error.error?.message ?? 'Não foi possível enviar sua foto. Tente novamente.'
+                    )
+                }
+            })
+    }
+
+    skipProfilePhoto(): void {
+        if (this.isUploadingPhoto()) return
+
+        this.finishProfileStep()
+    }
+
+    private finishProfileStep(): void {
         if (this.selectedUserType() === 'TEACHER') {
             console.log('Direcionar para vínculo institucional')
             return
         }
 
-        // Aluno segue para o dashboard.
         this.router.navigate(['/dashboard'])
     }
 

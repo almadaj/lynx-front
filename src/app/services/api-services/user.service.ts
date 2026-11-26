@@ -25,4 +25,19 @@ export class UserService {
     findMyInfo(): Observable<UserResponseDTO> {
         return this.http.get<UserResponseDTO>(`${this.apiUrl}/user/me`)
     }
+
+    uploadProfilePhoto(file: File): Observable<void> {
+        const formData = new FormData()
+        formData.append('file', file)
+
+        return this.http.put<void>(
+            `${this.apiUrl}/user/me/photo`,
+            formData,
+            { withCredentials: true }
+        )
+    }
+
+    deleteProfilePhoto(id: string): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/${id}/photo`);
+    }
 }
